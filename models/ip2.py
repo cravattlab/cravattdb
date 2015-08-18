@@ -127,32 +127,22 @@ class IP2:
                 files={ f.name: f}
             )
 
-    def prolucid_search(self, protein_database_user_id=None, protein_database_id=None):
+    def prolucid_search(self, params, protein_database_user_id, protein_database_id):
         ''' perform prolucid search '''
 
-        self._db.cursor.execute(
-            'SELECT data FROM ip2_search_params WHERE experiment_type == %s'
-            (self.experiment_type, )
-        )
-
-        data = self._db.dict_cursor.fetchone()
-        self._db.close()
-
-        flask.json.loads(data)
-
-        data.update({
+        params.update({
             'expId': self.experiment_id,
             'expPath': self.experiment_path,
             'sampleName': self.experiment_name,
             'pid': self.project_id,
             'projectName': self.project_name,
-            'sp.proteinUserId': 72,
-            'sp.proteinDbId': 641  
+            'sp.proteinUserId': protein_database_user_id,
+            'sp.proteinDbId': protein_database_id  
         })
 
         requests.post(
             'http://goldfish.scripps.edu/ip2/prolucidProteinId.html',
-            data,
+            params,
             cookies=self.cookies
         )
 

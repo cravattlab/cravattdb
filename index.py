@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-from models.ip2 import IP2
+from models.search import Search
 
 app = Flask(__name__)
 app.debug = True
@@ -10,20 +10,21 @@ def index():
 
 @app.route('/search/<name>', methods = [ 'POST' ])
 def search(name):
-    test = {
-        'test': 'wat'
-    }
+    search = Search()
 
-    ip2 = IP2(name)
-
-    ip2.login(
+    search.login(
         request.json['username'],
         request.json['password']
     )
 
+    search.search(
+        request.files,
+        request.json['organism'],
+        request.json['experiment_type'],
+        request.json['param_mods']
+    )
+
     return jsonify(request.json)
-
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
