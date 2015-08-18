@@ -1,0 +1,20 @@
+<td><strong>{{ item.file.name }}</strong></td>
+<td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+<td ng-show="uploader.isHTML5">
+    <div class="ui progress" data-percent="{ item.progress }">
+        <div class="bar" style="transition-duration: 300ms;" ng-style="{ 'width': item.progress + '%' }">
+            <div class="progress">{{ item.progress }}%</div>
+        </div>
+    </div>
+</td>
+<td>
+    <span ng-show="item.isSuccess"><i class="checkmark icon"></i></span>
+    <span ng-show="item.isCancel"><i class="ban icon"></i></span>
+    <span ng-show="item.isError"><i class="remove icon"></i></span>
+</td>
+<td nowrap>
+    <button type="button" class="tiny negative ui labeled button" ng-click="item.remove()">
+        <i class="trash outline icon"></i>
+        Remove
+    </button>
+</td>

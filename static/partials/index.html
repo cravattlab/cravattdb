@@ -1,0 +1,57 @@
+<h1 class="ui dividing header">Welcome to Cravegas</h1>
+<form class="ui form">
+    <div class="four wide field">
+        <label>Dataset Name</label>
+        <input type="text" placeholder="Dataset Name" ng-model="main.data.name">
+    </div>
+    <div class="four wide field">
+        <label>IP2 Username</label>
+        <input type="text" placeholder="Username" ng-model="main.data.username">
+    </div>
+
+    <div class="four wide field">
+        <label>IP2 Password</label>
+        <input type="password" placeholder="Password" ng-model="main.data.password">
+    </div>
+
+    <div class="four wide field">
+        <label>Gender</label>
+        <select class="ui dropdown">
+            <option value="human">Human</option>
+            <option value="mouse">Mouse</option>
+        </select>
+    </div>
+
+    <div class="four wide field">
+        <label>Experiment Type</label>
+        <select class="ui dropdown">
+            <option value="silac">SILAC</option>
+            <option value="isotop">ISOTOP</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <table class="ui basic table" ng-show="main.flatQueue().length">
+            <thead>
+                <tr>
+                    <th width="50%">Name</th>
+                    <th ng-show="uploader.isHTML5">Size</th>
+                    <th ng-show="uploader.isHTML5">Progress</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in main.flatQueue()" ng-include="'/static/partials/file-item.html'"></tr>
+            </tbody>
+        </table>
+
+        <button type="button" class="ui labeled button btn-file">
+            <i class="file outline icon"></i>
+            Select Files
+            <input id="pick-files" type="file" nv-file-select uploader="uploader" multiple />
+        </button>
+    </div>
+
+    <button class="ui button" type="submit" ng-click="main.submit()">Submit</button>
+</form>
