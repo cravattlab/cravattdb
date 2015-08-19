@@ -11,7 +11,7 @@ class Search:
         self.name = name
 
     def login(self, username, password):
-        self._ip2 = IP2()
+        self._ip2 = IP2(self.name)
         self._ip2.login(username, password)
         self.username = username
 
@@ -24,9 +24,12 @@ class Search:
         database = self._get_database_path(organism)
         params.update({'database_name': database['name']})
 
+        self._ip2.protein_database_user_id = database['user_id']
+        self._ip2.protein_database_id = database['database_id']
+
         # convert to .ms2 and start ip2 search when done
         self.files = self._convert(
-            partial(self._ip2.search, params, database['user_id'], database['database_id'])
+            partial(self._ip2.search, params)
         )
 
     def _get_params(self, experiment_type, param_mods):

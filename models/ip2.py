@@ -17,8 +17,8 @@ class IP2:
 
     def search(self, params):
         ''' convenience method '''
-        self.login(params['username'], params['password'])
         self.set_project_id()
+        self.create_experiment()
         self.set_experiment_id()
         self.set_experiment_path()
         self.upload_spectra(params['files'])
@@ -53,7 +53,7 @@ class IP2:
         self.project_id = project_id
         return project_id
 
-    def set_experiment_id(self, name):
+    def set_experiment_id(self):
         exp_req = requests.get(
             'http://goldfish.scripps.edu/ip2/viewExperiment.html', 
             {
@@ -64,12 +64,10 @@ class IP2:
         )
 
         soup = BeautifulSoup(exp_req.text)
-        table = soup.find('table', id='experimentO')
-        forms = table.find_all('form', action='editExperiment.html')
+        forms = soup.find_all('form', action='editExperiment.html')
 
         for form in forms:
-            sampleInput = form.find('input', attrs={'name':'sampleName'}, value=name)
-
+            sampleInput = form.find('input', attrs={'name':'sampleName'}, value=self.dataset_name)
             if sampleInput:
                 self.experiment_id = int(form.find('input', attrs={'name': 'expId'})['value'])
                 return
@@ -93,7 +91,7 @@ class IP2:
         self.experiment_path = path.group(1)
 
 
-    def create_experiment(self, name):
+    def create_experiment(self):
         ''' create experiment under project '''
 
         requests.post(
@@ -101,7 +99,7 @@ class IP2:
             {
                 'pid': self.project_id,
                 'projectName': self.project_name,
-                'sampleName': name,
+                'sampleName': self.dataset_name,
                 'sampleDescription': '',
                 'instrumentId': 34,
                 'month': 6,
@@ -127,7 +125,7 @@ class IP2:
                 files={ f.name: f}
             )
 
-    def prolucid_search(self, params, protein_database_user_id, protein_database_id):
+    def prolucid_search(self, params):
         ''' perform prolucid search '''
 
         params.update({
@@ -136,8 +134,8 @@ class IP2:
             'sampleName': self.experiment_name,
             'pid': self.project_id,
             'projectName': self.project_name,
-            'sp.proteinUserId': protein_database_user_id,
-            'sp.proteinDbId': protein_database_id  
+            'sp.proteinUserId': self.protein_database_user_id,
+            'sp.proteinDbId': self.protein_database_id
         })
 
         requests.post(
