@@ -18,7 +18,7 @@ def search(name):
     )
 
     search.search(
-        request.files.getlist("file[]"),
+        request.files.getlist('file'),
         request.form['organism'],
         request.form['experiment_type'],
         request.form['param_mods']

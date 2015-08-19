@@ -20,7 +20,4 @@ class Upload:
         for file in self.files:
             if file and self.allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(UPLOAD_FOLDER, dir_path, filename))
-
-                print 'moving files'
-                print self.files
+                file.save(os.path.join(dir_path, filename))

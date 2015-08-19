@@ -26,7 +26,6 @@ class Search:
 
         # convert to .ms2 and start ip2 search when done
         self.files = self._convert(
-            upload.files,
             partial(self._ip2.search, params, database['user_id'], database['database_id'])
         )
 
@@ -55,7 +54,7 @@ class Search:
 
         return database_map[organism]
 
-    def _convert(self, files, callback):
+    def _convert(self, callback):
         # start conversion
         requests.get(
             'http://localhost:5001/convert/' + self.username + '/' + self.name,
@@ -69,8 +68,8 @@ class Search:
             start = time.clock()
             status = self._check_convert_status()
 
-            if 'success' in status:
-                running = false
+            if status['status'] == 'success' :
+                running = False
                 callback()
                 break
 
