@@ -1,56 +1,67 @@
 <h1 class="ui dividing header">Welcome to Cravegas</h1>
 <form class="ui form">
-    <div class="four wide field">
+    <div class="six wide field">
         <label>Dataset Name</label>
         <input type="text" placeholder="Dataset Name" ng-model="main.data.name">
     </div>
-    <div class="four wide field">
+    <div class="six wide field">
         <label>IP2 Username</label>
         <input type="text" placeholder="Username" ng-model="main.data.username">
     </div>
 
-    <div class="four wide field">
+    <div class="six wide field">
         <label>IP2 Password</label>
         <input type="password" placeholder="Password" ng-model="main.data.password">
     </div>
 
-    <div class="four wide field">
-        <label>Species</label>
-        <select class="ui dropdown">
+    <div class="six wide field">
+        <label>Diff Mod</label>
+        <input type="text" placeholder="Diff Mod" ng-model="main.data.param_mods">
+    </div>
+
+    <div class="six wide field">
+        <label>Organism</label>
+        <select class="ui dropdown" ng-model="main.data.organism">
             <option value="human">Human</option>
             <option value="mouse">Mouse</option>
         </select>
     </div>
 
-    <div class="four wide field">
+    <div class="six wide field">
         <label>Experiment Type</label>
-        <select class="ui dropdown">
+        <select class="ui dropdown" ng-model="main.data.experiment_type">
             <option value="silac">SILAC</option>
             <option value="isotop">ISOTOP</option>
         </select>
     </div>
 
     <div class="field">
-        <table class="ui basic table" ng-show="main.flatQueue().length">
+        <table class="ui basic table" ng-show="main.files.length">
             <thead>
                 <tr>
-                    <th width="50%">Name</th>
-                    <th ng-show="uploader.isHTML5">Size</th>
-                    <th ng-show="uploader.isHTML5">Progress</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th width="80%">Name</th>
+                    <th>Size</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in main.flatQueue()" ng-include="'/static/partials/file-item.html'"></tr>
+                <tr ng-repeat="item in main.files">
+                    <td><strong>{{ item.name }}</strong></td>
+                    <td nowrap>{{ item.size/1024/1024|number:2 }} MB</td>    
+                </tr>
             </tbody>
         </table>
 
-        <button type="button" class="ui labeled button btn-file">
+        <div class="ui progress" data-percent="{ main.progress }" ng-class="{ success: main.progress == 100 }" ng-show="main.progress > 0">
+            <div class="bar" style="transition-duration: 300ms;" ng-style="{ 'width': main.progress + '%' }">
+                <div class="progress">{{ main.progress }}%</div>
+            </div>
+        </div>
+
+        <button type="button" class="ui labeled button btn-file" ngf-select ngf-multiple="true" ngf-keep="true" ngf-keep-distinct="true" ng-model="main.files">
             <i class="file outline icon"></i>
             Select Files
-            <input id="pick-files" type="file" nv-file-select uploader="uploader" multiple />
         </button>
+
     </div>
 
     <button class="ui button" type="submit" ng-click="main.submit()">Submit</button>

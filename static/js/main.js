@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('cravatt-ip2', ['ngRoute', 'ngResource', 'angularFileUpload']);
+var app = angular.module('cravatt-ip2', ['ngRoute', 'ngResource', 'ngFileUpload']);
 
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
@@ -11,30 +11,27 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
     });
 }]);
 
-app.controller('MainController', ['$scope', '$http', 'FileUploader', function($scope, $http, FileUploader) {
-    console.log('hello world');
-    this.data = {
-    	files: []
-    };
+app.controller('MainController', ['$scope', '$http', 'Upload', function($scope, $http, Upload) {
+    this.data = {};
+    this.progress = 0;
 
     this.submit = function() {
-        $http.post('/search/' + this.data.name, this.data).success(function(data) {
-            console.log(data);
+        var upload = Upload.upload({
+            url: '/search/' + this.data.name,
+            file: this.files,
+            method: 'POST',
+            sendFieldsAs: 'json-blob',
+            fields: this.data
+        }).success(function (data, status, headers, config) {
+            console.log(data, status, headers, config)
+        }).error(function (data, status, headers, config) {
+            console.log('error status: ' + status);
+        }).progress(function(e) {
+            this.progress = parseInt(100.0 * e.loaded / e.total);
         }.bind(this));
     };
-
-    var uploader = $scope.uploader = new FileUploader();
-    this.uploadCompleted = false;
-    // mix in ng-file-upload queue with files thave have already been uploaded
-    this.flatQueue = function() {
-        return this.data.files.concat(uploader.queue);
-    }
-
-    uploader.onCompleteAll = function() {
-        this.uploadCompleted = true;
-    }.bind(this);
 }]);
 
 $(function() {
-	$('.ui.dropdown').dropdown();
+    $('.ui.dropdown').dropdown();
 });

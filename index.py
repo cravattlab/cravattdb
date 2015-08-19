@@ -10,21 +10,21 @@ def index():
 
 @app.route('/search/<name>', methods = [ 'POST' ])
 def search(name):
-    search = Search()
+    search = Search(name)
 
     search.login(
-        request.json['username'],
-        request.json['password']
+        request.form['username'],
+        request.form['password']
     )
 
     search.search(
         request.files,
-        request.json['organism'],
-        request.json['experiment_type'],
-        request.json['param_mods']
+        request.form['organism'],
+        request.form['experiment_type'],
+        request.form['param_mods']
     )
 
-    return jsonify(request.json)
+    return 'hello'
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
