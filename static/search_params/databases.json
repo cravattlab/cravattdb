@@ -18,5 +18,10 @@
         "name": "UniProt_H37RV_TB_08-04-2014_reversed.fasta",
         "user_id": 176,
         "database_id": 1487
+    },
+    "celegans": {
+        "name": "UniProt_c_elegans_01-15-2014_reversed.fasta",
+        "user_id": 186,
+        "database_id": 1627
     }
 }
