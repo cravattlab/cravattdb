@@ -1,7 +1,7 @@
 # from db.db import Database
 from bs4 import BeautifulSoup
 from distutils.util import strtobool
-import flask.json, requests, re
+import flask.json, requests, re, os
 
 class IP2:
     ''' 
@@ -13,17 +13,17 @@ class IP2:
         self.dataset_name = name
         self.project_id = 0
         self.loggedOn = False
-        self.project_name = 'cravatdb'
+        self.project_name = 'cravattdb'
 
-    def search(self, params):
+    def search(self, params, files):
         ''' convenience method '''
         self.set_project_id()
         self.create_experiment()
         self.set_experiment_id()
         self.set_experiment_path()
-        self.upload_spectra(params['files'])
-        self.prolucid_search()
-        self.check_job_status()
+        self.upload_spectra(files)
+        # self.prolucid_search(params)
+        # self.check_job_status()
 
     def login(self, username, password):
         ''' login to IP2 '''
@@ -40,7 +40,7 @@ class IP2:
 
     def logout(self):
         ''' log out of IP2 '''
-        requets.get('http://goldfish.scripps.edu/ip2/logout.jsp', cookies=self.cookies)
+        requests.get('http://goldfish.scripps.edu/ip2/logout.jsp', cookies=self.cookies)
 
     def set_project_id(self):
         ''' get project id for cravattdb project or else create new project '''
@@ -112,18 +112,23 @@ class IP2:
 
     def upload_spectra(self, files):
         ''' upload .ms2 files '''
+
+        print 'uploading files', files
+
         for f in files:
-            requests.post(
+            r = requests.post(
                 'http://goldfish.scripps.edu/helper/spectraUpload.jsp',
                 {
-                    'Filename': f.name,
+                    'Filename':  os.path.split(f.name)[1],
                     'expPath': self.experiment_path,
-                    'Filedata': f,
+                    'row2ms': 'false',
                     'Upload': 'Submit Query'
                 },
-                cookies=self.cookies,
-                files={ f.name: f}
+                cookies = self.cookies,
+                files = { 'Filedata': f }
             )
+
+            f.close()
 
     def prolucid_search(self, params):
         ''' perform prolucid search '''
@@ -131,7 +136,7 @@ class IP2:
         params.update({
             'expId': self.experiment_id,
             'expPath': self.experiment_path,
-            'sampleName': self.experiment_name,
+            'sampleName': self.dataset_name,
             'pid': self.project_id,
             'projectName': self.project_name,
             'sp.proteinUserId': self.protein_database_user_id,
@@ -144,7 +149,7 @@ class IP2:
             cookies=self.cookies
         )
 
-    def check_job_status(self, name):
+    def check_job_status(self):
         ''' check if job is finished '''
         session_text = requests.get('http://goldfish.scripps.edu/ip2/dwr/engine.js').text
         session_id = re.search('_origScriptSessionId\s=\s"(\w+)"', session_text).group(1)

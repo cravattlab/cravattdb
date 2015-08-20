@@ -2,9 +2,11 @@ import json
 import xmltodict
 import time
 import requests
+import os
+from functools import partial
 from models.ip2 import IP2
 from models.upload import Upload
-from functools import partial
+from glob import glob
 
 class Search:
     def __init__(self, name):
@@ -28,9 +30,11 @@ class Search:
         self._ip2.protein_database_id = database['database_id']
 
         # convert to .ms2 and start ip2 search when done
-        self.files = self._convert(
-            partial(self._ip2.search, params)
-        )
+        self.files = self._convert(partial(self._search, params))
+
+    def _search(self, params):
+        ms2_files = self._get_ms2_files()
+        self._ip2.search(params, ms2_files)
 
     def _get_params(self, experiment_type, param_mods):
         with open('static/search_params/search_params.json') as f:
@@ -57,7 +61,7 @@ class Search:
 
         return database_map[organism]
 
-    def _convert(self, callback):
+    def _convert(self, callback=None):
         # start conversion
         requests.get(
             'http://localhost:5001/convert/' + self.username + '/' + self.name,
@@ -71,9 +75,9 @@ class Search:
             start = time.clock()
             status = self._check_convert_status()
 
-            if status['status'] == 'success' :
+            if status['status'] == 'success':
                 running = False
-                callback()
+                if callback: callback()
                 break
 
             work_duration = time.clock() - start
@@ -85,3 +89,12 @@ class Search:
         )
 
         return r.json()
+
+    def _get_ms2_files(self):
+        paths = glob(os.path.join('uploads', self.username, self.name, '*.ms2'))
+        files = []
+
+        for path in paths:
+            files.append(open(path, 'rb'))
+
+        return files
