@@ -23,7 +23,6 @@ class Search:
         # setup search params
         params = self._get_params(experiment_type, param_mods)
         database = self._get_database_path(organism)
-        params.update({'database_name': database['name']})
 
         self._ip2.protein_database_user_id = database['user_id']
         self._ip2.protein_database_id = database['database_id']

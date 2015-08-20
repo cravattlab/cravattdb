@@ -1,5 +1,6 @@
 {
-	"isotop": "isotop.xml",
+	"isotop": "isotop.json",
 	"silac": "silac.json",
-	"redime": "redime.xml"
+	"redime": "redime.json",
+	"n15": "n15.json"
 }
