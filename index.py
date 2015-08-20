@@ -24,8 +24,11 @@ def search(name):
         request.form['param_mods']
     )
 
-
     return 'hello'
+
+@app.route('/status', methods = [ 'GET' ])
+def status():
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

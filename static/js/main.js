@@ -8,6 +8,10 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
         templateUrl: '/static/partials/index.html',
         controller: 'MainController',
         controllerAs: 'main'
+    }).when('/status', {
+        templateUrl: '/static/partials/status.html',
+        controller: 'StatusController',
+        controllerAs: 'status'
     });
 }]);
 
@@ -30,6 +34,10 @@ app.controller('MainController', ['$scope', '$http', 'Upload', function($scope, 
             this.progress = parseInt(100.0 * e.loaded / e.total);
         }.bind(this));
     };
+}]);
+
+app.controller('StatusController', ['$scope', '$http', function($scope, $http) {
+
 }]);
 
 $(function() {
