@@ -22,7 +22,7 @@ class IP2:
         self.set_experiment_id()
         self.set_experiment_path()
         self.upload_spectra(files)
-        # self.prolucid_search(params)
+        self.prolucid_search(params)
         # self.check_job_status()
 
     def login(self, username, password):
@@ -84,8 +84,6 @@ class IP2:
         )
 
         soup = BeautifulSoup(path_req.text)
-
-        # soup.find('b', text="Spectra Path:").next_sibling.string.strip().replace('/spectra', '')
         text = soup.find('div', class_='add_spectra').find('script', text=re.compile(r'.+expPath.+')).contents[0]
         path = re.search('"expPath":\s"([\w/]+)"', text)
         self.experiment_path = path.group(1)
@@ -112,9 +110,7 @@ class IP2:
 
     def upload_spectra(self, files):
         ''' upload .ms2 files '''
-
-        print 'uploading files', files
-
+        
         for f in files:
             r = requests.post(
                 'http://goldfish.scripps.edu/helper/spectraUpload.jsp',

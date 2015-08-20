@@ -1,5 +1,5 @@
 {
 	"isotop": "isotop.xml",
-	"silac": "silac.xml",
+	"silac": "silac.json",
 	"redime": "redime.xml"
 }

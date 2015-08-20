@@ -1,5 +1,4 @@
 import json
-import xmltodict
 import time
 import requests
 import os
@@ -30,7 +29,7 @@ class Search:
         self._ip2.protein_database_id = database['database_id']
 
         # convert to .ms2 and start ip2 search when done
-        self.files = self._convert(partial(self._search, params))
+        self._convert(partial(self._search, params))
 
     def _search(self, params):
         ms2_files = self._get_ms2_files()
@@ -44,7 +43,7 @@ class Search:
             raise KeyError('Search params are not available for this experiment_type')
 
         with open('static/search_params/' + params_map[experiment_type]) as f:
-            params = xmltodict.parse(f.read())
+            params = json.loads(f.read())
 
         # if param_mods:
         #     params.update(json.loads(param_mods))
