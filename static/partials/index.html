@@ -10,29 +10,28 @@
     </ul>
 </div>
 
-<form class="ui form">
-    <div class="six wide field">
+<form class="ui form" name="upload">
+    <div class="six wide required field">
         <label>Dataset Name</label>
-        <input type="text" placeholder="Dataset Name" ng-model="main.data.name">
-    </div>
-    <div class="six wide field">
-        <label>IP2 Username</label>
-        <input type="text" placeholder="Username" ng-model="main.data.username">
+        <input type="text" placeholder="Dataset Name" ng-model="main.data.name" required>
     </div>
 
-    <div class="six wide field">
-        <label>IP2 Password</label>
-        <input type="password" placeholder="Password" ng-model="main.data.password">
+    <div class="fields">
+        <div class="six wide required field">
+            <label>IP2 Username</label>
+            <input type="text" placeholder="Username" ng-model="main.data.username" required>
+        </div>
+
+        <div class="six wide required field">
+            <label>IP2 Password</label>
+            <input type="password" placeholder="Password" ng-model="main.data.password" required>
+        </div>
     </div>
 
-    <div class="six wide field">
-        <label>Diff Mod</label>
-        <input type="text" placeholder="Diff Mod" ng-model="main.data.param_mods">
-    </div>
-
-    <div class="six wide field">
+    <div class="six wide required field">
         <label>Organism</label>
-        <select class="ui dropdown" ng-model="main.data.organism">
+        <select class="ui dropdown" ng-model="main.data.organism" required>
+            <option value="">Select Species</option>
             <option value="human">Human</option>
             <option value="mouse">Mouse</option>
             <option value="bcg">BCG</option>
@@ -41,9 +40,10 @@
         </select>
     </div>
 
-    <div class="six wide field">
+    <div class="six wide required field">
         <label>Experiment Type</label>
-        <select class="ui dropdown" ng-model="main.data.experiment_type">
+        <select class="ui dropdown" ng-model="main.data.experiment_type" required>
+            <option value="">Select Experiment Type</option>
             <option value="silac">SILAC</option>
             <option value="isotop">ISOTOP</option>
             <option value="redime">ReDiMe</option>
@@ -72,13 +72,12 @@
                 <div class="progress">{{ main.progress }}%</div>
             </div>
         </div>
-
-        <button type="button" class="ui labeled button btn-file" ngf-select ngf-multiple="true" ngf-keep="true" ngf-keep-distinct="true" ng-model="main.files">
-            <i class="file outline icon"></i>
-            Select Files
-        </button>
-
     </div>
 
-    <button class="ui button" type="submit" ng-click="main.submit()">Submit</button>
+    <button type="button" class="ui labeled button btn-file" ngf-select ngf-multiple="true" ngf-keep="true" ngf-keep-distinct="true" ng-model="main.files" required>
+        <i class="file outline icon"></i> Upload RAW Files
+        <input type="file" class="ui labeled button btn-file" ngf-select ngf-multiple="true" ngf-keep="true" ngf-keep-distinct="true" ng-model="main.files" required />
+    </button>
+
+    <button class="ui primary button" type="submit" ng-click="main.submit()" ng-class="{ disabled : !upload.$valid }">Submit</button>
 </form>

@@ -33,10 +33,7 @@ def status():
     return render_template('index.html')
 
 def error_response(details, code):
-    return make_response(
-        jsonify({ 'error': details }),
-        code
-    )
+    return make_response(jsonify({ 'error': details }), code)
 
 @app.errorhandler(401)
 def unauthorized(error):
