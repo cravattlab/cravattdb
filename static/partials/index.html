@@ -1,4 +1,15 @@
 <h1 class="ui dividing header">Welcome to Cravegas</h1>
+
+<div class="ui error message" ng-show="main.errors.length && main.showErrors">
+    <i class="close icon" ng-click="main.showErrors = false"></i>
+    <div class="header">
+        There were some errors with your submission
+    </div>
+    <ul class="list">
+        <li ng-repeat="error in main.errors">{{ error }}</li>
+    </ul>
+</div>
+
 <form class="ui form">
     <div class="six wide field">
         <label>Dataset Name</label>

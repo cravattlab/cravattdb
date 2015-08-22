@@ -7,14 +7,15 @@ ALLOWED_EXTENSIONS = set(['raw', 'RAW'])
 class Upload:
     def __init__(self, files, username, name):
         self.files = files
-        self.move(username, name)
+        self.path = os.path.join(username, name)
+        self.move()
 
     def allowed_file(self, filename):
         return '.' in filename and \
             filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-    def move(self, username, name):
-        dir_path = os.path.join(UPLOAD_FOLDER, username, name)
+    def move(self):
+        dir_path = os.path.join(UPLOAD_FOLDER, self.path)
         os.makedirs(dir_path)
 
         for file in self.files:

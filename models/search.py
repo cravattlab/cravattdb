@@ -1,7 +1,4 @@
-import json
-import time
-import requests
-import os
+import json, time, requests, os
 from functools import partial
 from models.ip2 import IP2
 from models.upload import Upload
@@ -16,9 +13,9 @@ class Search:
         self._ip2.login(username, password)
         self.username = username
 
-    def search(self, files, organism, experiment_type, param_mods):
+    def search(self, files, organism, experiment_type, param_mods=None):
         # save RAW files to disk
-        upload = Upload(files, self.username, self.name)
+        Upload(files, self.username, self.name)
 
         # setup search params
         params = self._get_params(experiment_type, param_mods)
@@ -34,7 +31,7 @@ class Search:
         ms2_files = self._get_ms2_files()
         self._ip2.search(params, ms2_files)
 
-    def _get_params(self, experiment_type, param_mods):
+    def _get_params(self, experiment_type, param_mods=None):
         with open('static/search_params/search_params.json') as f:
             params_map = json.loads(f.read())
 
@@ -54,7 +51,6 @@ class Search:
             database_map = json.loads(f.read())
 
         if organism not in database_map:
-            print organism
             raise KeyError('There is no database set for this organism')
 
         return database_map[organism]

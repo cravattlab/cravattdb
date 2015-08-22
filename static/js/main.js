@@ -18,6 +18,8 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 app.controller('MainController', ['$scope', '$http', 'Upload', function($scope, $http, Upload) {
     this.data = {};
     this.progress = 0;
+    this.showErrors = true;
+    this.errors = [];
 
     this.submit = function() {
         var upload = Upload.upload({
@@ -28,10 +30,19 @@ app.controller('MainController', ['$scope', '$http', 'Upload', function($scope, 
             fields: this.data
         }).success(function (data, status, headers, config) {
             console.log(data, status, headers, config)
-        }).error(function (data, status, headers, config) {
-            console.log('error status: ' + status);
         }).progress(function(e) {
             this.progress = parseInt(100.0 * e.loaded / e.total);
+        }.bind(this));
+
+        upload.catch(function(data) {
+            if (data.status === 401) {
+                var message = 'Incorrect username or password';
+                this.showErrors = true;
+
+                if (this.errors.indexOf(message) === -1) {
+                    this.errors.push(message);
+                }
+            }
         }.bind(this));
     };
 }]);

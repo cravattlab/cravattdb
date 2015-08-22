@@ -35,8 +35,7 @@ class IP2:
         })
 
         self.cookies = login_req.history[0].cookies
-
-        return True
+        return 'error' not in login_req.url
 
     def logout(self):
         ''' log out of IP2 '''
