@@ -9,9 +9,9 @@ class Search:
         self.name = name
 
     def login(self, username, password):
-        self._ip2 = IP2(self.name)
-        self._ip2.login(username, password)
         self.username = username
+        self._ip2 = IP2(self.name)
+        return self._ip2.login(username, password)
 
     def search(self, files, organism, experiment_type, param_mods=None):
         # save RAW files to disk
