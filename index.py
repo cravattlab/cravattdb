@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, abort, make_response
 from models.search import Search
 
 app = Flask(__name__)
@@ -12,16 +12,18 @@ def index():
 def search(name):
     search = Search(name)
 
-    search.login(
-        request.form['username'],
-        request.form['password']
+    login = search.login(
+        request.form.get('username'),
+        request.form.get('password')
     )
+
+    if not login: abort(401)
 
     search.search(
         request.files.getlist('file'),
-        request.form['organism'],
-        request.form['experiment_type'],
-        request.form['param_mods']
+        request.form.get('organism'),
+        request.form.get('experiment_type'),
+        request.form.get('param_mods')
     )
 
     return 'hello'
@@ -30,5 +32,16 @@ def search(name):
 def status():
     return render_template('index.html')
 
+def error_response(details, code):
+    return make_response(
+        jsonify({ 'error': details }),
+        code
+    )
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return error_response(error.description, error.code)
+
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', threaded=True)
