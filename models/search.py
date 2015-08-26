@@ -70,8 +70,8 @@ class Search:
                 dta_link = self._get_dtaselect()
                 return dta_link
 
-        work_duration = time.clock() - start
-        time.sleep(polling_interval - work_duration)
+            work_duration = time.clock() - start
+            time.sleep(polling_interval - work_duration)
 
     def _get_dtaselect(self):
         link = self._ip2.get_dtaselect()

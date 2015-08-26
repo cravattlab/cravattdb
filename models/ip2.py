@@ -14,6 +14,7 @@ class IP2:
         self.project_id = 0
         self.loggedOn = False
         self.project_name = 'cravattdb'
+        self.search_id = None
 
     def search(self, params, files):
         ''' convenience method '''
