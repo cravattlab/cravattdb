@@ -5,9 +5,9 @@ UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['raw', 'RAW'])
 
 class Upload:
-    def __init__(self, files, username, name):
+    def __init__(self, files, path):
         self.files = files
-        self.path = os.path.join(username, name)
+        self.path = path
         self.move()
 
     def allowed_file(self, filename):

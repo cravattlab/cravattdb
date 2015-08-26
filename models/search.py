@@ -1,4 +1,5 @@
 import json, time, requests, os
+import models.convert as convert
 from functools import partial
 from models.ip2 import IP2
 from models.upload import Upload
@@ -15,7 +16,8 @@ class Search:
 
     def search(self, files, organism, experiment_type, param_mods=None):
         # save RAW files to disk
-        Upload(files, self.username, self.name)
+        self.path = os.path.join(self.username, self.name)
+        Upload(files, self.path)
 
         # setup search params
         params = self._get_params(experiment_type, param_mods)
@@ -25,10 +27,10 @@ class Search:
         self._ip2.protein_database_id = database['database_id']
 
         # convert to .ms2 and start ip2 search when done
-        self._convert(partial(self._search, params))
+        convert.convert(self.path, partial(self._search, params))
         link = self._check_search_status()
 
-        print link
+        print(link)
 
     def _search(self, params):
         ms2_files = self._get_ms2_files()
@@ -58,35 +60,6 @@ class Search:
 
         return database_map[organism]
 
-    def _convert(self, callback = None):
-        # start conversion
-        requests.get(
-            'http://localhost:5001/convert/' + self.username + '/' + self.name,
-        )
-
-        # poll every 30 seconds
-        polling_interval = 30
-        running = True
-
-        while running:
-            start = time.clock()
-            status = self._check_convert_status()
-
-            if status['status'] == 'success':
-                running = False
-                if callback: callback()
-                break
-
-            work_duration = time.clock() - start
-            time.sleep(polling_interval - work_duration)
-
-    def _check_convert_status(self):
-        r = requests.get(
-            'http://localhost:5001/status/' + self.username + '/' + self.name,
-        )
-
-        return r.json()
-
     def _get_ms2_files(self):
         paths = glob(os.path.join('uploads', self.username, self.name, '*.ms2'))
         files = []
@@ -103,7 +76,7 @@ class Search:
         while running:
             try:
                 info = self._ip2.check_job_status()
-            except LookupError(error):
+            except LookupError as e:
                 # job was not found, the job is finished or something went
                 # horribly wrong
                 running = False
@@ -112,5 +85,4 @@ class Search:
 
     def _get_dtaselect(self):
         link = self._ip2.get_dtaselect()
-        print link
         return link
