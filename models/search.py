@@ -26,6 +26,9 @@ class Search:
 
         # convert to .ms2 and start ip2 search when done
         self._convert(partial(self._search, params))
+        link = self._check_search_status()
+
+        print link
 
     def _search(self, params):
         ms2_files = self._get_ms2_files()
@@ -55,7 +58,7 @@ class Search:
 
         return database_map[organism]
 
-    def _convert(self, callback=None):
+    def _convert(self, callback = None):
         # start conversion
         requests.get(
             'http://localhost:5001/convert/' + self.username + '/' + self.name,
@@ -92,3 +95,22 @@ class Search:
             files.append(open(path, 'rb'))
 
         return files
+
+    def _check_search_status(self):
+        polling_interval = 180
+        running = True
+
+        while running:
+            try:
+                info = self._ip2.check_job_status()
+            except LookupError(error):
+                # job was not found, the job is finished or something went
+                # horribly wrong
+                running = False
+                dta_link = self._get_dtaselect()
+                return dta_link
+
+    def _get_dtaselect(self):
+        link = self._ip2.get_dtaselect()
+        print link
+        return link

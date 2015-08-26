@@ -166,7 +166,9 @@ class IP2:
         )
 
         # find sample and get identifier
-        id = re.search('s(\d+)\.sampleName="' + name + '"', status_req.text).group(1)
+        id = re.search('s(\d+)\.sampleName="' + self.dataset_name + '"', status_req.text).group(1)
+
+        if not id: raise LookupError('Job status could not be resolved')
 
         # now collect all the information
         info = re.findall('s' + id + '\.(\w+)=([\w"\._\-\s]+);', status_req.text)
