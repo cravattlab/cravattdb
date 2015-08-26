@@ -1,4 +1,4 @@
-import json, os
+import json, os, time
 import config.config as config
 from models.ip2 import IP2
 
@@ -55,7 +55,12 @@ class Search:
         polling_interval = 180
         running = True
 
+        # wait a bit before we poll for status
+        time.sleep(polling_interval)
+
         while running:
+            start = time.clock()
+
             try:
                 info = self._ip2.check_job_status()
             except LookupError as e:
@@ -64,6 +69,9 @@ class Search:
                 running = False
                 dta_link = self._get_dtaselect()
                 return dta_link
+
+        work_duration = time.clock() - start
+        time.sleep(polling_interval - work_duration)
 
     def _get_dtaselect(self):
         link = self._ip2.get_dtaselect()

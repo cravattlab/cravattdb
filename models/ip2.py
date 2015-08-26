@@ -23,7 +23,6 @@ class IP2:
         self.set_experiment_path()
         self.upload_spectra(files)
         self.prolucid_search(params)
-        # self.check_job_status()
 
     def login(self, username, password):
         ''' login to IP2 '''
