@@ -110,20 +110,19 @@ class IP2:
     def upload_spectra(self, files):
         ''' upload .ms2 files '''
         
-        for f in files:
-            r = requests.post(
-                'http://goldfish.scripps.edu/helper/spectraUpload.jsp',
-                {
-                    'Filename':  os.path.split(f.name)[1],
-                    'expPath': self.experiment_path,
-                    'row2ms': 'false',
-                    'Upload': 'Submit Query'
-                },
-                cookies = self.cookies,
-                files = { 'Filedata': f }
-            )
-
-            f.close()
+        for file_path in files:
+            with open(file_path) as f:
+                r = requests.post(
+                    'http://goldfish.scripps.edu/helper/spectraUpload.jsp',
+                    {
+                        'Filename':  os.path.split(f.name)[1],
+                        'expPath': self.experiment_path,
+                        'row2ms': 'false',
+                        'Upload': 'Submit Query'
+                    },
+                    cookies = self.cookies,
+                    files = { 'Filedata': f }
+                )
 
     def prolucid_search(self, params):
         ''' perform prolucid search '''

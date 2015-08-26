@@ -1,5 +1,9 @@
+import os
 from flask import Flask, render_template, jsonify, request, abort, make_response
 from models.search import Search
+from models.upload import Upload
+from functools import partial
+import models.convert as convert
 
 app = Flask(__name__)
 app.debug = True
@@ -10,6 +14,8 @@ def index():
 
 @app.route('/search/<name>', methods = [ 'POST' ])
 def search(name):
+    username = request.form.get('username')
+
     search = Search(name)
 
     login = search.login(
@@ -19,12 +25,21 @@ def search(name):
 
     if not login: abort(401)
 
-    search.search(
-        request.files.getlist('file'),
-        request.form.get('organism'),
-        request.form.get('experiment_type'),
-        request.form.get('param_mods')
+    # save RAW files to disk
+    path = os.path.join(username, name)
+    Upload(request.files.getlist('file'), path)
+
+    # convert to .ms2 and start ip2 search when done
+    convert.convert(path, 
+        partial(
+            search.search,
+            request.form.get('organism'),
+            request.form.get('experiment_type'),
+            path
+        )
     )
+
+    # quantify all of the things
 
     return 'hello'
 

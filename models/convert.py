@@ -1,10 +1,9 @@
 import requests, time
+import config.config as config
 
 def convert(path, callback = None):
     # start conversion
-    requests.get(
-        'http://localhost:5001/convert/' + path,
-    )
+    requests.get(config.CONVERT_URL + '/convert/' + path)
 
     # poll every 30 seconds
     polling_interval = 30
@@ -19,7 +18,7 @@ def convert(path, callback = None):
 
         if status['status'] == 'success':
             running = False
-            if callback: callback()
+            if callback: callback(status)
             return status
             break
 
@@ -27,8 +26,5 @@ def convert(path, callback = None):
         time.sleep(polling_interval - work_duration)
 
 def get_status(path):
-    r = requests.get(
-        'http://localhost:5001/status/' + path,
-    )
-
+    r = requests.get(config.CONVERT_URL + '/status/' + path)
     return r.json()

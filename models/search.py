@@ -1,42 +1,36 @@
-import json, time, requests, os
-import models.convert as convert
-from functools import partial
+import json, os
+import config.config as config
 from models.ip2 import IP2
-from models.upload import Upload
-from glob import glob
 
 class Search:
     def __init__(self, name):
+        # dataset name
         self.name = name
 
     def login(self, username, password):
-        self.username = username
         self._ip2 = IP2(self.name)
         return self._ip2.login(username, password)
 
-    def search(self, files, organism, experiment_type, param_mods=None):
-        # save RAW files to disk
-        self.path = os.path.join(self.username, self.name)
-        Upload(files, self.path)
-
+    def search(self, organism, experiment_type, path, convert_status):
         # setup search params
-        params = self._get_params(experiment_type, param_mods)
+        params = self._get_params(experiment_type)
         database = self._get_database_path(organism)
 
         self._ip2.protein_database_user_id = database['user_id']
         self._ip2.protein_database_id = database['database_id']
 
-        # convert to .ms2 and start ip2 search when done
-        convert.convert(self.path, partial(self._search, params))
+        files = []
+
+        for f in convert_status['files_converted']:
+            if f.endswith('.ms2'):
+                files.append(os.path.join(config.UPLOAD_FOLDER, path, f))
+
+        self._ip2.search(params, files)
         link = self._check_search_status()
 
-        print(link)
+        return link
 
-    def _search(self, params):
-        ms2_files = self._get_ms2_files()
-        self._ip2.search(params, ms2_files)
-
-    def _get_params(self, experiment_type, param_mods=None):
+    def _get_params(self, experiment_type):
         with open('static/search_params/search_params.json') as f:
             params_map = json.loads(f.read())
 
@@ -45,9 +39,6 @@ class Search:
 
         with open('static/search_params/' + params_map[experiment_type]) as f:
             params = json.loads(f.read())
-
-        # if param_mods:
-        #     params.update(json.loads(param_mods))
 
         return params
 
@@ -59,15 +50,6 @@ class Search:
             raise KeyError('There is no database set for this organism')
 
         return database_map[organism]
-
-    def _get_ms2_files(self):
-        paths = glob(os.path.join('uploads', self.username, self.name, '*.ms2'))
-        files = []
-
-        for path in paths:
-            files.append(open(path, 'rb'))
-
-        return files
 
     def _check_search_status(self):
         polling_interval = 180

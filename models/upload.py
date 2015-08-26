@@ -1,7 +1,7 @@
 import os
+import config.config as config
 from werkzeug import secure_filename
 
-UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['raw', 'RAW'])
 
 class Upload:
@@ -15,7 +15,7 @@ class Upload:
             filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
     def move(self):
-        dir_path = os.path.join(UPLOAD_FOLDER, self.path)
+        dir_path = os.path.join(config.UPLOAD_FOLDER, self.path)
         os.makedirs(dir_path)
 
         for file in self.files:
