@@ -74,9 +74,9 @@
         </div>
     </div>
 
-    <button type="button" class="ui labeled button btn-file" ngf-select ngf-multiple="true" ngf-keep="true" ngf-keep-distinct="true" ng-model="main.files" required>
-        <i class="file outline icon"></i> Upload RAW Files
-        <input type="file" class="ui labeled button btn-file" ngf-select ngf-multiple="true" ngf-keep="true" ngf-keep-distinct="true" ng-model="main.files" required />
+    <button type="button" class="ui labeled button btn-file">
+        <i class="file outline icon"></i> Select RAW Files
+        <input type="file" ngf-select ngf-multiple="true" ngf-keep="true" ngf-keep-distinct="true" ng-model="main.files" required />
     </button>
 
     <button class="ui primary button" type="submit" ng-click="main.submit()" ng-class="{ disabled : !upload.$valid }">Submit</button>

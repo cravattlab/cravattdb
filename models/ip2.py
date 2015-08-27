@@ -1,7 +1,6 @@
-# from db.db import Database
+import requests, re
 from bs4 import BeautifulSoup
 from distutils.util import strtobool
-import flask.json, requests, re, os
 
 class IP2:
     ''' 
@@ -115,7 +114,7 @@ class IP2:
                 r = requests.post(
                     'http://goldfish.scripps.edu/helper/spectraUpload.jsp',
                     {
-                        'Filename':  os.path.split(f.name)[1],
+                        'Filename':  path.name,
                         'expPath': self.experiment_path,
                         'row2ms': 'false',
                         'Upload': 'Submit Query'

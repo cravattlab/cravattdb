@@ -1,5 +1,4 @@
-import json, os, time
-import config.config as config
+import json, time
 from models.ip2 import IP2
 
 class Search:
