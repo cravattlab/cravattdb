@@ -11,19 +11,13 @@ class Search:
         self._ip2 = IP2(self.name)
         return self._ip2.login(username, password)
 
-    def search(self, organism, experiment_type, path, convert_status):
+    def search(self, organism, experiment_type, files):
         # setup search params
         params = self._get_params(experiment_type)
         database = self._get_database_path(organism)
 
         self._ip2.protein_database_user_id = database['user_id']
         self._ip2.protein_database_id = database['database_id']
-
-        files = []
-
-        for f in convert_status['files_converted']:
-            if f.endswith('.ms2'):
-                files.append(os.path.join(config.UPLOAD_FOLDER, path, f))
 
         self._ip2.search(params, files)
         link = self._check_search_status()
@@ -53,12 +47,11 @@ class Search:
 
     def _check_search_status(self):
         polling_interval = 180
-        running = True
 
         # wait a bit before we poll for status
         time.sleep(polling_interval)
 
-        while running:
+        while True:
             start = time.clock()
 
             try:
@@ -66,7 +59,6 @@ class Search:
             except LookupError as e:
                 # job was not found, the job is finished or something went
                 # horribly wrong
-                running = False
                 dta_link = self._get_dtaselect()
                 return dta_link
 

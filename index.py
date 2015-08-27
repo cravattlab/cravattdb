@@ -1,9 +1,10 @@
 import os
+import config.config as config
 from flask import Flask, render_template, jsonify, request, abort, make_response
 from models.search import Search
 from models.upload import Upload
-from functools import partial
 import models.convert as convert
+import models.quantify as quantify
 
 app = Flask(__name__)
 app.debug = True
@@ -29,17 +30,28 @@ def search(name):
     path = os.path.join(username, name)
     Upload(request.files.getlist('file'), path)
 
-    # convert to .ms2 and start ip2 search when done
-    convert.convert(path, 
-        partial(
-            search.search,
-            request.form.get('organism'),
-            request.form.get('experiment_type'),
-            path
-        )
+    # convert .raw to .ms2
+    convert_status = convert.convert(path)
+
+    files = []
+
+    for f in convert_status['files_converted']:
+        files.append(os.path.join(config.UPLOAD_FOLDER, path, f))
+
+    # initiate IP2 search
+    dta_select_link = search.search(
+        request.form.get('organism'),
+        request.form.get('experiment_type'),
+        [ f for f in files if f.endswith('.ms2') ]
     )
 
     # quantify all of the things
+    quantify.quantify(
+        name,
+        dta_select_link,
+        request.form.get('experiment_type'),
+        os.path.join(username, name)
+    )
 
     return 'hello'
 

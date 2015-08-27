@@ -9,8 +9,6 @@ def convert(path, callback = None):
     polling_interval = 30
     running = True
 
-    if not callback: return True
-
     # if we are passed a callback then return only when conversion is done
     while running:
         start = time.clock()
@@ -20,7 +18,6 @@ def convert(path, callback = None):
             running = False
             if callback: callback(status)
             return status
-            break
 
         work_duration = time.clock() - start
         time.sleep(polling_interval - work_duration)
