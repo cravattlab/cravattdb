@@ -1,24 +1,23 @@
-import os
+import pathlib
 import config.config as config
 from werkzeug import secure_filename
 
-ALLOWED_EXTENSIONS = set(['raw', 'RAW'])
+def upload(files, username, name):
+    name = secure_filename(name)
+    username = secure_filename(username)
+    path = pathlib.Path(config.UPLOAD_URL, username, name)
 
-class Upload:
-    def __init__(self, files, path):
-        self.files = files
-        self.path = path
-        self.move()
+    path.mkdir()
 
-    def allowed_file(self, filename):
-        return '.' in filename and \
-            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+    for i, f in enumerate(sorted(files)):
+        # only allow .raw extension
+        filename = secure_filename(f.filename)
+        filepath = pathlib.PurePath(filename)
 
-    def move(self):
-        dir_path = os.path.join(config.UPLOAD_FOLDER, self.path)
-        os.makedirs(dir_path)
+        if filepath.suffix.lower() == '.raw':
+            # rename raw files to reflect dataset name
+            # adding _INDEX to please cimage
+            filename = name + '_{}.raw'.format(i)
+            f.save(str(path.joinpath(filename)))
 
-        for file in self.files:
-            if file and self.allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(dir_path, filename))
+    return name, path
