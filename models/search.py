@@ -11,7 +11,7 @@ class Search:
         self._ip2 = IP2(self.name)
         return self._ip2.login(username, password)
 
-    def search(self, organism, experiment_type, files):
+    def search(self, organism, experiment_type, file_paths):
         # setup search params
         params = self._get_params(experiment_type)
         database = self._get_database_path(organism)
@@ -19,7 +19,7 @@ class Search:
         self._ip2.protein_database_user_id = database['user_id']
         self._ip2.protein_database_id = database['database_id']
 
-        self._ip2.search(params, files)
+        self._ip2.search(params, file_paths)
         link = self._check_search_status()
 
         return link

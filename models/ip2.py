@@ -16,13 +16,13 @@ class IP2:
         self.project_name = 'cravattdb'
         self.search_id = None
 
-    def search(self, params, files):
+    def search(self, params, file_paths):
         ''' convenience method '''
         self.set_project_id()
         self.create_experiment()
         self.set_experiment_id()
         self.set_experiment_path()
-        self.upload_spectra(files)
+        self.upload_spectra(file_paths)
         self.prolucid_search(params)
 
     def login(self, username, password):
@@ -107,11 +107,11 @@ class IP2:
             cookies=self.cookies
         )
 
-    def upload_spectra(self, files):
+    def upload_spectra(self, file_paths):
         ''' upload .ms2 files '''
         
-        for file_path in files:
-            with open(file_path) as f:
+        for path in file_paths:
+            with path.open() as f:
                 r = requests.post(
                     'http://goldfish.scripps.edu/helper/spectraUpload.jsp',
                     {
@@ -201,7 +201,7 @@ class IP2:
 
         soup = BeautifulSoup(path_req.text)
 
-        search_td = soup.find('td', text=re.compile(self.search_id))
+        search_td = soup.find('td', text=re.compile(str(self.search_id)))
 
         for el in search_td.next_siblings:
             if el.name == 'td':

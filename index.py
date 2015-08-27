@@ -1,10 +1,10 @@
-import os
-import config.config as config
+from pathlib import PurePath
 from flask import Flask, render_template, jsonify, request, abort, make_response
 from models.search import Search
 from models.upload import Upload
 import models.convert as convert
 import models.quantify as quantify
+import models.upload as upload
 
 app = Flask(__name__)
 app.debug = True
@@ -27,22 +27,20 @@ def search(name):
     if not login: abort(401)
 
     # save RAW files to disk
-    path = os.path.join(username, name)
-    Upload(request.files.getlist('file'), path)
+    # path is type pathlib.Path
+    name, path = upload.upload(request.files.getlist('file'), username, name)
 
     # convert .raw to .ms2
-    convert_status = convert.convert(path)
+    # removing first bit of file path since that is the upload folder
+    convert_status = convert.convert(PurePath(path.parts[1:]).as_posix())
 
-    files = []
-
-    for f in convert_status['files_converted']:
-        files.append(os.path.join(config.UPLOAD_FOLDER, path, f))
+    converted_paths = [ path.joinpath(path, f) for f in convert_status['files_converted'] ]
 
     # initiate IP2 search
     dta_select_link = search.search(
         request.form.get('organism'),
         request.form.get('experiment_type'),
-        [ f for f in files if f.endswith('.ms2') ]
+        [ f for f in converted_paths if f.suffix == '.ms2']
     )
 
     # quantify all of the things
@@ -50,7 +48,7 @@ def search(name):
         name,
         dta_select_link,
         request.form.get('experiment_type'),
-        os.path.join(username, name)
+        path
     )
 
     return 'hello'
