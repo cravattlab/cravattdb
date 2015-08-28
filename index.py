@@ -1,8 +1,6 @@
-from pathlib import PurePath
 from flask import Flask, render_template, jsonify, request, abort, make_response
 from models.search import Search
-import models.convert as convert
-import models.quantify as quantify
+from models.tasks import process
 import models.upload as upload
 
 app = Flask(__name__)
@@ -27,27 +25,21 @@ def search(name):
 
     # save RAW files to disk
     # path is type pathlib.Path
-    name, path = upload.upload(request.files.getlist('file'), username, name)
-
-    # convert .raw to .ms2
-    # removing first bit of file path since that is the upload folder
-    convert_status = convert.convert(PurePath(*path.parts[1:]).as_posix())
-
-    converted_paths = [ path.joinpath(f) for f in convert_status['files_converted'] ]
-
-    # initiate IP2 search
-    dta_select_link = search.search(
-        request.form.get('organism'),
-        request.form.get('experiment_type'),
-        [ f for f in converted_paths if f.suffix == '.ms2']
+    name, path = upload.upload(
+        request.files.getlist('file'),
+        username,
+        name
     )
 
-    # quantify all of the things
-    quantify.quantify(
-        name,
-        dta_select_link,
-        request.form.get('experiment_type'),
-        path
+    print('now we process')
+
+    # continue processing in background with celery
+    process.delay(
+        search,
+        name, 
+        path,
+        request.form.get('organism'),
+        request.form.get('experiment_type')
     )
 
     return 'hello'
