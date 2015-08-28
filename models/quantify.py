@@ -12,12 +12,12 @@ def quantify(name, dta_link, experiment_type, path):
 
     return_code = subprocess.Popen([
         'cimage2',
-        _get_params_path(experiment_type),
+        str(_get_params_path(experiment_type)),
         name
-    ], cwd=dta_path).wait()
+    ], cwd=str(dta_path)).wait()
 
-    if return_code:
-        combine(path, experiment_type)
+    if return_code != 0:
+        return combine(path, experiment_type) == 0
     else:
         return False
 
@@ -31,7 +31,9 @@ def combine(path, experiment_type):
     if experiment_type is not 'isotop':
         args.insert(1, 'by_protein')
 
-    return subprocess.Popen(args, cwd=path).wait()
+    return subprocess.Popen(args, cwd=str(path)).wait()
 
 def _get_params_path(experiment_type):
-    return os.path.join('static', 'cimage_params', experiment_type + '.params')
+    return pathlib.Path(
+        'static', 'cimage_params', experiment_type
+    ).with_suffix('.params').resolve()
