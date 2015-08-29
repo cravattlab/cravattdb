@@ -210,10 +210,8 @@ class IP2:
         dta_req = requests.get('http://goldfish.scripps.edu' + link, cookies=self.cookies)
         soup = BeautifulSoup(dta_req.text)
         dta_link = 'http://goldfish.scripps.edu' + soup.find('a', text=re.compile('DTASelect-filter')).attrs['href']
-        link_req = requests.get(dta_link, cookies=self.cookies)
 
-        return link_req.text
-
+        return dta_link
 
     def _find_project_id(self):
         project_req = requests.get(

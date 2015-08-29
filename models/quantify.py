@@ -16,7 +16,7 @@ def quantify(name, dta_link, experiment_type, path):
         name
     ], cwd=str(dta_path)).wait()
 
-    if return_code != 0:
+    if return_code == 0:
         return combine(path, experiment_type) == 0
     else:
         return False

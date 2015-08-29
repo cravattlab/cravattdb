@@ -58,12 +58,7 @@ class Search:
             except LookupError as e:
                 # job was not found, the job is finished or something went
                 # horribly wrong
-                dta_link = self._get_dtaselect()
-                return dta_link
+                return self._ip2.get_dtaselect()
 
             work_duration = time.clock() - start
             time.sleep(polling_interval - work_duration)
-
-    def _get_dtaselect(self):
-        link = self._ip2.get_dtaselect()
-        return link

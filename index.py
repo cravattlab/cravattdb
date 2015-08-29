@@ -31,8 +31,6 @@ def search(name):
         name
     )
 
-    print('now we process')
-
     # continue processing in background with celery
     process.delay(
         search,
@@ -54,7 +52,6 @@ def error_response(details, code):
 @app.errorhandler(401)
 def unauthorized(error):
     return error_response(error.description, error.code)
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', threaded=True)
