@@ -35,14 +35,23 @@ app.controller('MainController', ['$scope', '$http', 'Upload', function($scope, 
         }.bind(this));
 
         upload.catch(function(data) {
-            if (data.status === 401) {
-                var message = 'Incorrect username or password';
+            console.log(data)
+            if (data.data.hasOwnProperty('error')) {
+                var message = data.data.error;
                 this.showErrors = true;
 
+                if (data.status === 401) {
+                    message = 'Incorrect username or password';
+                } else if (data.status === 409) {
+                    message = 'Dataset already exists';
+                }
+                
                 if (this.errors.indexOf(message) === -1) {
                     this.errors.push(message);
                 }
             }
+
+
         }.bind(this));
     };
 }]);

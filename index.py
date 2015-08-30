@@ -25,11 +25,15 @@ def search(name):
 
     # save RAW files to disk
     # path is type pathlib.Path
-    name, path = upload.upload(
-        request.files.getlist('file'),
-        username,
-        name
-    )
+    try:
+        name, path = upload.upload(
+            request.files.getlist('file'),
+            username,
+            name
+        )
+    except FileExistsError:
+        abort(409)
+
 
     # continue processing in background with celery
     process.delay(
@@ -51,6 +55,10 @@ def error_response(details, code):
 
 @app.errorhandler(401)
 def unauthorized(error):
+    return error_response(error.description, error.code)
+
+@app.errorhandler(409)
+def dataset_exists(error):
     return error_response(error.description, error.code)
 
 if __name__ == "__main__":
