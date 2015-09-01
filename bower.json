@@ -11,9 +11,10 @@
   ],
   "dependencies": {
     "angular": "1.4.4",
-    "angular-route": "~1.4.4",
     "angular-resource": "~1.4.4",
+    "angular-route": "~1.4.4",
     "jquery": "~2.1.4",
-    "ng-file-upload": "~6.2.1"
+    "ng-file-upload": "~6.2.1",
+    "semantic": "semantic-ui#~2.0.8"
   }
 }
