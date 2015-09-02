@@ -18,5 +18,5 @@ ENV PATH /home/cravattdb/cravatt-ip2/env/bin:$PATH
 USER cravattdb
 
 WORKDIR /home/cravattdb/cravatt-ip2
-ADD /cravatt-ip2/start.sh /home/cravattdb/start.sh
+ADD /start.sh /home/cravattdb/start.sh
 CMD [ "/bin/bash", "/home/cravattdb/start.sh" ]

@@ -20,8 +20,8 @@ vi config.py
 Then:
 
 ```bash
-cd ~/github/cravatt-ip2
-sudo docker build -t cravattdb_image .
+cd ~/github
+sudo docker build -t cravattdb_image cravatt-ip2
 sudo docker run -itd -p 5000:5000 -v $PWD/cravatt-ip2:/home/cravattdb/cravatt-ip2 -v $PWD/cimage-minimal:/home/cravattdb/cimage-minimal --name cravattdb cravattdb_image
 ```
 
