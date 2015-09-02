@@ -22,15 +22,10 @@ Then:
 ```bash
 cd ~/github/cravatt-ip2
 sudo docker build -t cravattdb_image .
-sudo docker run -itd -p 5000:5000 --name cravattdb cravattdb_image
-
-cd ~/github/cimage-minimal
-sudo docker build -t cimage_image .
-sudo docker run -itd --name cimage --volumes-from cravattdb cimage_image
+sudo docker run -itd -p 5000:5000 -v $PWD/cravatt-ip2:/home/cravattdb/cravatt-ip2 -v $PWD/cimage-minimal:/home/cravattdb/cimage-minimal --name cravattdb cravattdb_image
 ```
 
-Now we can install the necessary services:
-
+Now we can run the necessary services:
 ```bash
 sudo docker exec -d -u root cravattdb rabbitmq-server -detached
 sudo docker exec -d cravattdb celery -A models.tasks worker --loglevel=info --detach

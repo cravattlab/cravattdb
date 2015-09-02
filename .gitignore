@@ -4,7 +4,6 @@ node_modules
 semantic
 *.pyc
 config/config.py
-Dockerfile
 
 # Windows image file caches
 Thumbs.db
