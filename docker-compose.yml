@@ -1,0 +1,21 @@
+cravattdb:
+    build: .
+    ports:
+        - "5000:5000"
+    volumes:
+        - .:/home/cravattdb/cravatt-ip2
+        - ../cimage-minimal:/home/cravattdb/cimage-minimal
+    links:
+        - postgres
+        - rabbitmq
+    tty: true
+    stdin_open: true
+postgres:
+    image: postgres
+    environment:
+        - POSTGRES_PASSWORD=rZTkh5lD8LmfrepUf7Jq
+rabbitmq:
+    image: rabbitmq
+    hostname: my-rabbit
+    tty: true
+    stdin_open: true

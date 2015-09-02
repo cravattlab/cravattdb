@@ -3,7 +3,7 @@ from pathlib import PurePath
 import models.convert as convert
 import models.quantify as quantify
 
-app = Celery('tasks', broker='amqp://guest@localhost//')
+app = Celery('tasks', broker='amqp://guest@rabbitmq//')
 
 @app.task
 def process(search, name, path, organism, experiment_type):

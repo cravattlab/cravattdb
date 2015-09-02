@@ -1,33 +1,27 @@
-To setup from scratch, first we clone repos, and install docker:
+To setup from scratch, first we clone repos, and install docker, and docker-compose
 
 ```bash
-sudo apt-get install -y git
+sudo apt-get install -y git, pip
 mkdir ~/github && cd ~/github
 git clone git@github.com:/cravattlab/cimage-minimal.git
 git clone git@github.com:/cravattlab/cravatt-ip2.git
 
+sudo pip install docker-compose
 curl -sSL https://get.docker.com/ | sh
 ```
 
-Before we build the docker images and run the containers, we must create a config file for cravattdb.
+Before we build the docker images and run the containers, we must create a config file for cravattdb. Also, set a password for the postgres user in 
+`docker-compose.yml`.
 
 ```bash
 cd ~/github/cravatt-ip2/config
 cp config.sample.py config.py
 vi config.py
+vi ~/github/cravatt-ip2/docker-compose.yml
 ```
 
-Then:
+Then just run [`docker-compose`](https://docs.docker.com/compose):
 
 ```bash
-cd ~/github
-sudo docker build -t cravattdb_image cravatt-ip2
-sudo docker run -itd -p 5000:5000 -v $PWD/cravatt-ip2:/home/cravattdb/cravatt-ip2 -v $PWD/cimage-minimal:/home/cravattdb/cimage-minimal --name cravattdb cravattdb_image
-```
-
-Now we can run the necessary services:
-```bash
-sudo docker exec -d -u root cravattdb rabbitmq-server -detached
-sudo docker exec -d cravattdb celery -A models.tasks worker --loglevel=info --detach
-sudo docker exec -d cravattdb python index.py
+sudo docker-compose up -d
 ```
