@@ -6,7 +6,9 @@ ADD / /home/cravatt
 VOLUME /home/cravatt/uploads
 
 RUN adduser --disabled-password --gecos '' cravattdb
+RUN chown -R cravattdb /home/cravatt
 USER cravattdb
+
 WORKDIR /home/cravatt
 RUN npm install
 RUN bower install -F --config.analytics=false
