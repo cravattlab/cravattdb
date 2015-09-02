@@ -13,3 +13,4 @@ WORKDIR /home/cravatt
 RUN npm install
 RUN bower install -F --config.analytics=false
 RUN virtualenv env && . env/bin/activate && pip install -r requirements.txt
+ENV PATH /home/cravatt/env/bin:$PATH
