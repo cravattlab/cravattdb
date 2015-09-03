@@ -4,6 +4,7 @@ cravattdb:
         - "5000:5000"
     volumes:
         - .:/home/cravattdb/cravatt-ip2
+        - /mnt/cravattdb:/home/cravattdb/cravatt-ip2/uploads
         - ../cimage-minimal:/home/cravattdb/cimage-minimal
     links:
         - postgres
@@ -16,6 +17,6 @@ postgres:
         - POSTGRES_PASSWORD=rZTkh5lD8LmfrepUf7Jq
 rabbitmq:
     image: rabbitmq
-    hostname: my-rabbit
+    hostname: rabbitmq
     tty: true
     stdin_open: true

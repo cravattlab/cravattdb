@@ -2,6 +2,7 @@ from celery import Celery
 from pathlib import PurePath
 import models.convert as convert
 import models.quantify as quantify
+import config.config as config
 
 app = Celery('tasks', broker='amqp://guest@rabbitmq//')
 
@@ -9,7 +10,7 @@ app = Celery('tasks', broker='amqp://guest@rabbitmq//')
 def process(search, name, path, organism, experiment_type):
     # convert .raw to .ms2
     # removing first bit of file path since that is the upload folder
-    convert_status = convert.convert(PurePath(*path.parts[1:]).as_posix())
+    convert_status = convert.convert(PurePath(path).relative_to(config.UPLOAD_FOLDER).as_posix())
 
     converted_paths = [ path.joinpath(f) for f in convert_status['files_converted'] ]
 
