@@ -1,7 +1,7 @@
 cravattdb:
     build: .
     ports:
-        - "5000:5000"
+        - "8080:5000"
     volumes:
         - .:/home/cravattdb/cravatt-ip2
         - /mnt/cravattdb:/home/cravattdb/cravatt-ip2/uploads
@@ -12,9 +12,10 @@ cravattdb:
     tty: true
     stdin_open: true
 postgres:
-    image: postgres
-    environment:
-        - POSTGRES_PASSWORD=rZTkh5lD8LmfrepUf7Jq
+    image: cravattlab/cravattdb_postgres
+    extends:
+        file: config/database.yml
+        service: database
 rabbitmq:
     image: rabbitmq
     hostname: rabbitmq

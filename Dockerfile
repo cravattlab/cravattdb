@@ -2,8 +2,6 @@ FROM cravattlab/cravattdb_base
 
 MAINTAINER Radu Suciu <radusuciu@gmail.com>
 
-# Clone repos in
-
 # Create user with non-root privileges
 RUN adduser --disabled-password --gecos '' cravattdb
 RUN chown -R cravattdb /home/cravattdb

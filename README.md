@@ -23,5 +23,6 @@ vi ~/github/cravatt-ip2/docker-compose.yml
 Then just run [`docker-compose`](https://docs.docker.com/compose):
 
 ```bash
+cd ~/github/cravatt-ip2
 sudo docker-compose up -d
 ```
