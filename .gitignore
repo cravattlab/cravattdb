@@ -5,6 +5,8 @@ semantic
 *.pyc
 config/config.py
 *.pid
+.vagrant
+vagrant-sync
 
 # Windows image file caches
 Thumbs.db
