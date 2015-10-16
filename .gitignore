@@ -3,7 +3,6 @@ bower_components
 node_modules
 semantic
 *.pyc
-config/config.py
 *.pid
 .vagrant
 vagrant-sync
