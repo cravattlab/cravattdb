@@ -3,19 +3,13 @@
 <table class="ui basic table">
     <thead>
         <tr>
-            <th>Username</th>
             <th>Dataset Name</th>
-            <th>Organism</th>
-            <th>Experiment Type</th>
             <th>Status</th>
         </tr>
     </thead>
     <tbody>
         <tr ng-repeat="item in status.experiments">
-            <td>{{ item.username }}</td>
             <td>{{ item.name }}</td>
-            <td>{{ item.organism }}</td>
-            <td>{{ item.experiment_type }}</td>
             <td>{{ item.status }}</td>
         </tr>
     </tbody>

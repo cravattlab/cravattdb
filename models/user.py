@@ -1,4 +1,5 @@
 from flask.ext.security import UserMixin, RoleMixin
+from sqlalchemy.dialects.postgresql import JSON
 from models.database import db
 
 roles_users = db.Table(
@@ -18,6 +19,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
     confirmed_at = db.Column(db.DateTime())
+    meta = db.Column(JSON)
     roles = db.relationship(
         'Role',
         secondary=roles_users,

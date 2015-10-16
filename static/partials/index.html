@@ -51,6 +51,26 @@
         </select>
     </div>
 
+        <h3 class="ui horizontal divider header">
+            <i class="settings icon"></i>
+            Advanced Settings
+        </h3>
+    <div id="advanced" class="ui segment">
+
+        <h4 class="ui horizontal header">Differential Modifications</h4>
+
+        <div class="six wide field">
+            <input type="text" placeholder="" value="15.9949 M" required>
+        </div>
+
+        <div class="six wide field">
+
+            <input type="text" placeholder="" ng-model="main.data.diffmod" ng-init="15.9949 M" required>
+        </div>
+
+    </div>
+
+
     <div class="field">
         <table class="ui basic table" ng-show="main.files.length">
             <thead>
@@ -74,7 +94,7 @@
         </div>
     </div>
 
-    <button type="button" class="ui button" ng-click="main.clickUpload($event)">
+    <button type="button" class="ui button" onclick="document.getElementById('file-select').click()">
         <i class="file outline icon"></i> Select RAW Files
         <input type="file" id="file-select" ngf-select ngf-multiple="true" ngf-keep="true" ngf-keep-distinct="true" ng-model="main.files" required />
     </button>

@@ -9,6 +9,7 @@ cravattdb:
     links:
         - postgres
         - rabbitmq
+        - redis
     tty: true
     stdin_open: true
 postgres:
@@ -21,3 +22,6 @@ rabbitmq:
     hostname: rabbitmq
     tty: true
     stdin_open: true
+redis:
+    image: redis
+    hostname: redis

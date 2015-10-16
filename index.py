@@ -1,17 +1,31 @@
 from flask import Flask, render_template, jsonify, request, abort, make_response
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required
+from flask_security.core import current_user
+from flask_mail import Mail
+from redis import Redis
 from models.search import Search
 from models.tasks import process
 from models.database import db
 import models.upload as upload
 import config.config as config
 import models.user as user
+import json
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = config.SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
+app.config['SECURITY_REGISTERABLE'] = True
+app.config['MAIL_SERVER'] = config.MAIL_SERVER
+app.config['MAIL_PORT'] = config.MAIL_PORT
+app.config['MAIL_USE_TLS'] = config.MAIL_USE_TLS
+app.config['MAIL_USE_SSL'] = config.MAIL_USE_SSL
+app.config['MAIL_USERNAME'] = config.EMAIL
+app.config['MAIL_PASSWORD'] = config.EMAIL_PASSWORD
+
+redis = Redis(host='redis')
+mail = Mail(app)
 
 # Create database connection object
 db.init_app(app)
@@ -21,10 +35,13 @@ user_datastore = SQLAlchemyUserDatastore(db, user.User, user.Role)
 security = Security(app, user_datastore)
 
 @app.route('/')
+@login_required
 def index():
-    return render_template('index.html')
+    meta = current_user.meta
+    return render_template('index.html', meta=meta, id=current_user.email)
 
 @app.route('/search/<name>', methods = [ 'POST' ])
+@login_required
 def search(name):
     username = request.form.get('username')
 
@@ -42,7 +59,7 @@ def search(name):
     try:
         name, path = upload.upload(
             request.files.getlist('file'),
-            username,
+            current_user.get_id(),
             name
         )
     except FileExistsError:
@@ -51,6 +68,7 @@ def search(name):
     # continue processing in background with celery
     process.delay(
         search,
+        current_user.get_id(),
         name, 
         path,
         request.form.get('organism'),
@@ -62,13 +80,18 @@ def search(name):
 @app.route('/status', methods = [ 'GET' ])
 @login_required
 def status():
-    return render_template('index.html')
+    user_id = current_user.get_id()
+    info = redis.hgetall(user_id)
+    return render_template('index.html', id=current_user.email, info=info)
+
+# @app.route('/register')
+# def register():
+#     return render_template('security/register_user.html')
 
 # Create a user to test with
 @app.before_first_request
 def create_user():
     db.create_all()
-    user_datastore.create_user(email='matt@nobien.net', password='password')
     db.session.commit()
 
 def error_response(details, code):

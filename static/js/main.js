@@ -21,11 +21,6 @@ app.controller('MainController', ['$scope', '$http', 'Upload', function($scope, 
     this.showErrors = true;
     this.errors = [];
 
-    this.clickUpload = function(e) {
-        console.log('wat');
-        angular.element(e.target).triggerHandler('click');
-    };
-
     this.submit = function() {
         var upload = Upload.upload({
             url: '/search/' + this.data.name,
