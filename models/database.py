@@ -63,11 +63,10 @@ class ExperimentType(db.Model):
     name = db.Column(db.String(80))
     search_params = db.Column(JSON)
     cimage_params = db.Column(JSON)
-    # one to one relationship
-    experiment = db.relationship(
+    experiments = db.relationship(
         'Experiment',
-        uselist='false',
-        backref='experiment_type'
+        backref='experiment_type',
+        lazy='dynamic'
     )
 
 
@@ -78,9 +77,8 @@ class Organism(db.Model):
     tax_id = db.Column(db.Integer)
     name = db.Column(db.String(80))
     display_name = db.column(db.String(80))
-    # one to one relationship
-    experiment = db.relationship(
+    experiments = db.relationship(
         'Experiment',
-        uselist='false',
-        backref='organism'
+        backref='organism',
+        lazy='dynamic'
     )
