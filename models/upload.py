@@ -1,3 +1,4 @@
+"""Handles file uploads."""
 import pathlib
 import config.config as config
 from werkzeug import secure_filename

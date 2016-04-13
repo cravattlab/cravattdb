@@ -1,3 +1,4 @@
+"""Backend for a proteomics database."""
 from flask import Flask, render_template, jsonify, request, abort, make_response
 from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required
 from flask_security.core import current_user

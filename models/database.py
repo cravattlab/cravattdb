@@ -1,3 +1,4 @@
+"""Contains definitions of SQLAlchemy tables."""
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.security import UserMixin, RoleMixin
 from sqlalchemy.dialects.postgresql import JSON
@@ -12,12 +13,16 @@ roles_users = db.Table(
 
 
 class Role(db.Model, RoleMixin):
+    """Simple role or database user."""
+
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
 
 
 class User(db.Model, UserMixin):
+    """User of proteomics database."""
+
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
@@ -37,6 +42,8 @@ class User(db.Model, UserMixin):
 
 
 class Experiment(db.Model):
+    """Structure for experiment."""
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     path = db.Column(db.String(80))
@@ -50,6 +57,8 @@ class Experiment(db.Model):
 
 
 class ExperimentType(db.Model):
+    """Defines different experiment types."""
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     search_params = db.Column(JSON)
@@ -63,6 +72,8 @@ class ExperimentType(db.Model):
 
 
 class Organism(db.Model):
+    """Holds data related to model organisms."""
+
     id = db.Column(db.Integer, primary_key=True)
     tax_id = db.Column(db.Integer)
     name = db.Column(db.String(80))
