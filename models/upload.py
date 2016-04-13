@@ -2,6 +2,7 @@ import pathlib
 import config.config as config
 from werkzeug import secure_filename
 
+
 def upload(files, username, name):
     name = secure_filename(name)
     username = secure_filename(username)

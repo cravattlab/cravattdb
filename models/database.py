@@ -1,3 +1,75 @@
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
+from flask.ext.security import UserMixin, RoleMixin
+from sqlalchemy.dialects.postgresql import JSON
 
 db = SQLAlchemy()
+
+roles_users = db.Table(
+    'roles_users',
+    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
+)
+
+
+class Role(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(255))
+    active = db.Column(db.Boolean())
+    confirmed_at = db.Column(db.DateTime())
+    meta = db.Column(JSON)
+    experiments = db.relationship(
+        'Experiment',
+        backref='user',
+        lazy='dynamic'
+    )
+    roles = db.relationship(
+        'Role',
+        secondary=roles_users,
+        backref=db.backref('users', lazy='dynamic')
+    )
+
+
+class Experiment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    path = db.Column(db.String(80))
+    date = db.Column(db.DateTime())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    organism_id = db.Column(db.Integer, db.ForeignKey('organism.id'))
+    experiment_type_id = db.Column(db.Integer, db.ForeignKey('experiment_type.id'))
+    additional_search_params = db.Column(JSON)
+    additional_quant_params = db.Column(JSON)
+    annotations = db.Column(JSON)
+
+
+class ExperimentType(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    search_params = db.Column(JSON)
+    cimage_params = db.Column(JSON)
+    # one to one relationship
+    experiment = db.relationship(
+        'Experiment',
+        uselist='false',
+        backref='experiment_type'
+    )
+
+
+class Organism(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tax_id = db.Column(db.Integer)
+    name = db.Column(db.String(80))
+    display_name = db.column(db.String(80))
+    # one to one relationship
+    experiment = db.relationship(
+        'Experiment',
+        uselist='false',
+        backref='organism'
+    )

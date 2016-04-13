@@ -1,0 +1,43 @@
+<h1 class="ui dividing header">Cravegas 0.1</h1>
+
+<div class="ui error message" ng-show="main.errors.length && main.showErrors">
+    <i class="close icon" ng-click="main.showErrors = false"></i>
+    <div class="header">
+        There were some errors with your submission
+    </div>
+    <ul class="list">
+        <li ng-repeat="error in main.errors">{{ error }}</li>
+    </ul>
+</div>
+
+<form class="ui form" name="upload">
+    <div class="six wide required field">
+        <label>Dataset Name</label>
+        <input type="text" placeholder="Dataset Name" ng-model="main.data.name" required>
+    </div>
+
+    <div class="six wide required field">
+        <label>Organism</label>
+        <select class="ui dropdown" ng-model="main.data.organism" required>
+            <option value="">Select Species</option>
+            <option value="human">Human</option>
+            <option value="mouse">Mouse</option>
+            <option value="bcg">BCG</option>
+            <option value="tb">TB</option>
+            <option value="celegans">C. elegans</option>
+        </select>
+    </div>
+
+    <div class="six wide required field">
+        <label>Experiment Type</label>
+        <select class="ui dropdown" ng-model="main.data.experiment_type" required>
+            <option value="">Select Experiment Type</option>
+            <option value="silac">SILAC</option>
+            <option value="isotop">ISOTOP</option>
+            <option value="redime">ReDiMe</option>
+            <option value="n15">N15</option>
+        </select>
+    </div>
+
+    <button class="ui primary button" type="submit" ng-click="main.submit()">Submit</button>
+</form>

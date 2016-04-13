@@ -1,16 +1,13 @@
 from flask import Flask, render_template, jsonify, request, abort, make_response
-from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required
 from flask_security.core import current_user
 from flask_mail import Mail
 from redis import Redis
 from models.search import Search
 from models.tasks import process
-from models.database import db
+from models.database import db, User, Role
 import models.upload as upload
 import config.config as config
-import models.user as user
-import json
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -31,8 +28,9 @@ mail = Mail(app)
 db.init_app(app)
 
 # Setup Flask-Security
-user_datastore = SQLAlchemyUserDatastore(db, user.User, user.Role)
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
+
 
 @app.route('/')
 @login_required
@@ -40,11 +38,10 @@ def index():
     meta = current_user.meta
     return render_template('index.html', meta=meta, id=current_user.email)
 
-@app.route('/search/<name>', methods = [ 'POST' ])
+
+@app.route('/search/<name>', methods=['POST'])
 @login_required
 def search(name):
-    username = request.form.get('username')
-
     search = Search(name)
 
     login = search.login(
@@ -52,7 +49,8 @@ def search(name):
         request.form.get('password')
     )
 
-    if not login: abort(401)
+    if not login:
+        abort(401)
 
     # save RAW files to disk
     # path is type pathlib.Path
@@ -69,7 +67,7 @@ def search(name):
     process.delay(
         search,
         current_user.get_id(),
-        name, 
+        name,
         path,
         request.form.get('organism'),
         request.form.get('experiment_type')
@@ -77,29 +75,37 @@ def search(name):
 
     return 'hello'
 
-@app.route('/status', methods = [ 'GET' ])
+
+@app.route('/status', methods=['GET'])
 @login_required
 def status():
     user_id = current_user.get_id()
     info = redis.hgetall(user_id)
     return render_template('index.html', id=current_user.email, info=info)
 
-# @app.route('/register')
-# def register():
-#     return render_template('security/register_user.html')
 
-# Create a user to test with
+@app.route('/sideload', methods=['GET'])
+@login_required
+def sideload():
+    user_id = current_user.get_id()
+    info = redis.hgetall(user_id)
+    return render_template('index.html', id=current_user.email, info=info)
+
+
 @app.before_first_request
 def create_user():
     db.create_all()
     db.session.commit()
 
+
 def error_response(details, code):
-    return make_response(jsonify({ 'error': details }), code)
+    return make_response(jsonify({'error': details}), code)
+
 
 @app.errorhandler(401)
 def unauthorized(error):
     return error_response(error.description, error.code)
+
 
 @app.errorhandler(409)
 def dataset_exists(error):

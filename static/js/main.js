@@ -12,6 +12,10 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
         templateUrl: '/static/partials/status.html',
         controller: 'StatusController',
         controllerAs: 'status'
+    }).when('/sideload', {
+       templateUrl: '/static/partials/sideload.html',
+       controller: 'SideloadController',
+       controllerAs: 'sideload' 
     });
 }]);
 
@@ -57,6 +61,10 @@ app.controller('MainController', ['$scope', '$http', 'Upload', function($scope, 
 }]);
 
 app.controller('StatusController', ['$scope', '$http', function($scope, $http) {
+
+}]);
+
+app.controller('SideloadController', ['$scope', '$http', function($scope, $http) {
 
 }]);
 
