@@ -42,11 +42,10 @@ class User(db.Model, UserMixin):
 
 
 class Experiment(db.Model):
-    """Structure for experiment."""
+    """Holds experimental metadata."""
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
-    path = db.Column(db.String(80))
     date = db.Column(db.DateTime())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     organism_id = db.Column(db.Integer, db.ForeignKey('organism.id'))
@@ -54,6 +53,34 @@ class Experiment(db.Model):
     additional_search_params = db.Column(JSON)
     additional_quant_params = db.Column(JSON)
     annotations = db.Column(JSON)
+
+
+class Dataset(db.Model):
+    """Holds actual experimental dataset."""
+
+    __tablename__ = 'datasets'
+    id = db.Column(db.Integer, primary_key=True)
+    peptide_index = db.Column(db.Integer)
+    ipi = db.Column(db.String(20))
+    description = db.Column(db.Text)
+    symbol = db.Column(db.String(20))
+    sequence = db.Column(db.String(100))
+    mass = db.Column(db.Numeric)
+    charge = db.Column(db.Integer)
+    segment = db.Column(db.Integer)
+    ratio = db.Column(db.Numeric)
+    intensity = db.Column(db.Numeric)
+    num_ms2_peaks = db.Column(db.Integer)
+    num_candidate_peaks = db.Column(db.Integer)
+    max_light_intensity = db.Column(db.Numeric)
+    light_noise = db.Column(db.Numeric)
+    max_heavy_intensity = db.Column(db.Numeric)
+    heavy_noise = db.Column(db.Numeric)
+    rsquared = db.Column(db.Numeric)
+    entry = db.Column(db.Integer)
+    link = db.Column(db.String(100))
+    discriminator = db.Column('type', db.String(50))
+    __mapper_args__ = {'polymorphic_on': discriminator}
 
 
 class ExperimentType(db.Model):

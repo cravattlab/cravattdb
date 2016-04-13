@@ -6,9 +6,10 @@ from flask_mail import Mail
 from redis import Redis
 from models.search import Search
 from models.tasks import process
-from models.database import db, User, Role
+from models.database import db, User, Role, Experiment
 import models.upload as upload
 import config.config as config
+import models.sideload
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -88,9 +89,15 @@ def status():
 @app.route('/sideload', methods=['GET'])
 @login_required
 def sideload():
-    user_id = current_user.get_id()
-    info = redis.hgetall(user_id)
-    return render_template('index.html', id=current_user.email, info=info)
+
+    experiment = Experiment(
+        name=request.get('name'),
+        user_id=current_user.get_id(),
+        organism_id=request.get('organism'),
+        experiment_type_id=request.get('experiment_type')
+    )
+
+    return jsonify(experiment)
 
 
 @app.before_first_request

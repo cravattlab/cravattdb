@@ -1,4 +1,4 @@
-"""Handles file uploads."""
+"""Handles uploads of .RAW files."""
 import pathlib
 import config.config as config
 from werkzeug import secure_filename
