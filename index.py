@@ -6,10 +6,10 @@ from flask_mail import Mail
 from redis import Redis
 from models.search import Search
 from models.tasks import process
-from models.database import db, User, Role, Experiment
+from models.database import db, User, Role, Experiment, ExperimentType, Organism, OrganismSchema
 import models.upload as upload
 import config.config as config
-import models.sideload
+import models.sideload as sideload
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -32,6 +32,8 @@ db.init_app(app)
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
+
+organisms_schema = OrganismSchema(many=True)
 
 
 @app.route('/')
@@ -86,18 +88,57 @@ def status():
     return render_template('index.html', id=current_user.email, info=info)
 
 
-@app.route('/sideload', methods=['GET'])
+@app.route('/sideload', methods=['GET', 'POST'])
 @login_required
-def sideload():
+def sideload_dataset():
+    if request.method == 'GET':
+        return render_template('index.html')
+    else:
+        experiment = Experiment(
+            name=request.form.get('name'),
+            user_id=current_user.get_id(),
+            organism_id=request.form.get('organism'),
+            experiment_type_id=request.form.get('experiment_type')
+        )
 
-    experiment = Experiment(
-        name=request.get('name'),
-        user_id=current_user.get_id(),
-        organism_id=request.get('organism'),
-        experiment_type_id=request.get('experiment_type')
+        db.session.add(experiment)
+
+        sideload.new_dataset(
+            request.form.get('experiment_type'),
+            request.form.get('experiment_id'),
+            request.files['file']
+        )
+
+        db.session.commit()
+
+        return 'hello'
+
+
+@app.route('/api/experiment_types', methods=['GET'])
+def get_experiment_types():
+    return jsonify({'data': ExperimentType.query.all()})
+
+
+@app.route('/api/organisms', methods=['GET'])
+def get_organisms():
+    organisms = Organism.query.all()
+    print(organisms, organisms_schema)
+    results = organisms_schema.dump(organisms)
+    return jsonify({'data': results.data})
+
+
+@app.route('/api/organism/add', methods=['GET'])
+def add_organism():
+    organism = Organism(
+        tax_id=request.args.get('taxId'),
+        name=request.args.get('name'),
+        display_name=request.args.get('displayName')
     )
 
-    return jsonify(experiment)
+    db.session.add(organism)
+    db.session.commit()
+
+    return jsonify({'data': organism})
 
 
 @app.before_first_request

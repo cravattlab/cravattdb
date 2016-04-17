@@ -5,7 +5,7 @@ from re import sub
 import io
 
 
-def populate_dataset(dataset_type, id, file):
+def new_dataset(dataset_type, id, file):
     dataset = create_dataset(dataset_type, id)
     raw_data = preprocess(file)
     data = []
@@ -28,7 +28,7 @@ def populate_dataset(dataset_type, id, file):
             link=line[11]
         ))
 
-    db.session().save(data)
+    db.session.bulk_save_objects(data)
 
 
 def preprocess(file):
@@ -65,6 +65,7 @@ def create_dataset(dataset_type, id):
     }
 
     # "the dark side of type"
+    # https://jeffknupp.com/blog/2013/12/28/improve-your-python-metaclasses-and-dynamic-classes-with-type/
     return type(
         dataset_name,
         (db.Model,),

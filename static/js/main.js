@@ -2,6 +2,8 @@
 
 var app = angular.module('cravatt-ip2', ['ngRoute', 'ngResource', 'ngFileUpload']);
 
+app.value('bootstrap', window.bootstrap || {});
+
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
     $routeProvider.when('/', {

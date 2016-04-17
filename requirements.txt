@@ -15,6 +15,7 @@ itsdangerous==0.24
 Jinja2==2.8
 kombu==3.0.26
 MarkupSafe==0.23
+marshmallow==2.7.1
 passlib==1.6.5
 psycopg2==2.6.1
 pytz==2015.4
