@@ -2,7 +2,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.security import UserMixin, RoleMixin
 from sqlalchemy.dialects.postgresql import JSON
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, post_load
 
 db = SQLAlchemy()
 
@@ -123,6 +123,10 @@ class OrganismSchema(Schema):
     """Marshmallow schema for Organism."""
 
     id = fields.Integer(dump_only=True)
-    display_name = fields.String(dump_only=True)
-    name = fields.String(dump_only=True)
-    tax_id = fields.Integer(dump_only=True)
+    tax_id = fields.Integer()
+    name = fields.String()
+    display_name = fields.String()
+
+    @post_load
+    def make_organism(self, data):
+        return Organism(**data)

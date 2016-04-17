@@ -33,6 +33,7 @@ db.init_app(app)
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
+organism_schema = OrganismSchema()
 organisms_schema = OrganismSchema(many=True)
 
 
@@ -129,16 +130,16 @@ def get_organisms():
 
 @app.route('/api/organism/add', methods=['GET'])
 def add_organism():
-    organism = Organism(
-        tax_id=request.args.get('taxId'),
-        name=request.args.get('name'),
-        display_name=request.args.get('displayName')
-    )
+    organism = organism_schema.load({
+        'tax_id': request.args.get('taxId'),
+        'name': request.args.get('name'),
+        'display_name': request.args.get('displayName')
+    })
 
-    db.session.add(organism)
+    db.session.add(organism.data)
     db.session.commit()
 
-    return jsonify({'data': organism})
+    return jsonify({'data': organism.dump()})
 
 
 @app.before_first_request
