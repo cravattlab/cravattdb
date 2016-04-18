@@ -111,7 +111,7 @@ class Organism(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tax_id = db.Column(db.Integer)
     name = db.Column(db.String(80))
-    display_name = db.column(db.String(80))
+    display_name = db.Column(db.String(80))
     experiments = db.relationship(
         'Experiment',
         backref='organism',
@@ -128,5 +128,5 @@ class OrganismSchema(Schema):
     display_name = fields.String()
 
     @post_load
-    def make_organism(self, data):
+    def _make_organism(self, data):
         return Organism(**data)
