@@ -2,7 +2,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.security import UserMixin, RoleMixin
 from sqlalchemy.dialects.postgresql import JSON
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, post_dump
 
 db = SQLAlchemy()
 
@@ -130,3 +130,10 @@ class OrganismSchema(Schema):
     @post_load
     def _make_organism(self, data):
         return Organism(**data)
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        key = 'organisms' if many else 'organism'
+        return {
+            key: data
+        }

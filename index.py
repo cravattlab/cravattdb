@@ -7,6 +7,7 @@ from redis import Redis
 from models.search import Search
 from models.tasks import process
 from models.database import db, User, Role, Experiment, ExperimentType, Organism, OrganismSchema
+from http import HTTPStatus
 import models.upload as upload
 import config.config as config
 import models.sideload as sideload
@@ -120,15 +121,20 @@ def get_experiment_types():
     return jsonify({'data': ExperimentType.query.all()})
 
 
-@app.route('/api/organisms', methods=['GET'])
-def get_organisms():
-    organisms = Organism.query.all()
-    print(organisms, organisms_schema)
-    results = organisms_schema.dump(organisms)
-    return jsonify({'data': results.data})
+@app.route('/api/organism', methods=['GET', 'POST'])
+@app.route('/api/organism/<int:organism_id>', methods=['GET', 'POST'])
+def get_organism(organism_id=None):
+    if organism_id:
+        organism = Organism.query.get(organism_id)
+        result = organism_schema.dump(organism)
+    else:
+        organisms = Organism.query.all()
+        result = organisms_schema.dump(organisms)
+
+    return jsonify(result.data)
 
 
-@app.route('/api/organism/add', methods=['GET'])
+@app.route('/api/organism', methods=['PUT'])
 def add_organism():
     organism = organism_schema.load({
         'tax_id': request.args.get('taxId'),
@@ -138,8 +144,22 @@ def add_organism():
 
     db.session.add(organism.data)
     db.session.commit()
+    result = organism_schema.dump(organism.data)
 
-    return jsonify({'data': organism.dump()})
+    return jsonify(result.data)
+
+
+@app.route('/api/organism/<int:organism_id>', methods=['DELETE'])
+def delete_organism(organism_id):
+    organism = Organism.query.get(organism_id)
+
+    if organism:
+        db.session.delete(organism)
+        db.session.commit()
+    else:
+        return ('', HTTPStatus.NOT_FOUND)
+
+    return ('', HTTPStatus.NO_CONTENT)
 
 
 @app.before_first_request
