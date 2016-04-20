@@ -51,6 +51,8 @@ class Experiment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     organism_id = db.Column(db.Integer, db.ForeignKey('organism.id'))
     experiment_type_id = db.Column(db.Integer, db.ForeignKey('experiment_type.id'))
+    probe_id = db.Column(db.Integer, db.ForeignKey('probe.id'))
+    inhibitor_id = db.Column(db.Integer, db.ForeignKey('inhibitor.id'))
     additional_search_params = db.Column(JSON)
     additional_quant_params = db.Column(JSON)
     annotations = db.Column(JSON)
@@ -81,7 +83,10 @@ class Dataset(db.Model):
     entry = db.Column(db.Integer)
     link = db.Column(db.String(100))
     discriminator = db.Column('type', db.String(50))
-    __mapper_args__ = {'polymorphic_on': discriminator}
+    __mapper_args__ = {
+        'polymorphic_identity': 'dataset',
+        'polymorphic_on': discriminator
+    }
 
 
 class ExperimentType(db.Model):
@@ -137,3 +142,49 @@ class OrganismSchema(Schema):
         return {
             key: data
         }
+
+
+class Probe(db.Model):
+    """Holds data about a particular probe."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    iupac_name = db.Column(db.Text)
+    inchi = db.Column(db.Text)
+    experiments = db.relationship(
+        'Experiment',
+        backref='probe',
+        lazy='dynamic'
+    )
+
+
+class ProbeSchema(Schema):
+    """Marshmallow schema for Probe."""
+
+    id = fields.Integer(dump_only=True)
+    name = fields.String()
+    iupac_name = fields.String()
+    inchi = fields.String()
+
+
+class Inhibitor(db.Model):
+    """Holds data about a particular inhibitor."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    iupac_name = db.Column(db.Text)
+    inchi = db.Column(db.Text)
+    experiments = db.relationship(
+        'Experiment',
+        backref='inhibitor',
+        lazy='dynamic'
+    )
+
+
+class InhibitorSchema(Schema):
+    """Marshmallow schema for Inhibitor."""
+
+    id = fields.Integer(dump_only=True)
+    name = fields.String()
+    iupac_name = fields.String()
+    inchi = fields.String()
