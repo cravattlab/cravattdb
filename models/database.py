@@ -6,36 +6,35 @@ from marshmallow import Schema, fields, post_load, post_dump
 
 db = SQLAlchemy()
 
+Column = db.Column
+relationship = db.relationship
+
 roles_users = db.Table(
     'roles_users',
-    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-    db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
+    Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    Column('role_id', db.Integer(), db.ForeignKey('role.id'))
 )
 
 
 class Role(db.Model, RoleMixin):
     """Simple role or database user."""
 
-    id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(80), unique=True)
-    description = db.Column(db.String(255))
+    id = Column(db.Integer(), primary_key=True)
+    name = Column(db.String(80), unique=True)
+    description = Column(db.String(255))
 
 
 class User(db.Model, UserMixin):
     """User of proteomics database."""
 
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), unique=True)
-    password = db.Column(db.String(255))
-    active = db.Column(db.Boolean())
-    confirmed_at = db.Column(db.DateTime())
-    meta = db.Column(JSON)
-    experiments = db.relationship(
-        'Experiment',
-        backref='user',
-        lazy='dynamic'
-    )
-    roles = db.relationship(
+    # __tablename__ = 'user_list'
+    id = Column(db.Integer, primary_key=True)
+    email = Column(db.String(255), unique=True)
+    password = Column(db.String(255))
+    active = Column(db.Boolean())
+    confirmed_at = Column(db.DateTime())
+    meta = Column(JSON)
+    roles = relationship(
         'Role',
         secondary=roles_users,
         backref=db.backref('users', lazy='dynamic')
@@ -45,44 +44,90 @@ class User(db.Model, UserMixin):
 class Experiment(db.Model):
     """Holds experimental metadata."""
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    date = db.Column(db.DateTime())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    organism_id = db.Column(db.Integer, db.ForeignKey('organism.id'))
-    experiment_type_id = db.Column(db.Integer, db.ForeignKey('experiment_type.id'))
-    probe_id = db.Column(db.Integer, db.ForeignKey('probe.id'))
-    inhibitor_id = db.Column(db.Integer, db.ForeignKey('inhibitor.id'))
-    additional_search_params = db.Column(JSON)
-    additional_quant_params = db.Column(JSON)
-    annotations = db.Column(JSON)
+    id = Column(db.Integer, primary_key=True)
+    name = Column(db.String(80))
+    date = Column(db.DateTime())
+    user_id = Column(db.Integer, db.ForeignKey('user.id'))
+    organism_id = Column(db.Integer, db.ForeignKey('organism.id'))
+    experiment_type_id = Column(db.Integer, db.ForeignKey('experiment_type.id'))
+    probe_id = Column(db.Integer, db.ForeignKey('probe.id'))
+    inhibitor_id = Column(db.Integer, db.ForeignKey('inhibitor.id'))
+    additional_search_params = Column(JSON)
+    additional_quant_params = Column(JSON)
+    annotations = Column(JSON)
+    # bidirectional many-to-one relationships corresponding to foreign keys above
+    user = relationship('User', backref='experiments')
+    organism = relationship('Organism', backref='experiments')
+    experiment_type = relationship('ExperimentType', backref='experiments')
+    probe = relationship('Probe', backref='experiments')
+    inhibitor = relationship('Inhibitor', backref='experiments')
+
+
+class JSONField(fields.Field):
+    """Custom Field for handling Postgres' JSON data type."""
+
+    def _serialize(self, value, attr, obj):
+        if value is None:
+            return ''
+        return value
+
+    def _deserialize(self, value, attr, data):
+        return value
+
+
+class ExperimentSchema(Schema):
+    """Marshmallow schema for Experiement."""
+
+    id = fields.Integer(dump_only=True)
+    name = fields.String()
+    date = fields.DateTime()
+    user_id = fields.Integer()
+    organism_id = fields.Integer()
+    organism = fields.Nested('OrganismSchema')
+    experiment_type_id = fields.Integer()
+    experiment_type = fields.Nested('ExperimentTypeSchema')
+    probe_id = fields.Integer()
+    probe = fields.Nested('ProbeSchema')
+    inhibitor_id = fields.Integer()
+    inhibitor = fields.Nested('InhibitorSchema')
+    additional_search_params = fields.String()
+    additional_quant_params = fields.String()
+    annotations = fields.String()
+
+    @post_load
+    def _make_experiment(self, data):
+        return Experiment(**data)
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        return {'experiments': data} if many else data
 
 
 class Dataset(db.Model):
     """Holds actual experimental dataset."""
 
     __tablename__ = 'datasets'
-    id = db.Column(db.Integer, primary_key=True)
-    peptide_index = db.Column(db.Integer)
-    ipi = db.Column(db.String(20))
-    description = db.Column(db.Text)
-    symbol = db.Column(db.String(20))
-    sequence = db.Column(db.String(100))
-    mass = db.Column(db.Numeric)
-    charge = db.Column(db.Integer)
-    segment = db.Column(db.Integer)
-    ratio = db.Column(db.Numeric)
-    intensity = db.Column(db.Numeric)
-    num_ms2_peaks = db.Column(db.Integer)
-    num_candidate_peaks = db.Column(db.Integer)
-    max_light_intensity = db.Column(db.Numeric)
-    light_noise = db.Column(db.Numeric)
-    max_heavy_intensity = db.Column(db.Numeric)
-    heavy_noise = db.Column(db.Numeric)
-    rsquared = db.Column(db.Numeric)
-    entry = db.Column(db.Integer)
-    link = db.Column(db.String(100))
-    discriminator = db.Column('type', db.String(50))
+    id = Column(db.Integer, primary_key=True)
+    peptide_index = Column(db.Integer)
+    ipi = Column(db.String(20))
+    description = Column(db.Text)
+    symbol = Column(db.String(20))
+    sequence = Column(db.String(100))
+    mass = Column(db.Numeric)
+    charge = Column(db.Integer)
+    segment = Column(db.Integer)
+    ratio = Column(db.Numeric)
+    intensity = Column(db.Numeric)
+    num_ms2_peaks = Column(db.Integer)
+    num_candidate_peaks = Column(db.Integer)
+    max_light_intensity = Column(db.Numeric)
+    light_noise = Column(db.Numeric)
+    max_heavy_intensity = Column(db.Numeric)
+    heavy_noise = Column(db.Numeric)
+    rsquared = Column(db.Numeric)
+    entry = Column(db.Integer)
+    link = Column(db.String(100))
+    discriminator = Column('type', db.String(50))
     __mapper_args__ = {
         'polymorphic_identity': 'dataset',
         'polymorphic_on': discriminator
@@ -92,43 +137,30 @@ class Dataset(db.Model):
 class ExperimentType(db.Model):
     """Defines different experiment types."""
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    search_params = db.Column(JSON)
-    cimage_params = db.Column(JSON)
-    experiments = db.relationship(
-        'Experiment',
-        backref='experiment_type',
-        lazy='dynamic'
-    )
+    id = Column(db.Integer, primary_key=True)
+    name = Column(db.String(80))
+    search_params = Column(JSON)
+    cimage_params = Column(JSON)
 
 
 class ExperimentTypeSchema(Schema):
     """Marshmallow schema for ExperimentType."""
 
-    id = fields.Int(dump_only=True)
-    name = fields.Str()
+    id = fields.Integer(dump_only=True)
+    name = fields.String()
 
     @post_dump(pass_many=True)
     def _wrap(self, data, many):
-        key = 'experiment_types' if many else 'experiment_type'
-        return {
-            key: data
-        }
+        return {'experiment_types': data} if many else data
 
 
 class Organism(db.Model):
     """Holds data related to model organisms."""
 
-    id = db.Column(db.Integer, primary_key=True)
-    tax_id = db.Column(db.Integer)
-    name = db.Column(db.String(80))
-    display_name = db.Column(db.String(80))
-    experiments = db.relationship(
-        'Experiment',
-        backref='organism',
-        lazy='dynamic'
-    )
+    id = Column(db.Integer, primary_key=True)
+    tax_id = Column(db.Integer)
+    name = Column(db.String(80))
+    display_name = Column(db.String(80))
 
 
 class OrganismSchema(Schema):
@@ -145,24 +177,16 @@ class OrganismSchema(Schema):
 
     @post_dump(pass_many=True)
     def _wrap(self, data, many):
-        key = 'organisms' if many else 'organism'
-        return {
-            key: data
-        }
+        return {'organisms': data} if many else data
 
 
 class Probe(db.Model):
     """Holds data about a particular probe."""
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    iupac_name = db.Column(db.Text)
-    inchi = db.Column(db.Text)
-    experiments = db.relationship(
-        'Experiment',
-        backref='probe',
-        lazy='dynamic'
-    )
+    id = Column(db.Integer, primary_key=True)
+    name = Column(db.String(80))
+    iupac_name = Column(db.Text)
+    inchi = Column(db.Text)
 
 
 class ProbeSchema(Schema):
@@ -177,15 +201,10 @@ class ProbeSchema(Schema):
 class Inhibitor(db.Model):
     """Holds data about a particular inhibitor."""
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    iupac_name = db.Column(db.Text)
-    inchi = db.Column(db.Text)
-    experiments = db.relationship(
-        'Experiment',
-        backref='inhibitor',
-        lazy='dynamic'
-    )
+    id = Column(db.Integer, primary_key=True)
+    name = Column(db.String(80))
+    iupac_name = Column(db.Text)
+    inchi = Column(db.Text)
 
 
 class InhibitorSchema(Schema):

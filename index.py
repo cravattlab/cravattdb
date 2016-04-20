@@ -6,7 +6,11 @@ from flask_mail import Mail
 from redis import Redis
 from models.search import Search
 from models.tasks import process
-from models.database import db, User, Role, Experiment, ExperimentType, Organism, OrganismSchema, ExperimentTypeSchema
+from models.database import (
+    db, User, Role,
+    Experiment, ExperimentType, Organism,
+    OrganismSchema, ExperimentTypeSchema, ExperimentSchema
+)
 from http import HTTPStatus
 import models.upload as upload
 import config.config as config
@@ -34,6 +38,8 @@ db.init_app(app)
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
+experiment_schema = ExperimentSchema()
+experiments_schema = ExperimentSchema(many=True)
 organism_schema = OrganismSchema()
 organisms_schema = OrganismSchema(many=True)
 experiment_type_schema = ExperimentTypeSchema()
@@ -98,24 +104,56 @@ def sideload_dataset():
     if request.method == 'GET':
         return render_template('index.html')
     else:
-        experiment = Experiment(
-            name=request.form.get('name'),
-            user_id=current_user.get_id(),
-            organism_id=request.form.get('organism'),
-            experiment_type_id=request.form.get('experiment_type')
-        )
+        print('hello')
+        experiment = experiment_schema.load({
+            'name': request.form.get('name'),
+            'user_id': current_user.get_id(),
+            'organism_id': request.form.get('organism'),
+            'experiment_type_id': request.form.get('experimentType')
+        })
+        db.session.add(experiment.data)
 
-        db.session.add(experiment)
+        print(experiment.data)
 
-        sideload.new_dataset(
-            request.form.get('experiment_type'),
-            request.form.get('experiment_id'),
-            request.files['file']
-        )
+        # sideload.new_dataset(
+        #     request.form.get('experiment_type'),
+        #     request.form.get('experiment_id'),
+        #     request.files['file']
+        # )
 
-        db.session.commit()
+        # db.session.commit()
 
         return 'hello'
+
+
+@app.route('/api/experiment', methods=['PUT'])
+def add_experiment():
+    experiment = experiment_schema.load({
+        'name': request.args.get('name'),
+        'user_id': 1,
+        'organism_id': request.args.get('organism'),
+        'experiment_type_id': request.args.get('experimentType')
+    })
+
+    print(experiment)
+    db.session.add(experiment.data)
+    db.session.commit()
+    result = organism_schema.dump(experiment.data)
+
+    return jsonify(result.data)
+
+
+@app.route('/api/experiment', methods=['GET', 'POST'])
+@app.route('/api/experiment/<int:experiment_id>', methods=['GET', 'POST'])
+def get_experiment(experiment_id=None):
+    if experiment_id:
+        experiment = Experiment.query.get(experiment_id)
+        result = experiment_schema.dump(experiment)
+    else:
+        experiments = Experiment.query.all()
+        result = experiments_schema.dump(experiments)
+
+    return jsonify(result.data)
 
 
 @app.route('/api/experiment_type', methods=['GET', 'POST'])
