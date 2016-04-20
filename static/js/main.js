@@ -71,7 +71,10 @@ app.controller('SideloadController', ['$scope', '$http', function($scope, $http)
 
     $http.get('/api/organism').then(function(response) {
         this.data.organisms = response.data.organisms;
-        // console.log(response);
+    }.bind(this));
+
+    $http.get('/api/experiment_type').then(function(response) {
+        this.data.experimentTypes = response.data.experiment_types;
     }.bind(this));
 }]);
 

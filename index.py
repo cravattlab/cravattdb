@@ -6,7 +6,7 @@ from flask_mail import Mail
 from redis import Redis
 from models.search import Search
 from models.tasks import process
-from models.database import db, User, Role, Experiment, ExperimentType, Organism, OrganismSchema
+from models.database import db, User, Role, Experiment, ExperimentType, Organism, OrganismSchema, ExperimentTypeSchema
 from http import HTTPStatus
 import models.upload as upload
 import config.config as config
@@ -36,6 +36,8 @@ security = Security(app, user_datastore)
 
 organism_schema = OrganismSchema()
 organisms_schema = OrganismSchema(many=True)
+experiment_type_schema = ExperimentTypeSchema()
+experiment_types_schema = ExperimentTypeSchema(many=True)
 
 
 @app.route('/')
@@ -116,9 +118,17 @@ def sideload_dataset():
         return 'hello'
 
 
-@app.route('/api/experiment_types', methods=['GET'])
-def get_experiment_types():
-    return jsonify({'data': ExperimentType.query.all()})
+@app.route('/api/experiment_type', methods=['GET', 'POST'])
+@app.route('/api/experiment_type/<int:experiment_id>', methods=['GET', 'POST'])
+def get_experiment_type(experiment_id=None):
+    if experiment_id:
+        experiment_type = ExperimentType.query.get(experiment_id)
+        result = experiment_type_schema.dump(experiment_type)
+    else:
+        experiment_types = ExperimentType.query.all()
+        result = experiment_types_schema.dump(experiment_types)
+
+    return jsonify(result.data)
 
 
 @app.route('/api/organism', methods=['GET', 'POST'])

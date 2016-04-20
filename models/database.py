@@ -107,7 +107,14 @@ class ExperimentTypeSchema(Schema):
     """Marshmallow schema for ExperimentType."""
 
     id = fields.Int(dump_only=True)
-    name = fields.Str(dump_only=True)
+    name = fields.Str()
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        key = 'experiment_types' if many else 'experiment_type'
+        return {
+            key: data
+        }
 
 
 class Organism(db.Model):
