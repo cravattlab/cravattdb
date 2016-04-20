@@ -67,8 +67,23 @@ app.controller('StatusController', ['$scope', '$http', function($scope, $http) {
 }]);
 
 app.controller('SideloadController', ['$scope', '$http', function($scope, $http) {
+    this.data = {};
 
+    $http.get('/api/organism').then(function(response) {
+        this.data.organisms = response.data.organisms;
+        // console.log(response);
+    }.bind(this));
 }]);
+
+// http://ng.malsup.com/#!/titlecase-filter
+app.filter('titlecase', function() {
+    return function(s) {
+        s = ( s === undefined || s === null ) ? '' : s;
+        return s.toString().toLowerCase().replace( /\b([a-z])/g, function(ch) {
+            return ch.toUpperCase();
+        });
+    };
+});
 
 $(function() {
     $('.ui.dropdown').dropdown();

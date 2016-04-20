@@ -18,13 +18,9 @@
 
     <div class="six wide required field">
         <label>Organism</label>
-        <select class="ui dropdown" ng-model="main.data.organism" required>
+        <select class="ui dropdown" ng-model="sideload.data.organism" required>
             <option value="">Select Species</option>
-            <option value="human">Human</option>
-            <option value="mouse">Mouse</option>
-            <option value="bcg">BCG</option>
-            <option value="tb">TB</option>
-            <option value="celegans">C. elegans</option>
+            <option ng-repeat="organism in sideload.data.organisms" value="{{ organism.id }}">{{ organism.display_name | titlecase }}</option>
         </select>
     </div>
 
