@@ -11,7 +11,7 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "vagrant-sync/cimage-minimal", "/home/vagrant/github/cimage-minimal", create: true
   config.vm.synced_folder "vagrant-sync/cravattdb", "/home/vagrant/github/cravattdb", create: true
 
-  config.vm.provision "shell", inline: <<-SHELL
+  config.vm.provision "dependencies", type: "shell", inline: <<-SHELL
     # installing things
     sudo apt-get update
     sudo apt-get install -y git python-pip
@@ -23,7 +23,9 @@ Vagrant.configure(2) do |config|
     chmod 700 ~/.ssh
     ssh-keyscan -H github.com >> ~/.ssh/known_hosts
     ssh -T git@github.com
+  SHELL
 
+  config.vm.provision "code", type: "shell", inline: <<-SHELL
     # don't forget the code
     git clone git@github.com:/cravattlab/cimage-minimal.git github/cimage-minimal
     git clone git@github.com:/cravattlab/cravattdb.git github/cravattdb
