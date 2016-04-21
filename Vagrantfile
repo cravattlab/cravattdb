@@ -9,7 +9,7 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest:8080, host:8080
 
   config.vm.synced_folder "vagrant-sync/cimage-minimal", "/home/vagrant/github/cimage-minimal", create: true
-  config.vm.synced_folder "vagrant-sync/cravatt-ip2", "/home/vagrant/github/cravatt-ip2", create: true
+  config.vm.synced_folder "vagrant-sync/cravattdb", "/home/vagrant/github/cravattdb", create: true
 
   config.vm.provision "shell", inline: <<-SHELL
     # installing things
@@ -26,7 +26,7 @@ Vagrant.configure(2) do |config|
 
     # don't forget the code
     git clone git@github.com:/cravattlab/cimage-minimal.git github/cimage-minimal
-    git clone git@github.com:/cravattlab/cravatt-ip2.git github/cravatt-ip2
+    git clone git@github.com:/cravattlab/cravattdb.git github/cravattdb
     chown -R vagrant:vagrant github
   SHELL
 

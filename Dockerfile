@@ -12,9 +12,9 @@ RUN ln -s /home/cravattdb/cimage-minimal/cimage_combine /usr/local/bin
 ENV CIMAGE_PATH /home/cravattdb/cimage-minimal
 
 # Setup CravattDB
-ENV PATH /home/cravattdb/cravatt-ip2/env/bin:$PATH
+ENV PATH /home/cravattdb/cravattdb/env/bin:$PATH
 USER cravattdb
 
-WORKDIR /home/cravattdb/cravatt-ip2
+WORKDIR /home/cravattdb/cravttdb
 ADD /start.sh /home/cravattdb/start.sh
 CMD [ "/bin/bash", "/home/cravattdb/start.sh" ]
