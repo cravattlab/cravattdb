@@ -15,4 +15,4 @@ npm install
 bower install -F
 
 # run the server
-python run.py
+python ../run.py
