@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('cravatt-ip2', ['ngRoute', 'ngResource', 'ngFileUpload']);
+var app = angular.module('cravattdb', ['ngRoute', 'ngResource', 'ngFileUpload']);
 
 app.value('bootstrap', window.bootstrap || {});
 

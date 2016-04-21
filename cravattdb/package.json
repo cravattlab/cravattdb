@@ -1,5 +1,5 @@
 {
-  "name": "cravatt-ip2",
+  "name": "cravattdb",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,12 +10,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cravattlab/cravatt-ip2.git"
+    "url": "git+https://github.com/cravattlab/cravattdb.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cravattlab/cravatt-ip2/issues"
+    "url": "https://github.com/cravattlab/cravattdb/issues"
   },
-  "homepage": "https://github.com/cravattlab/cravatt-ip2#readme"
+  "homepage": "https://github.com/cravattlab/cravattdb#readme"
 }

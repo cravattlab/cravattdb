@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/cravattdb/cravatt-ip2/cravattdb
+cd /home/cravattdb/cravattdb/cravattdb
 npm install
 bower install -F
 
@@ -8,7 +8,7 @@ bower install -F
 celery -A cravattdb.models.tasks worker --loglevel=info --detach
 
 # install requirements in separate virtual environment
-cd /home/cravattdb/cravatt-ip2
+cd /home/cravattdb/cravattdb
 virtualenv env
 source env/bin/activate
 pip install -r requirements.txt
