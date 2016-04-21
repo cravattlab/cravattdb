@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# get client libraries
 cd /home/cravattdb/cravatt-ip2/cravattdb
 npm install
 bower install -F
 
 # start celery daemon
-celery -A models.tasks worker --loglevel=info --detach
+celery -A cravattdb.models.tasks worker --loglevel=info --detach
 
 # install requirements in separate virtual environment
 cd /home/cravattdb/cravatt-ip2

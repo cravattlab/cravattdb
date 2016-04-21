@@ -10,4 +10,4 @@ def create_app():
     return app
 
 if __name__ == "__main__":
-    create_app().run()
+    create_app().run(host='0.0.0.0', threaded=True, port=5000)

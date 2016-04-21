@@ -1,8 +1,8 @@
 from celery import Celery
 from pathlib import PurePath
 from redis import Redis
-import models.convert as convert
-import models.quantify as quantify
+import cravattdb.models.convert as convert
+import cravattdb.models.quantify as quantify
 import config.config as config
 
 app = Celery('tasks', broker='amqp://guest@rabbitmq//')

@@ -1,5 +1,5 @@
 """Defines methods for interacting with database."""
-from models.database import (
+from cravattdb.models.database import (
     db,
     Experiment, ExperimentType, Organism,
     OrganismSchema, ExperimentTypeSchema, ExperimentSchema

@@ -4,13 +4,13 @@ from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required
 from flask_security.core import current_user
 from flask_mail import Mail
 from redis import Redis
-from models.search import Search
-from models.tasks import process
-from models.database import db, User, Role
+from cravattdb.models.search import Search
+from cravattdb.models.tasks import process
+from cravattdb.models.database import db, User, Role
 from http import HTTPStatus
-import models.upload as upload
+import cravattdb.models.upload as upload
 import config.config as config
-import models.api as api
+import cravattdb.models.api as api
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -26,6 +26,8 @@ app.config['MAIL_PASSWORD'] = config.EMAIL_PASSWORD
 
 redis = Redis(host='redis')
 mail = Mail(app)
+
+print('hello')
 
 # Create database connection object
 db.init_app(app)

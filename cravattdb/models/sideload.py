@@ -1,5 +1,5 @@
 """Helper methods for creating datasets."""
-from models.database import db
+from cravattd.models.database import db
 from csv import reader
 from re import sub
 import io
