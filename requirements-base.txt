@@ -3,6 +3,7 @@ celery
 Flask
 Flask-Security
 Flask-SQLAlchemy
+Flask-Failsafe
 marshmallow
 psycopg2
 PyYAML

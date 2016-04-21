@@ -6,15 +6,11 @@ from flask_mail import Mail
 from redis import Redis
 from models.search import Search
 from models.tasks import process
-from models.database import (
-    db, User, Role,
-    Experiment, ExperimentType, Organism,
-    OrganismSchema, ExperimentTypeSchema, ExperimentSchema
-)
+from models.database import db, User, Role
 from http import HTTPStatus
 import models.upload as upload
 import config.config as config
-import models.sideload as sideload
+import models.api as api
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -37,13 +33,6 @@ db.init_app(app)
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
-
-experiment_schema = ExperimentSchema()
-experiments_schema = ExperimentSchema(many=True)
-organism_schema = OrganismSchema()
-organisms_schema = OrganismSchema(many=True)
-experiment_type_schema = ExperimentTypeSchema()
-experiment_types_schema = ExperimentTypeSchema(many=True)
 
 
 @app.route('/')
@@ -104,16 +93,12 @@ def sideload_dataset():
     if request.method == 'GET':
         return render_template('index.html')
     else:
-        print('hello')
-        experiment = experiment_schema.load({
-            'name': request.form.get('name'),
-            'user_id': current_user.get_id(),
-            'organism_id': request.form.get('organism'),
-            'experiment_type_id': request.form.get('experimentType')
-        })
-        db.session.add(experiment.data)
-
-        print(experiment.data)
+        result = api.add_experiment(
+            name=request.form.get('name'),
+            user_id=current_user.get_id(),
+            organism_id=request.form.get('organism'),
+            experiment_type_id=request.form.get('experimentType')
+        )
 
         # sideload.new_dataset(
         #     request.form.get('experiment_type'),
@@ -123,22 +108,17 @@ def sideload_dataset():
 
         # db.session.commit()
 
-        return 'hello'
+        return result.data
 
 
 @app.route('/api/experiment', methods=['PUT'])
 def add_experiment():
-    experiment = experiment_schema.load({
-        'name': request.args.get('name'),
-        'user_id': 1,
-        'organism_id': request.args.get('organism'),
-        'experiment_type_id': request.args.get('experimentType')
-    })
-
-    print(experiment)
-    db.session.add(experiment.data)
-    db.session.commit()
-    result = organism_schema.dump(experiment.data)
+    result = api.add_experiment(
+        name=request.args.get('name'),
+        user_id=current_user.get_id(),
+        organism_id=request.args.get('organism'),
+        organism_type_id=request.args.get('experimentType')
+    )
 
     return jsonify(result.data)
 
@@ -146,68 +126,33 @@ def add_experiment():
 @app.route('/api/experiment', methods=['GET', 'POST'])
 @app.route('/api/experiment/<int:experiment_id>', methods=['GET', 'POST'])
 def get_experiment(experiment_id=None):
-    if experiment_id:
-        experiment = Experiment.query.get(experiment_id)
-        result = experiment_schema.dump(experiment)
-    else:
-        experiments = Experiment.query.all()
-        result = experiments_schema.dump(experiments)
-
+    result = api.get_experiment(experiment_id)
     return jsonify(result.data)
 
 
 @app.route('/api/experiment_type', methods=['GET', 'POST'])
 @app.route('/api/experiment_type/<int:experiment_id>', methods=['GET', 'POST'])
 def get_experiment_type(experiment_id=None):
-    if experiment_id:
-        experiment_type = ExperimentType.query.get(experiment_id)
-        result = experiment_type_schema.dump(experiment_type)
-    else:
-        experiment_types = ExperimentType.query.all()
-        result = experiment_types_schema.dump(experiment_types)
-
+    result = api.get_experiment_tpe(experiment_id)
     return jsonify(result.data)
 
 
 @app.route('/api/organism', methods=['GET', 'POST'])
 @app.route('/api/organism/<int:organism_id>', methods=['GET', 'POST'])
 def get_organism(organism_id=None):
-    if organism_id:
-        organism = Organism.query.get(organism_id)
-        result = organism_schema.dump(organism)
-    else:
-        organisms = Organism.query.all()
-        result = organisms_schema.dump(organisms)
-
+    result = api.get_organism(organism_id)
     return jsonify(result.data)
 
 
 @app.route('/api/organism', methods=['PUT'])
 def add_organism():
-    organism = organism_schema.load({
-        'tax_id': request.args.get('taxId'),
-        'name': request.args.get('name'),
-        'display_name': request.args.get('displayName')
-    })
-
-    db.session.add(organism.data)
-    db.session.commit()
-    result = organism_schema.dump(organism.data)
+    result = api.add_organism(
+        tax_id=request.args.get('taxId'),
+        name=request.args.get('name'),
+        display_name=request.args.get('displayName')
+    )
 
     return jsonify(result.data)
-
-
-@app.route('/api/organism/<int:organism_id>', methods=['DELETE'])
-def delete_organism(organism_id):
-    organism = Organism.query.get(organism_id)
-
-    if organism:
-        db.session.delete(organism)
-        db.session.commit()
-    else:
-        return ('', HTTPStatus.NOT_FOUND)
-
-    return ('', HTTPStatus.NO_CONTENT)
 
 
 @app.before_first_request
@@ -228,6 +173,3 @@ def unauthorized(error):
 @app.errorhandler(HTTPStatus.CONFLICT)
 def dataset_exists(error):
     return error_response(error.description, error.code)
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', threaded=True)

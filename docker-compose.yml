@@ -4,7 +4,7 @@ cravattdb:
         - "8080:5000"
     volumes:
         - .:/home/cravattdb/cravatt-ip2
-        - /mnt/cravattdb:/home/cravattdb/cravatt-ip2/uploads
+        - /mnt/cravattdb:/home/cravattdb/cravatt-ip2/cravattdb/uploads
         - ../cimage-minimal:/home/cravattdb/cimage-minimal
     links:
         - postgres
