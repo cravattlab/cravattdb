@@ -27,8 +27,6 @@ app.config['MAIL_PASSWORD'] = config.EMAIL_PASSWORD
 redis = Redis(host='redis')
 mail = Mail(app)
 
-print('hello')
-
 # Create database connection object
 db.init_app(app)
 

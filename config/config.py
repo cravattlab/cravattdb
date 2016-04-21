@@ -1,9 +1,10 @@
+"""Main configuration file for project."""
 import yaml
 
 UPLOAD_FOLDER = 'uploads'
 CONVERT_URL = 'http://cravattwork.scripps.edu:5001'
 
-#Flask-Security
+# Flask-Security
 SECRET_KEY = 'super-secret'
 
 MAIL_SERVER = 'smtp.gmail.com'

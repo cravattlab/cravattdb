@@ -15,4 +15,5 @@ npm install
 bower install -F
 
 # run the server
-python ../run.py
+cd /home/cravattdb/cravattdb
+python run.py

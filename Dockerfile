@@ -15,6 +15,6 @@ ENV CIMAGE_PATH /home/cravattdb/cimage-minimal
 ENV PATH /home/cravattdb/cravattdb/env/bin:$PATH
 USER cravattdb
 
-WORKDIR /home/cravattdb/cravttdb
+WORKDIR /home/cravattdb/cravattdb
 ADD /start.sh /home/cravattdb/start.sh
 CMD [ "/bin/bash", "/home/cravattdb/start.sh" ]
