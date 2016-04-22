@@ -113,46 +113,53 @@ def sideload_dataset():
 
 @app.route('/api/experiment', methods=['PUT'])
 def add_experiment():
-    result = api.add_experiment(
+    return jsonify(api.add_experiment(
         name=request.args.get('name'),
-        user_id=current_user.get_id(),
+        user_id=1,
         organism_id=request.args.get('organism'),
-        organism_type_id=request.args.get('experimentType')
-    )
-
-    return jsonify(result.data)
+        experiment_type_id=request.args.get('experimentType'),
+        probe_id=request.args.get('probe'),
+        inhibitor_id=request.args.get('inhibitor')
+    ))
 
 
 @app.route('/api/experiment', methods=['GET', 'POST'])
 @app.route('/api/experiment/<int:experiment_id>', methods=['GET', 'POST'])
 def get_experiment(experiment_id=None):
-    result = api.get_experiment(experiment_id)
-    return jsonify(result.data)
+    return jsonify(api.get_experiment(experiment_id))
 
 
 @app.route('/api/experiment_type', methods=['GET', 'POST'])
 @app.route('/api/experiment_type/<int:experiment_id>', methods=['GET', 'POST'])
 def get_experiment_type(experiment_id=None):
-    result = api.get_experiment_tpe(experiment_id)
-    return jsonify(result.data)
+    return jsonify(api.get_experiment_type(experiment_id))
 
 
 @app.route('/api/organism', methods=['GET', 'POST'])
 @app.route('/api/organism/<int:organism_id>', methods=['GET', 'POST'])
 def get_organism(organism_id=None):
-    result = api.get_organism(organism_id)
-    return jsonify(result.data)
+    return jsonify(api.get_organism(organism_id))
+
+
+@app.route('/api/probe', methods=['GET', 'POST'])
+@app.route('/api/probe/<int:probe_id>', methods=['GET', 'POST'])
+def get_probe(probe_id=None):
+    return jsonify(api.get_probe(probe_id))
+
+
+@app.route('/api/inhibitor', methods=['GET', 'POST'])
+@app.route('/api/inhibitor/<int:inhibitor_id>', methods=['GET', 'POST'])
+def get_inhibitor(inhibitor_id=None):
+    return jsonify(api.get_inhibitor(inhibitor_id))
 
 
 @app.route('/api/organism', methods=['PUT'])
 def add_organism():
-    result = api.add_organism(
+    return jsonify(api.add_organism(
         tax_id=request.args.get('taxId'),
         name=request.args.get('name'),
         display_name=request.args.get('displayName')
-    )
-
-    return jsonify(result.data)
+    ))
 
 
 @app.before_first_request

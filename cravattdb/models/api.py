@@ -1,8 +1,9 @@
 """Defines methods for interacting with database."""
 from cravattdb.models.database import (
     db,
-    Experiment, ExperimentType, Organism,
-    OrganismSchema, ExperimentTypeSchema, ExperimentSchema
+    Experiment, ExperimentType, Organism, Probe, Inhibitor,
+    OrganismSchema, ExperimentTypeSchema, ExperimentSchema, ProbeSchema, InhibitorSchema
+
 )
 
 
@@ -12,21 +13,29 @@ organism_schema = OrganismSchema()
 organisms_schema = OrganismSchema(many=True)
 experiment_type_schema = ExperimentTypeSchema()
 experiment_types_schema = ExperimentTypeSchema(many=True)
+probe_schema = ProbeSchema()
+probes_schema = ProbeSchema(many=True)
+inhibitor_schema = InhibitorSchema()
+inhibitors_schema = InhibitorSchema(many=True)
 
 
-def add_experiment(name, user_id, organism_id, experiment_type):
+def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id, inhibitor_id):
     experiment = experiment_schema.load({
         'name': name,
         'user_id': user_id,
         'organism_id': organism_id,
-        'experiment_type_id': experiment_type
+        'experiment_type_id': experiment_type_id,
+        'probe_id': probe_id,
+        'inhibitor_id': inhibitor_id
     })
+
+    print(experiment)
 
     db.session.add(experiment.data)
     db.session.commit()
     result = organism_schema.dump(experiment.data)
 
-    result.data
+    return result.data
 
 
 def get_experiment(experiment_id):
@@ -37,7 +46,7 @@ def get_experiment(experiment_id):
         experiments = Experiment.query.all()
         result = experiments_schema.dump(experiments)
 
-    return result
+    return result.data
 
 
 def get_experiment_type(experiment_id):
@@ -48,7 +57,7 @@ def get_experiment_type(experiment_id):
         experiment_types = ExperimentType.query.all()
         result = experiment_types_schema.dump(experiment_types)
 
-    return result
+    return result.data
 
 
 def get_organism(organism_id):
@@ -59,7 +68,29 @@ def get_organism(organism_id):
         organisms = Organism.query.all()
         result = organisms_schema.dump(organisms)
 
-    return result
+    return result.data
+
+
+def get_probe(probe_id):
+    if probe_id:
+        probe = Probe.query.get(probe_id)
+        result = probe_schema.dump(probe)
+    else:
+        probes = Probe.query.all()
+        result = probes_schema.dump(probes)
+
+    return result.data
+
+
+def get_inhibitor(inhibitor_id):
+    if inhibitor_id:
+        inhibitor = Inhibitor.query.get(inhibitor_id)
+        result = inhibitor_schema.dump(inhibitor)
+    else:
+        inhibitors = Inhibitor.query.all()
+        result = inhibitors_schema.dump(inhibitors)
+
+    return result.data
 
 
 def add_organism(tax_id, name, display_name):
@@ -73,7 +104,7 @@ def add_organism(tax_id, name, display_name):
     db.session.commit()
     result = organism_schema.dump(organism.data)
 
-    return result
+    return result.data
 
 
 def delete_organism(organism_id):

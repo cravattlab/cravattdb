@@ -197,6 +197,14 @@ class ProbeSchema(Schema):
     iupac_name = fields.String()
     inchi = fields.String()
 
+    @post_load
+    def _make_probe(self, data):
+        return Probe(**data)
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        return {'probes': data} if many else data
+
 
 class Inhibitor(db.Model):
     """Holds data about a particular inhibitor."""
@@ -214,3 +222,11 @@ class InhibitorSchema(Schema):
     name = fields.String()
     iupac_name = fields.String()
     inchi = fields.String()
+
+    @post_load
+    def _make_inhibitor(self, data):
+        return Inhibitor(**data)
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        return {'inhibitors': data} if many else data
