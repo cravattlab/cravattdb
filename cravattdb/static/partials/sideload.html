@@ -32,6 +32,22 @@
         </select>
     </div>
 
+    <div class="six wide field">
+        <label>Probe</label>
+        <select class="ui dropdown" ng-model="sideload.probe">
+            <option value="">Select Probe</option>
+            <option ng-repeat="probe in sideload.data.probes" value="{{ probe.id }}">{{ probe.name | titlecase }}</option>
+        </select>
+    </div>
+
+    <div class="six wide field">
+        <label>Inhibitor</label>
+        <select class="ui dropdown" ng-model="sideload.inhibitor">
+            <option value="">Select Inhibitor</option>
+            <option ng-repeat="inhibitor in sideload.data.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name | titlecase }}</option>
+        </select>
+    </div>
+
     <button class="ui primary button" type="submit" ng-click="sideload.submit()">Submit</button>
 
     <button type="button" class="ui button" onclick="document.getElementById('file-select').click()">
