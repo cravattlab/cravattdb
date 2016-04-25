@@ -19,14 +19,14 @@ inhibitor_schema = InhibitorSchema()
 inhibitors_schema = InhibitorSchema(many=True)
 
 
-def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id, inhibitor_id):
+def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id=0, inhibitor_id=0):
     experiment = experiment_schema.load({
         'name': name,
-        'user_id': user_id,
-        'organism_id': organism_id,
-        'experiment_type_id': experiment_type_id,
-        'probe_id': probe_id,
-        'inhibitor_id': inhibitor_id
+        'user_id': int(user_id),
+        'organism_id': int(organism_id),
+        'experiment_type_id': int(experiment_type_id),
+        'probe_id': int(probe_id),
+        'inhibitor_id': int(inhibitor_id)
     })
 
     print(experiment)

@@ -87,46 +87,28 @@ def status():
     return render_template('index.html', id=current_user.email, info=info)
 
 
-@app.route('/sideload', methods=['GET', 'POST'])
+@app.route('/sideload', methods=['GET'])
 @login_required
 def sideload_dataset():
-    if request.method == 'GET':
-        bootstrap = {
-            **api.get_organism(),
-            **api.get_probe(),
-            **api.get_inhibitor(),
-            **api.get_experiment_type()
-        }
+    bootstrap = {
+        **api.get_organism(),
+        **api.get_probe(),
+        **api.get_inhibitor(),
+        **api.get_experiment_type()
+    }
 
-        return render_template('index.html', bootstrap=bootstrap)
-    else:
-        result = api.add_experiment(
-            name=request.form.get('name'),
-            user_id=current_user.get_id(),
-            organism_id=request.form.get('organism'),
-            experiment_type_id=request.form.get('experimentType')
-        )
-
-        # sideload.new_dataset(
-        #     request.form.get('experiment_type'),
-        #     request.form.get('experiment_id'),
-        #     request.files['file']
-        # )
-
-        # db.session.commit()
-
-        return result.data
+    return render_template('index.html', bootstrap=bootstrap)
 
 
 @app.route('/api/experiment', methods=['PUT'])
 def add_experiment():
     return jsonify(api.add_experiment(
-        name=request.args.get('name'),
+        name=request.json.get('name'),
         user_id=1,
-        organism_id=request.args.get('organism'),
-        experiment_type_id=request.args.get('experimentType'),
-        probe_id=request.args.get('probe'),
-        inhibitor_id=request.args.get('inhibitor')
+        organism_id=request.json.get('organism'),
+        experiment_type_id=request.json.get('experimentType'),
+        probe_id=request.json.get('probe'),
+        inhibitor_id=request.json.get('inhibitor')
     ))
 
 
