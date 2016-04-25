@@ -66,16 +66,8 @@ app.controller('StatusController', ['$scope', '$http', function($scope, $http) {
 
 }]);
 
-app.controller('SideloadController', ['$scope', '$http', function($scope, $http) {
-    this.data = {};
-
-    $http.get('/api/organism').then(function(response) {
-        this.data.organisms = response.data.organisms;
-    }.bind(this));
-
-    $http.get('/api/experiment_type').then(function(response) {
-        this.data.experimentTypes = response.data.experiment_types;
-    }.bind(this));
+app.controller('SideloadController', ['$scope', '$http', 'bootstrap', function($scope, $http, bootstrap) {
+    this.data = bootstrap || {};
 }]);
 
 // http://ng.malsup.com/#!/titlecase-filter

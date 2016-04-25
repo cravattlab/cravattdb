@@ -91,7 +91,14 @@ def status():
 @login_required
 def sideload_dataset():
     if request.method == 'GET':
-        return render_template('index.html')
+        bootstrap = {
+            **api.get_organism(),
+            **api.get_probe(),
+            **api.get_inhibitor(),
+            **api.get_experiment_type()
+        }
+
+        return render_template('index.html', bootstrap=bootstrap)
     else:
         result = api.add_experiment(
             name=request.form.get('name'),

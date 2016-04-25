@@ -38,7 +38,7 @@ def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id, inh
     return result.data
 
 
-def get_experiment(experiment_id):
+def get_experiment(experiment_id=None):
     if experiment_id:
         experiment = Experiment.query.get(experiment_id)
         result = experiment_schema.dump(experiment)
@@ -49,7 +49,7 @@ def get_experiment(experiment_id):
     return result.data
 
 
-def get_experiment_type(experiment_id):
+def get_experiment_type(experiment_id=None):
     if experiment_id:
         experiment_type = ExperimentType.query.get(experiment_id)
         result = experiment_type_schema.dump(experiment_type)
@@ -60,7 +60,7 @@ def get_experiment_type(experiment_id):
     return result.data
 
 
-def get_organism(organism_id):
+def get_organism(organism_id=None):
     if organism_id:
         organism = Organism.query.get(organism_id)
         result = organism_schema.dump(organism)
@@ -71,7 +71,7 @@ def get_organism(organism_id):
     return result.data
 
 
-def get_probe(probe_id):
+def get_probe(probe_id=None):
     if probe_id:
         probe = Probe.query.get(probe_id)
         result = probe_schema.dump(probe)
@@ -82,7 +82,7 @@ def get_probe(probe_id):
     return result.data
 
 
-def get_inhibitor(inhibitor_id):
+def get_inhibitor(inhibitor_id=None):
     if inhibitor_id:
         inhibitor = Inhibitor.query.get(inhibitor_id)
         result = inhibitor_schema.dump(inhibitor)
