@@ -1,9 +1,9 @@
 """Defines methods for interacting with database."""
+import cravattdb.models.sideload as sideload
 from cravattdb.models.database import (
     db,
     Experiment, ExperimentType, Organism, Probe, Inhibitor,
     OrganismSchema, ExperimentTypeSchema, ExperimentSchema, ProbeSchema, InhibitorSchema
-
 )
 
 
@@ -19,7 +19,7 @@ inhibitor_schema = InhibitorSchema()
 inhibitors_schema = InhibitorSchema(many=True)
 
 
-def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id=0, inhibitor_id=0):
+def add_experiment(name, user_id, organism_id, experiment_type_id, file, probe_id=0, inhibitor_id=0):
     experiment = experiment_schema.load({
         'name': name,
         'user_id': int(user_id),
@@ -29,10 +29,12 @@ def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id=0, i
         'inhibitor_id': int(inhibitor_id)
     })
 
-    print(experiment)
-
     db.session.add(experiment.data)
     db.session.commit()
+
+    # after commit since we need to get id
+    sideload.new_dataset(experiment.data.id, file)
+
     result = organism_schema.dump(experiment.data)
 
     return result.data

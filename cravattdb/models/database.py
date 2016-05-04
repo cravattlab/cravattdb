@@ -127,7 +127,7 @@ class Dataset(db.Model):
     rsquared = Column(db.Numeric)
     entry = Column(db.Integer)
     link = Column(db.String(100))
-    discriminator = Column('type', db.String(50))
+    discriminator = Column('experiment_id', db.Integer)
     __mapper_args__ = {
         'polymorphic_identity': 'dataset',
         'polymorphic_on': discriminator

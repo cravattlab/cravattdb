@@ -103,41 +103,42 @@ def sideload_dataset():
 @app.route('/api/experiment', methods=['PUT'])
 def add_experiment():
     return jsonify(api.add_experiment(
-        name=request.json.get('name'),
+        name=request.form.get('name'),
         user_id=1,
-        organism_id=request.json.get('organism'),
-        experiment_type_id=request.json.get('experimentType'),
-        probe_id=request.json.get('probe'),
-        inhibitor_id=request.json.get('inhibitor')
+        organism_id=request.form.get('organism'),
+        experiment_type_id=request.form.get('experimentType'),
+        probe_id=request.form.get('probe'),
+        inhibitor_id=request.form.get('inhibitor'),
+        file=request.files['file']
     ))
 
 
-@app.route('/api/experiment', methods=['GET', 'POST'])
-@app.route('/api/experiment/<int:experiment_id>', methods=['GET', 'POST'])
+@app.route('/api/experiment', methods=['GET'])
+@app.route('/api/experiment/<int:experiment_id>', methods=['GET'])
 def get_experiment(experiment_id=None):
     return jsonify(api.get_experiment(experiment_id))
 
 
-@app.route('/api/experiment_type', methods=['GET', 'POST'])
-@app.route('/api/experiment_type/<int:experiment_id>', methods=['GET', 'POST'])
+@app.route('/api/experiment_type', methods=['GET'])
+@app.route('/api/experiment_type/<int:experiment_id>', methods=['GET'])
 def get_experiment_type(experiment_id=None):
     return jsonify(api.get_experiment_type(experiment_id))
 
 
-@app.route('/api/organism', methods=['GET', 'POST'])
-@app.route('/api/organism/<int:organism_id>', methods=['GET', 'POST'])
+@app.route('/api/organism', methods=['GET'])
+@app.route('/api/organism/<int:organism_id>', methods=['GET'])
 def get_organism(organism_id=None):
     return jsonify(api.get_organism(organism_id))
 
 
-@app.route('/api/probe', methods=['GET', 'POST'])
-@app.route('/api/probe/<int:probe_id>', methods=['GET', 'POST'])
+@app.route('/api/probe', methods=['GET'])
+@app.route('/api/probe/<int:probe_id>', methods=['GET'])
 def get_probe(probe_id=None):
     return jsonify(api.get_probe(probe_id))
 
 
-@app.route('/api/inhibitor', methods=['GET', 'POST'])
-@app.route('/api/inhibitor/<int:inhibitor_id>', methods=['GET', 'POST'])
+@app.route('/api/inhibitor', methods=['GET'])
+@app.route('/api/inhibitor/<int:inhibitor_id>', methods=['GET'])
 def get_inhibitor(inhibitor_id=None):
     return jsonify(api.get_inhibitor(inhibitor_id))
 

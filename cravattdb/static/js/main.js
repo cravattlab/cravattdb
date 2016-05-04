@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('cravattdb', ['ngRoute', 'ngResource', 'ngFileUpload']);
+var app = angular.module('cravattdb', ['ngRoute', 'ngResource', 'ngFileUpload', 'file-model']);
 
 app.value('bootstrap', window.bootstrap || {});
 
@@ -56,8 +56,6 @@ app.controller('MainController', ['$scope', '$http', 'Upload', function($scope, 
                     this.errors.push(message);
                 }
             }
-
-
         }.bind(this));
     };
 }]);
@@ -70,7 +68,21 @@ app.controller('SideloadController', ['$scope', '$http', 'bootstrap', function($
     this.bootstrap = bootstrap || {};
 
     this.submit = function() {
-        $http.put('/api/experiment', this.data);
+        var formData = new FormData();
+
+        for (var key in this.data) {
+            formData.append(key, this.data[key]);
+        }
+
+        // https://uncorkedstudios.com/blog/multipartformdata-file-upload-with-angularjs
+        $http.put(
+            '/api/experiment',
+            formData,
+            {
+                transformRequest: angular.identity,
+                headers: { 'Content-Type': undefined }
+            }
+        );
     }.bind(this);
 }]);
 
