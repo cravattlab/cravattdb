@@ -79,7 +79,7 @@ def search(name):
     return 'hello'
 
 
-@app.route('/status', methods=['GET'])
+@app.route('/status')
 @login_required
 def status():
     user_id = current_user.get_id()
@@ -87,7 +87,7 @@ def status():
     return render_template('index.html', id=current_user.email, info=info)
 
 
-@app.route('/sideload', methods=['GET'])
+@app.route('/sideload')
 @login_required
 def sideload_dataset():
     bootstrap = {
@@ -101,10 +101,11 @@ def sideload_dataset():
 
 
 @app.route('/api/experiment', methods=['PUT'])
+@login_required
 def add_experiment():
     return jsonify(api.add_experiment(
         name=request.form.get('name'),
-        user_id=1,
+        user_id=current_user.get_id(),
         organism_id=request.form.get('organism'),
         experiment_type_id=request.form.get('experimentType'),
         probe_id=request.form.get('probe'),
@@ -113,32 +114,32 @@ def add_experiment():
     ))
 
 
-@app.route('/api/experiment', methods=['GET'])
-@app.route('/api/experiment/<int:experiment_id>', methods=['GET'])
+@app.route('/api/experiment')
+@app.route('/api/experiment/<int:experiment_id>')
 def get_experiment(experiment_id=None):
     return jsonify(api.get_experiment(experiment_id))
 
 
-@app.route('/api/experiment_type', methods=['GET'])
-@app.route('/api/experiment_type/<int:experiment_id>', methods=['GET'])
+@app.route('/api/experiment_type')
+@app.route('/api/experiment_type/<int:experiment_id>')
 def get_experiment_type(experiment_id=None):
     return jsonify(api.get_experiment_type(experiment_id))
 
 
-@app.route('/api/organism', methods=['GET'])
-@app.route('/api/organism/<int:organism_id>', methods=['GET'])
+@app.route('/api/organism')
+@app.route('/api/organism/<int:organism_id>')
 def get_organism(organism_id=None):
     return jsonify(api.get_organism(organism_id))
 
 
-@app.route('/api/probe', methods=['GET'])
-@app.route('/api/probe/<int:probe_id>', methods=['GET'])
+@app.route('/api/probe')
+@app.route('/api/probe/<int:probe_id>')
 def get_probe(probe_id=None):
     return jsonify(api.get_probe(probe_id))
 
 
-@app.route('/api/inhibitor', methods=['GET'])
-@app.route('/api/inhibitor/<int:inhibitor_id>', methods=['GET'])
+@app.route('/api/inhibitor')
+@app.route('/api/inhibitor/<int:inhibitor_id>')
 def get_inhibitor(inhibitor_id=None):
     return jsonify(api.get_inhibitor(inhibitor_id))
 
