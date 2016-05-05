@@ -18,6 +18,10 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
        templateUrl: '/static/partials/sideload.html',
        controller: 'SideloadController',
        controllerAs: 'sideload' 
+    }).when('/dataset/:experimentId', {
+        templateUrl: '/static/partials/dataset.html',
+        controller: 'DatasetController',
+        controllerAs: 'dataset'
     });
 }]);
 
@@ -62,6 +66,10 @@ app.controller('MainController', ['$scope', '$http', 'Upload', function($scope, 
 
 app.controller('StatusController', ['$scope', '$http', function($scope, $http) {
 
+}]);
+
+app.controller('DatasetController', ['$scope', 'bootstrap', function($scope, bootstrap) {
+    this.bootstrap = bootstrap || {};
 }]);
 
 app.controller('SideloadController', ['$scope', '$http', 'bootstrap', function($scope, $http, bootstrap) {

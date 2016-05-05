@@ -23,6 +23,7 @@ app.config['MAIL_USE_TLS'] = config.MAIL_USE_TLS
 app.config['MAIL_USE_SSL'] = config.MAIL_USE_SSL
 app.config['MAIL_USERNAME'] = config.EMAIL
 app.config['MAIL_PASSWORD'] = config.EMAIL_PASSWORD
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 redis = Redis(host='redis')
 mail = Mail(app)

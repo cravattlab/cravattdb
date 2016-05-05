@@ -127,10 +127,10 @@ class Dataset(db.Model):
     rsquared = Column(db.Numeric)
     entry = Column(db.Integer)
     link = Column(db.String(100))
-    discriminator = Column('experiment_id', db.Integer)
+    experiment_id = Column(db.Integer)
     __mapper_args__ = {
         'polymorphic_identity': 'dataset',
-        'polymorphic_on': discriminator
+        'polymorphic_on': experiment_id
     }
 
 
@@ -143,23 +143,23 @@ class DatasetSchema(Schema):
     description = fields.String()
     symbol = fields.String()
     sequence = fields.String()
-    mass = fields.Decimal()
+    mass = fields.Float()
     charge = fields.Integer()
     segment = fields.Integer()
-    ratio = fields.Decimal()
-    intensity = fields.Decimal()
+    ratio = fields.Float()
+    intensity = fields.Float()
     num_ms2_peaks = fields.Integer()
     num_candidate_peaks = fields.Integer()
-    max_light_intensity = fields.Decimal()
-    light_noise = fields.Decimal()
-    max_heavy_intensity = fields.Decimal()
-    heavy_noise = fields.Decimal()
-    rsquared = fields.Decimal()
+    max_light_intensity = fields.Float()
+    light_noise = fields.Float()
+    max_heavy_intensity = fields.Float()
+    heavy_noise = fields.Float()
+    rsquared = fields.Float()
     entry = fields.Integer()
     link = fields.String()
 
     @post_dump(pass_many=True)
-    def _wrap(self, data):
+    def _wrap(self, data, many):
         return {'dataset': data}
 
 

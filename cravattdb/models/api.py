@@ -1,6 +1,5 @@
 """Defines methods for interacting with database."""
 import cravattdb.models.sideload as sideload
-import sqlalchemy
 from cravattdb.models.database import (
     db,
     Experiment, Dataset, ExperimentType, Organism, Probe, Inhibitor,
@@ -54,12 +53,16 @@ def get_experiment(experiment_id=None):
 
 
 def get_dataset(experiment_id):
-    meta = sqlalchemy.MetaData(bind=db.engine)
-    dataset111 = sqlalchemy.Table('dataset_111', meta, autoload=True, autoload_with=db.engine)
-    print(dataset111, 'hello')
-    # dataset = Dataset.query.filter_by(discriminator=experiment_id)
-    # return dataset_schema.dump(dataset).data
-    return 'hello'
+    for i in range(2):
+        try:
+            dataset = Dataset.query.filter_by(experiment_id=experiment_id)
+            result = dataset_schema.dump(dataset).data
+            break
+        except AssertionError:
+            # class definition for dynamic class does not exist on current metadata
+            sideload.create_dataset(experiment_id)
+
+    return result
 
 
 def get_experiment_type(experiment_id=None):
