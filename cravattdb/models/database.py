@@ -134,6 +134,35 @@ class Dataset(db.Model):
     }
 
 
+class DatasetSchema(Schema):
+    """Marshmallow schema for Dataset."""
+
+    id = fields.Integer(dump_only=True)
+    peptide_index = fields.Integer()
+    ipi = fields.String()
+    description = fields.String()
+    symbol = fields.String()
+    sequence = fields.String()
+    mass = fields.Decimal()
+    charge = fields.Integer()
+    segment = fields.Integer()
+    ratio = fields.Decimal()
+    intensity = fields.Decimal()
+    num_ms2_peaks = fields.Integer()
+    num_candidate_peaks = fields.Integer()
+    max_light_intensity = fields.Decimal()
+    light_noise = fields.Decimal()
+    max_heavy_intensity = fields.Decimal()
+    heavy_noise = fields.Decimal()
+    rsquared = fields.Decimal()
+    entry = fields.Integer()
+    link = fields.String()
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data):
+        return {'dataset': data}
+
+
 class ExperimentType(db.Model):
     """Defines different experiment types."""
 
