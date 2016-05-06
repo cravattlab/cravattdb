@@ -1,0 +1,20 @@
+<pre>
+List info:
+predicate: {{experiments.predicate}}
+reverse: {{ experiments.reverse }}
+search: {{experiments.search}}
+</pre>
+
+Filter <input id="search" type="text" ng-model="experiments.search" />
+<table class="ui selectable celled table">
+    <thead>
+        <tr>
+            <th ng-repeat="heading in experiments.bootstrap.headers" ng-click="experiments.predicate = $index; experiments.reverse = !experiments.reverse">{{ heading }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in experiments.bootstrap.data  | filter:experiments.search | orderBy: experiments.sorter:experiments.reverse">
+            <td ng-repeat="column in row" ng-click="experiments.showDataset(row[0])">{{ column }}</td>
+        </tr>
+    </tbody>
+</table>

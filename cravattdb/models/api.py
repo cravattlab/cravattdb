@@ -8,16 +8,11 @@ from cravattdb.models.database import (
 
 
 experiment_schema = ExperimentSchema()
-experiments_schema = ExperimentSchema(many=True)
 dataset_schema = DatasetSchema(many=True)
 organism_schema = OrganismSchema()
-organisms_schema = OrganismSchema(many=True)
 experiment_type_schema = ExperimentTypeSchema()
-experiment_types_schema = ExperimentTypeSchema(many=True)
 probe_schema = ProbeSchema()
-probes_schema = ProbeSchema(many=True)
 inhibitor_schema = InhibitorSchema()
-inhibitors_schema = InhibitorSchema(many=True)
 
 
 def add_experiment(name, user_id, organism_id, experiment_type_id, file, probe_id=0, inhibitor_id=0):
@@ -41,15 +36,46 @@ def add_experiment(name, user_id, organism_id, experiment_type_id, file, probe_i
     return result.data
 
 
-def get_experiment(experiment_id=None):
-    if experiment_id:
-        experiment = Experiment.query.get(experiment_id)
-        result = experiment_schema.dump(experiment)
-    else:
-        experiments = Experiment.query.all()
-        result = experiments_schema.dump(experiments)
+def get_experiment(experiment_id=None, flat=False):
+    many = experiment_id is None
 
-    return result.data
+    if many:
+        experiment = Experiment.query.all()
+    else:
+        experiment = Experiment.query.get(experiment_id)
+
+    result = experiment_schema.dump(experiment, many=many)
+
+    if flat:
+        if many:
+            raw = result.data['experiments']
+        else:
+            raw = [result.data]
+
+        desired_keys = [
+            'date',
+            'name',
+            'inhibitor',
+            'organism',
+            'probe'
+        ]
+
+        filtered = []
+
+        for experiment in raw:
+            filtered.append({key: experiment[key] for key in desired_keys})
+
+        for item in filtered:
+            item['organism'] = item['organism']['name']
+            item['inhibitor'] = item['inhibitor']['name']
+            item['probe'] = item['probe']['name']
+
+        return {
+            'headers': list(filtered[0].keys()),
+            'data': [list(item.values()) for item in filtered]
+        }
+    else:
+        return result.data
 
 
 def get_dataset(experiment_id):
@@ -68,44 +94,40 @@ def get_dataset(experiment_id):
 def get_experiment_type(experiment_id=None):
     if experiment_id:
         experiment_type = ExperimentType.query.get(experiment_id)
-        result = experiment_type_schema.dump(experiment_type)
     else:
-        experiment_types = ExperimentType.query.all()
-        result = experiment_types_schema.dump(experiment_types)
+        experiment_type = ExperimentType.query.all()
 
+    result = experiment_type_schema.dump(experiment_type, many=experiment_id is None)
     return result.data
 
 
 def get_organism(organism_id=None):
     if organism_id:
         organism = Organism.query.get(organism_id)
-        result = organism_schema.dump(organism)
     else:
-        organisms = Organism.query.all()
-        result = organisms_schema.dump(organisms)
+        organism = Organism.query.all()
 
+    result = organism_schema.dump(organism, many=organism_id is None)
     return result.data
 
 
 def get_probe(probe_id=None):
     if probe_id:
         probe = Probe.query.get(probe_id)
-        result = probe_schema.dump(probe)
     else:
-        probes = Probe.query.all()
-        result = probes_schema.dump(probes)
+        probe = Probe.query.all()
 
+    result = probe_schema.dump(probe, many=probe_id is None)
     return result.data
 
 
 def get_inhibitor(inhibitor_id=None):
     if inhibitor_id:
         inhibitor = Inhibitor.query.get(inhibitor_id)
-        result = inhibitor_schema.dump(inhibitor)
     else:
-        inhibitors = Inhibitor.query.all()
-        result = inhibitors_schema.dump(inhibitors)
+        inhibitor = Inhibitor.query.all()
 
+    result = inhibitor_schema.dump(inhibitor, many=inhibitor_id is None)
     return result.data
 
 

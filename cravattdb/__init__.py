@@ -101,6 +101,13 @@ def sideload_dataset():
     return render_template('index.html', bootstrap=bootstrap)
 
 
+@app.route('/experiments')
+@login_required
+def get_experiments():
+    bootstrap = api.get_experiment(flat=True)
+    return render_template('index.html', bootstrap=bootstrap)
+
+
 @app.route('/dataset/<int:experiment_id>')
 @login_required
 def get_dataset(experiment_id):

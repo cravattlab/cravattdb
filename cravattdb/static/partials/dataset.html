@@ -1,1 +1,18 @@
-{{ dataset.bootstrap }}
+<pre>
+Dataset info:
+ratioRange: {{ dataset.ratioMin }}
+ratioRange: {{ dataset.ratioMax }}
+</pre>
+
+<div id="controls">
+    <div id="grouping-group">
+        Group by:
+        <button type="button" class="btn btn-default">Peptide</button>
+        <button type="button" class="btn btn-default active">Protein</button>
+    </div>
+
+    <div id="ratio-group">
+        Mean ratio range:<div range-slider id="ratioRange" decimal-places="2" min="0" max="20" step="0.25" model-min="dataset.ratioMin" model-max="dataset.ratioMax"></div>
+    </div>
+</div>
+<table datatable="" dt-options="dataset.dtOptions" class="table table-hover table-condensed"></table>
