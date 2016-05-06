@@ -156,3 +156,45 @@ def delete_organism(organism_id):
         return True
     else:
         return False
+
+
+def add_experiment_type(name, search_params, cimage_params):
+    experiment_type = experiment_type_schema.load({
+        'name': name,
+        'search_params': search_params,
+        'cimage_params': cimage_params
+    })
+
+    db.session.add(experiment_type.data)
+    db.session.commit()
+    result = experiment_type_schema.dump(experiment_type.data)
+
+    return result.data
+
+
+def add_probe(name, iupac_name, inchi):
+    probe = probe_schema.load({
+        'name': name,
+        'iupac_name': iupac_name,
+        'inchi': inchi
+    })
+
+    db.session.add(probe.data)
+    db.session.commit()
+    result = probe_schema.dump(probe.data)
+
+    return result.data
+
+
+def add_inhibitor(name, iupac_name, inchi):
+    inhibitor = inhibitor_schema.load({
+        'name': name,
+        'iupac_name': iupac_name,
+        'inchi': inchi
+    })
+
+    db.session.add(inhibitor.data)
+    db.session.commit()
+    result = inhibitor_schema.dump(inhibitor.data)
+
+    return result.data

@@ -178,6 +178,33 @@ def add_organism():
     ))
 
 
+@app.route('/api/experimentType', methods=['PUT'])
+def add_experiment_type():
+    return jsonify(api.add_experiment_type(
+        name=request.args.get('name'),
+        search_params=request.args.get('searchParams'),
+        cimage_params=request.args.get('cimageParams')
+    ))
+
+
+@app.route('/api/probe', methods=['PUT'])
+def add_probe():
+    return jsonify(api.add_probe(
+        name=request.args.get('name'),
+        iupac_name=request.args.get('iupacName'),
+        inchi=request.args.get('inchi')
+    ))
+
+
+@app.route('/api/inhibitor', methods=['PUT'])
+def add_inhibitor():
+    return jsonify(api.add_inhibitor(
+        name=request.args.get('name'),
+        iupac_name=request.args.get('iupacName'),
+        inchi=request.args.get('inchi')
+    ))
+
+
 @app.before_first_request
 def create_user():
     db.create_all()

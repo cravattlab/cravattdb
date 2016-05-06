@@ -178,6 +178,10 @@ class ExperimentTypeSchema(Schema):
     id = fields.Integer(dump_only=True)
     name = fields.String()
 
+    @post_load
+    def _make_experiment_type(self, data):
+        return ExperimentType(**data)
+
     @post_dump(pass_many=True)
     def _wrap(self, data, many):
         return {'experiment_types': data} if many else data
