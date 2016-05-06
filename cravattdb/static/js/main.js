@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('cravattdb', ['ngRoute', 'ngResource', 'ngFileUpload', 'file-model']);
+var app = angular.module('cravattdb', ['ngRoute', 'ngResource', 'ngFileUpload', 'file-model', 'datatables']);
 
 app.value('bootstrap', window.bootstrap || {});
 
@@ -86,20 +86,19 @@ function($scope, bootstrap, $http, $routeParams, DTOptionsBuilder, DTColumnBuild
     this.ratioMax = 20;
 
     this.dtOptions = DTOptionsBuilder
-        .fromSource('/api/dataset/' + $routeParams.id)
+        .fromSource('/api/dataset/' + $routeParams.experimentId)
         .withFnServerData(function (sSource, aoData, fnCallback, oSettings) {
             oSettings.jqXHR = $.ajax({
                 'dataType': 'json',
-                'url': sSource,
+                'url': oSettings.ajax,
                 'data': aoData,
                 'success': function(data) {
-                    data = orderData(data.dataset.data);
+                    data = orderData(data.data);
                     // le monkey patch
                     fnCallback.call(this, data);
                 }
             });
-        })
-        .withBootstrap();
+        });
 
     function orderData(data) {
         var lastId,

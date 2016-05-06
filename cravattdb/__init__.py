@@ -110,8 +110,19 @@ def get_experiments():
 
 @app.route('/dataset/<int:experiment_id>')
 @login_required
-def get_dataset(experiment_id):
+def render_dataset(experiment_id):
     return render_template('index.html', bootstrap=api.get_dataset(experiment_id))
+
+
+@app.route('/api/dataset/<int:experiment_id>')
+def get_dataset(experiment_id):
+    raw = api.get_dataset(experiment_id)
+    raw = raw['dataset']
+
+    return jsonify({
+        'headers': list(raw[0].keys()),
+        'data': [list(item.values()) for item in raw]
+    })
 
 
 @app.route('/api/experiment', methods=['PUT'])

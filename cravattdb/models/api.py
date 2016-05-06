@@ -1,5 +1,6 @@
 """Defines methods for interacting with database."""
 import cravattdb.models.sideload as sideload
+from collections import OrderedDict as OrderedDict
 from cravattdb.models.database import (
     db,
     Experiment, Dataset, ExperimentType, Organism, Probe, Inhibitor,
@@ -53,11 +54,12 @@ def get_experiment(experiment_id=None, flat=False):
             raw = [result.data]
 
         desired_keys = [
-            'date',
+            'id',
             'name',
-            'inhibitor',
             'organism',
-            'probe'
+            'probe',
+            'inhibitor',
+            'date'
         ]
 
         filtered = []
