@@ -10,6 +10,7 @@ from cravattdb.models.database import (
 
 experiment_schema = ExperimentSchema()
 dataset_schema = DatasetSchema(many=True)
+dataset_schema_summary = DatasetSchema(many=True, only=('peptide_index', 'ipi', 'symbol', 'sequence', 'mass', 'charge', 'segment', 'ratio'))
 organism_schema = OrganismSchema()
 experiment_type_schema = ExperimentTypeSchema()
 probe_schema = ProbeSchema()
@@ -65,7 +66,12 @@ def get_experiment(experiment_id=None, flat=False):
         filtered = []
 
         for experiment in raw:
-            filtered.append({key: experiment[key] for key in desired_keys})
+            ordered = OrderedDict()
+
+            for key in desired_keys:
+                ordered[key] = experiment[key]
+
+            filtered.append(ordered)
 
         for item in filtered:
             item['organism'] = item['organism']['name']
@@ -84,7 +90,7 @@ def get_dataset(experiment_id):
     for i in range(2):
         try:
             dataset = Dataset.query.filter_by(experiment_id=experiment_id)
-            result = dataset_schema.dump(dataset).data
+            result = dataset_schema_summary.dump(dataset).data
             break
         except AssertionError:
             # class definition for dynamic class does not exist on current metadata

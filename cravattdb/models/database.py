@@ -158,6 +158,11 @@ class DatasetSchema(Schema):
     entry = fields.Integer()
     link = fields.String()
 
+    class Meta:
+        """Additional settings."""
+
+        ordered = True
+
     @post_dump(pass_many=True)
     def _wrap(self, data, many):
         return {'dataset': data}

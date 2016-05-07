@@ -103,7 +103,7 @@ def sideload_dataset():
 
 @app.route('/experiments')
 @login_required
-def get_experiments():
+def render_experiments():
     bootstrap = api.get_experiment(flat=True)
     return render_template('index.html', bootstrap=bootstrap)
 

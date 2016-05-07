@@ -147,7 +147,17 @@ function($scope, bootstrap, $http, $routeParams, DTOptionsBuilder, DTColumnBuild
 
     setDefaults(this.dtOptions);
 
-    this.dtOptions.aoColumns = extractColumns(["peptide_index", "ipi", "symbol", "sequence", "mass", "charge", "segment", "ratio", "meanRatio"]);
+    this.dtOptions.aoColumns = extractColumns([
+        'peptide_index',
+        'ipi',
+        'symbol',
+        'sequence',
+        'mass',
+        'charge',
+        'segment',
+        'ratio',
+        'meanRatio'
+    ]);
 
     function setDefaults(options) {
         options.pageLength = 25;
@@ -219,7 +229,6 @@ function($scope, bootstrap, $http, $routeParams, DTOptionsBuilder, DTColumnBuild
         function( settings, data, dataIndex ) {
             var min = self.ratioMin;
             var max = self.ratioMax;
-            console.log(min, max);
             var ratio = parseFloat( data[8] ) || 0; // use data for the ratio column
 
             if ( ( isNaN( min ) && isNaN( max ) ) ||
