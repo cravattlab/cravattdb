@@ -4,8 +4,11 @@ node_modules
 semantic
 *.pyc
 *.pid
+*.map
 .vagrant
 vagrant-sync
+typings
+cravattdb/static/app/**/*.js
 
 # Windows image file caches
 Thumbs.db
