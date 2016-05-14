@@ -8,6 +8,10 @@ Vagrant.configure(2) do |config|
   config.ssh.forward_agent = true
   config.vm.network "forwarded_port", guest:8080, host:8080
 
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+  end
+
   config.vm.synced_folder "vagrant-sync/cimage-minimal", "/home/vagrant/github/cimage-minimal", create: true
   config.vm.synced_folder "vagrant-sync/cravattdb", "/home/vagrant/github/cravattdb", create: true
 
