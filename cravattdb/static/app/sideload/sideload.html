@@ -1,59 +1,57 @@
 <h1 class="ui dividing header">Cravegas 0.1</h1>
 
-<div class="ui error message" ng-show="sideload.errors.length && sideload.showErrors">
+<div class="ui error message" [hidden]="errors.length && showErrors">
     <i class="close icon" ng-click="sideload.showErrors = false"></i>
     <div class="header">
         There were some errors with your submission
     </div>
     <ul class="list">
-        <li ng-repeat="error in sideload.errors">{{ error }}</li>
+        <li *ngFor="let error of errors">{{ error }}</li>
     </ul>
 </div>
 
-{{ sideload.data }}
-
-<form class="ui form" name="upload">
+<form #f="ngForm" class="ui form" name="upload" (ngSubmit)="onSubmit(f.value)">
     <div class="six wide required field">
         <label>Dataset Name</label>
-        <input type="text" placeholder="Dataset Name" ng-model="sideload.data.name" required>
+        <input type="text" placeholder="Dataset Name" ngControl="name" required>
     </div>
 
     <div class="six wide required field">
         <label>Organism</label>
-        <select class="ui dropdown" ng-model="sideload.data.organism" required>
+        <select class="ui dropdown" ngControl="organism" required>
             <option value="">Select Species</option>
-            <option ng-repeat="organism in sideload.bootstrap.organisms" value="{{ organism.id }}">{{ organism.display_name | titlecase }}</option>
+            <option *ngFor="let organism of bootstrap.organisms" value="{{ organism.id }}">{{ organism.display_name }}</option>
         </select>
     </div>
 
     <div class="six wide required field">
         <label>Experiment Type</label>
-        <select class="ui dropdown" ng-model="sideload.data.experimentType" required>
+        <select class="ui dropdown" ngControl="type" required>
             <option value="">Select Experiment Type</option>
-            <option ng-repeat="experimentType in sideload.bootstrap.experiment_types" value="{{ experimentType.id }}">{{ experimentType.name | titlecase }}</option>
+            <option *ngFor="let experimentType of bootstrap.experiment_types" value="{{ experimentType.id }}">{{ experimentType.name }}</option>
         </select>
     </div>
 
     <div class="six wide field">
         <label>Probe</label>
-        <select class="ui dropdown" ng-model="sideload.data.probe">
+        <select class="ui dropdown" ngControl="probe">
             <option value="">Select Probe</option>
-            <option ng-repeat="probe in sideload.bootstrap.probes" value="{{ probe.id }}">{{ probe.name | titlecase }}</option>
+            <option *ngFor="let probe of bootstrap.probes" value="{{ probe.id }}">{{ probe.name }}</option>
         </select>
     </div>
 
     <div class="six wide field">
         <label>Inhibitor</label>
-        <select class="ui dropdown" ng-model="sideload.data.inhibitor">
+        <select class="ui dropdown" ngControl="inhibitor">
             <option value="">Select Inhibitor</option>
-            <option ng-repeat="inhibitor in sideload.bootstrap.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name | titlecase }}</option>
+            <option *ngFor="let inhibitor of bootstrap.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name }}</option>
         </select>
     </div>
 
-    <button class="ui primary button" type="submit" ng-click="sideload.submit()">Submit</button>
+    <button class="ui primary button" type="submit">Submit</button>
 
-    <button type="button" class="ui button" onclick="document.getElementById('file-select').click()">
+<!--     <button type="button" class="ui button" onclick="document.getElementById('file-select').click()">
         <i class="file outline icon"></i> Select Data File
         <input type="file" id="file-select" file-model="sideload.data.file" required />
-    </button>
+    </button> -->
 </form>
