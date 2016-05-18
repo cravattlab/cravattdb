@@ -105,30 +105,34 @@ def sideload_dataset():
 @login_required
 def render_experiments():
     bootstrap = api.get_experiment(flat=True)
-    return render_template('index.html', bootstrap=bootstrap)
+    return render_template('index.html', bootstrap={'experiments': bootstrap})
 
 
 @app.route('/dataset/<int:experiment_id>')
 @login_required
 def render_dataset(experiment_id):
     raw = api.get_dataset(experiment_id)
-    raw = raw['dataset']
 
     return render_template('index.html', bootstrap={
-        'headers': list(raw[0].keys()),
-        'data': [list(item.values()) for item in raw]
+        'dataset': {
+            'data': [list(item.values()) for item in raw['dataset']],
+            'id': experiment_id
+        }
     })
 
 
 @app.route('/api/dataset/<int:experiment_id>')
 def get_dataset(experiment_id):
     raw = api.get_dataset(experiment_id)
-    raw = raw['dataset']
 
     return jsonify({
-        'headers': list(raw[0].keys()),
-        'data': [list(item.values()) for item in raw]
+        'data': [list(item.values()) for item in raw['dataset']]
     })
+
+
+@app.route('/api/experiments')
+def get_experiments():
+    return jsonify(api.get_experiment(flat=True))
 
 
 @app.route('/api/experiment', methods=['PUT'])

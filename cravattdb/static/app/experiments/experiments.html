@@ -9,11 +9,16 @@ Filter <input id="search" type="text" />
 <table class="ui selectable celled table">
     <thead>
         <tr>
-            <th *ngFor="let heading of experiments.headers">{{ heading }}</th>
+            <th>id</th>
+            <th>name</th> 
+            <th>organism</th> 
+            <th>probe</th>
+            <th>inhibitor</th>
+            <th>date</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let row of experiments.data">
+        <tr *ngFor="let row of experiments" (click)="router.navigate(['/dataset', row[0]])">
             <td *ngFor="let column of row">{{ column }}</td>
         </tr>
     </tbody>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CanDeactivate, OnActivate, Router, RouteSegment } from '@angular/router';
 import { DatasetService } from './dataset.service'
 
@@ -8,13 +8,23 @@ import { DatasetService } from './dataset.service'
 })
 
 export class DatasetComponent implements OnActivate {
-    dataset: any[];
+    data: any[];
+    minRatio: Number;
+    maxRatio: Number;
 
     constructor(
         private service: DatasetService
-    ) { }
+    ) {
+        this.minRatio = 0;
+        this.maxRatio = 20;
+    }
 
-    routerOnActivate() {
-        this.service.getExperiments().then(dataset => this.dataset = dataset);
+    routerOnActivate(curr: RouteSegment): void {
+        let id = +curr.getParam('id')
+        this.getData(id);
+    }
+
+    getData(id) {
+        this.service.getData(id).then(d => this.data = d);
     }
 }
