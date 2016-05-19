@@ -1,0 +1,16 @@
+<pre>
+Dataset info:
+ratioRange: {{ minRatio }}
+ratioRange: {{ maxRatio }}
+</pre>
+
+<div id="controls">
+    <div id="grouping-group">
+        Group by:
+        <button type="button" class="btn btn-default">Peptide</button>
+        <button type="button" class="btn btn-default active">Protein</button>
+    </div>
+</div>
+
+<experiment-data [id]="id"></experiment-data>
+<experiment-meta [id]="id"></experiment-meta>

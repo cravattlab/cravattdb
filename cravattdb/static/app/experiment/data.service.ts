@@ -5,12 +5,12 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class DatasetService {
+export class DataService {
     constructor(private http: Http) { }
 
     getData(id): Promise<any> {
-        if (bootstrap.hasOwnProperty('dataset') && bootstrap.dataset.id === id) {
-            return Promise.resolve(bootstrap.dataset.data);
+        if (bootstrap.hasOwnProperty('experiment') && bootstrap.experiment.id === id) {
+            return Promise.resolve(bootstrap.experiment.data);
         } else {
             return this.http.get('/api/dataset/' + id)
                 .toPromise()

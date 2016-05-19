@@ -108,13 +108,13 @@ def render_experiments():
     return render_template('index.html', bootstrap={'experiments': bootstrap})
 
 
-@app.route('/dataset/<int:experiment_id>')
+@app.route('/experiment/<int:experiment_id>')
 @login_required
-def render_dataset(experiment_id):
+def render_experiment(experiment_id):
     raw = api.get_dataset(experiment_id)
 
     return render_template('index.html', bootstrap={
-        'dataset': {
+        'experiment': {
             'data': [list(item.values()) for item in raw['dataset']],
             'id': experiment_id
         }

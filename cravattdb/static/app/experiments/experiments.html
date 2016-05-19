@@ -18,7 +18,7 @@ Filter <input id="search" type="text" />
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let row of experiments" (click)="router.navigate(['/dataset', row[0]])">
+        <tr *ngFor="let row of experiments" (click)="router.navigate(['/experiment', row[0]])">
             <td *ngFor="let column of row">{{ column }}</td>
         </tr>
     </tbody>
