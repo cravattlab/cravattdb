@@ -27,6 +27,10 @@ export class SideloadComponent implements OnActivate {
         console.log('you submitted value:', form); 
     }
 
+    onFileChange(e) {
+        console.log(e.target.files);
+    }
+
     routerOnActivate() {
         this.service.getSideload().then(sideload => this.bootstrap = sideload);
     }
