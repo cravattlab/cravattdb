@@ -1,1 +1,16 @@
-{{ data | json }}
+<dl>
+    <dt>Name</dt>
+    <dd>{{ data?.name }}</dd>
+    <dt>Description</dt>
+    <dd>{{ data?.description }}</dd>
+    <dt>Date</dt>
+    <dd>{{ data?.date }}</dd>
+    <dt>Experiment Type</dt>
+    <dd>{{ data?.experiment_type?.name }}</dd>
+    <dt>Inhibitor</dt>
+    <dd>{{ data?.inhibitor?.name }}</dd>
+    <dt>Probe</dt>
+    <dd>{{ data?.probe?.name }}</dd>
+    <dt>Organism</dt>
+    <dd>{{ data?.organism?.display_name }}</dd>
+</dl>
