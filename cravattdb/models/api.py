@@ -10,7 +10,10 @@ from cravattdb.models.database import (
 
 experiment_schema = ExperimentSchema()
 dataset_schema = DatasetSchema(many=True)
-dataset_schema_summary = DatasetSchema(many=True, only=('peptide_index', 'ipi', 'symbol', 'sequence', 'mass', 'charge', 'segment', 'ratio'))
+dataset_schema_summary = DatasetSchema(many=True, only=(
+    'peptide_index', 'ipi', 'symbol', 'description', 'sequence',
+    'mass', 'charge', 'segment', 'ratio'
+))
 organism_schema = OrganismSchema()
 experiment_type_schema = ExperimentTypeSchema()
 probe_schema = ProbeSchema()

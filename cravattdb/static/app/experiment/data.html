@@ -1,19 +1,28 @@
 <table class="ui selectable celled table">
     <thead>
         <tr>
-            <th>peptide_index</th>
-            <th>ipi</th>
-            <th>symbol</th>
-            <th>sequence</th>
-            <th>mass</th>
-            <th>charge</th>
-            <th>segment</th>
-            <th>ratio</th>
+            <th>Uniprot</th>
+            <th>Symbol</th>
+            <th colspan="2">Description</th>
+            <th>Mean Ratio</th>
+        </tr>
+        <tr>
+            <th>Sequence</th>
+            <th>Mass</th>
+            <th>Charge</th>
+            <th>Segment</th>
+            <th>Ratio</th>
         </tr>
     </thead>
-    <tbody>
-        <tr *ngFor="let row of data">
-            <td *ngFor="let column of row">{{ column }}</td>
+    <tbody *ngFor="let row of data | groupByProtein">
+        <tr class="active">
+            <td>{{ row.uniprot }}</td>
+            <td>{{ row.symbol }}</td>
+            <td colspan="2">{{ row.description }}</td>
+            <td>{{ row.mean }}</td>
+        </tr>
+        <tr *ngFor="let group of row.value">
+            <td *ngFor="let column of group">{{ column }}</td>
         </tr>
     </tbody>
 </table>
