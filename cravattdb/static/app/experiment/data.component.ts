@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import * as _ from 'lodash';
 import { DataService } from './data.service'
 
 @Component({
@@ -17,6 +18,7 @@ export class DataComponent implements OnInit {
     constructor(private service: DataService) {}
 
     ngOnInit(): void {
+        console.log(_);
         this.service.getData(this.id).then(d => this.data = d);
     }
 }
