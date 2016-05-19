@@ -1,0 +1,19 @@
+<table class="ui selectable celled table">
+    <thead>
+        <tr>
+            <th>peptide_index</th>
+            <th>ipi</th>
+            <th>symbol</th>
+            <th>sequence</th>
+            <th>mass</th>
+            <th>charge</th>
+            <th>segment</th>
+            <th>ratio</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of data">
+            <td *ngFor="let column of row">{{ column }}</td>
+        </tr>
+    </tbody>
+</table>

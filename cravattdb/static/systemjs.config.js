@@ -3,6 +3,7 @@
   // map tells the System loader where to look for things
   var map = {
     'app':                        'static/app', // 'dist',
+    'lodash':                     'static/node_modules/lodash',
     'rxjs':                       'static/node_modules/rxjs',
     'angular2-in-memory-web-api': 'static/node_modules/angular2-in-memory-web-api',
     '@angular':                   'static/node_modules/@angular'
@@ -12,7 +13,7 @@
   var packages = {
     'app':                        { main: 'main.js',  defaultExtension: 'js' },
     'rxjs':                       { defaultExtension: 'js' },
-    'angular2-in-memory-web-api': { defaultExtension: 'js' },
+    'angular2-in-memory-web-api': { defaultExtension: 'js' }
   };
 
   var packageNames = [
@@ -25,6 +26,7 @@
     '@angular/router',
     '@angular/testing',
     '@angular/upgrade',
+    'lodash'
   ];
 
   // add package entries for angular packages in the form '@angular/common': { main: 'index.js', defaultExtension: 'js' }
