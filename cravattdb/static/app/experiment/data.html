@@ -1,28 +1,57 @@
-<table class="ui selectable celled table">
-    <thead>
-        <tr>
-            <th>Uniprot</th>
-            <th>Symbol</th>
-            <th colspan="2">Description</th>
-            <th>Mean Ratio</th>
-        </tr>
-        <tr>
-            <th>Sequence</th>
-            <th>Mass</th>
-            <th>Charge</th>
-            <th>Segment</th>
-            <th>Ratio</th>
-        </tr>
-    </thead>
-    <tbody *ngFor="let row of data | groupByProtein">
-        <tr class="active">
-            <td>{{ row.uniprot }}</td>
-            <td>{{ row.symbol }}</td>
-            <td colspan="2">{{ row.description }}</td>
-            <td>{{ row.mean }}</td>
-        </tr>
-        <tr *ngFor="let group of row.value">
-            <td *ngFor="let column of group">{{ column }}</td>
-        </tr>
-    </tbody>
+<table class="ui selectable celled table" [ngSwitch]="byPeptide">
+    <template [ngSwitchWhen]="false">
+        <thead>
+            <tr>
+                <th>Uniprot</th>
+                <th>Symbol</th>
+                <th colspan="2">Description</th>
+                <th>Mean Ratio</th>
+            </tr>
+            <tr>
+                <th>Sequence</th>
+                <th>Mass</th>
+                <th>Charge</th>
+                <th>Segment</th>
+                <th>Ratio</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let row of data | groupByProtein">
+            <tr class="active">
+                <td>{{ row.groupKey }}</td>
+                <td>{{ row.symbol }}</td>
+                <td colspan="2">{{ row.description }}</td>
+                <td>{{ row.mean }}</td>
+            </tr>
+            <tr *ngFor="let group of row.value">
+                <td *ngFor="let column of group">{{ column }}</td>
+            </tr>
+        </tbody>
+    </template>
+
+    <template [ngSwitchWhen]="true">
+        <thead>
+            <tr>
+                <th colspan="6">Sequence</th>
+                <th>Mean Ratio</th>
+            </tr>
+            <tr>
+                <th>Uniprot</th>
+                <th>Symbol</th>
+                <th>Description</th>
+                <th>Mass</th>
+                <th>Charge</th>
+                <th>Segment</th>
+                <th>Ratio</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let row of data | groupByPeptide">
+            <tr class="active">
+                <td colspan="6">{{ row.groupKey }}</td>
+                <td>{{ row.mean }}</td>
+            </tr>
+            <tr *ngFor="let group of row.value">
+                <td *ngFor="let column of group">{{ column }}</td>
+            </tr>
+        </tbody>
+    </template>
 </table>

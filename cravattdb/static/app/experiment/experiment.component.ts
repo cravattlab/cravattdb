@@ -10,11 +10,20 @@ import { MetaComponent } from './meta.component'
 
 export class ExperimentComponent implements OnActivate {
     data: any[];
-    minRatio: Number;
-    maxRatio: Number;
-    id: Number;
+    minRatio: number;
+    maxRatio: number;
+    id: number;
+    byPeptide: boolean;
+
+    constructor() {
+        this.byPeptide = false;
+    }
 
     routerOnActivate(curr: RouteSegment): void {
         this.id = +curr.getParam('id');
+    }
+
+    toggleGrouping(): void {
+        this.byPeptide = !this.byPeptide;
     }
 }

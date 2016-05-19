@@ -33,3 +33,7 @@ dd::after {
     display: block;
     clear: left;
 }
+
+#controls {
+    margin-bottom:1em;
+}
