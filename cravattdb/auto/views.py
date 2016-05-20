@@ -3,11 +3,11 @@
 from flask import Blueprint, request, abort, render_template
 from flask.ext.security import login_required
 from flask_security.core import current_user
-from cravattdb.models.search import Search
-from cravattdb.models.tasks import process
+from .search import Search
+from .tasks import process
 from http import HTTPStatus
 from redis import Redis
-import cravattdb.models.upload as upload
+import cravattdb.auto.upload as upload
 
 
 auto = Blueprint('auto', __name__,

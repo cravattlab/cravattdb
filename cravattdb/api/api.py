@@ -1,11 +1,11 @@
 """Defines methods for interacting with database."""
-import cravattdb.models.sideload as sideload
+from cravattdb import db
 from collections import OrderedDict as OrderedDict
-from cravattdb.models.database import (
-    db,
+from cravattdb.home.models import (
     Experiment, Dataset, ExperimentType, Organism, Probe, Inhibitor,
     OrganismSchema, ExperimentTypeSchema, ExperimentSchema, DatasetSchema, ProbeSchema, InhibitorSchema
 )
+import cravattdb.home.sideload as sideload
 
 
 experiment_schema = ExperimentSchema()

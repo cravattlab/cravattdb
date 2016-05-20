@@ -1,5 +1,5 @@
 import json, time
-from cravattdb.models.ip2 import IP2
+from .ip2 import IP2
 
 class Search:
     def __init__(self, name):

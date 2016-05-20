@@ -1,5 +1,6 @@
 """Helper methods for creating datasets."""
-from cravattdb.models.database import db, Dataset
+from cravattdb import db
+from cravattdb.home.models import Dataset
 from zipfile import ZipFile
 # from cravattdb import app
 import csv

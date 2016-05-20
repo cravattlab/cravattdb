@@ -3,7 +3,7 @@
 from flask import Blueprint, render_template
 from flask.ext.security import login_required
 from flask_security.core import current_user
-import cravattdb.models.api as api
+import cravattdb.api.api as api
 
 home = Blueprint('home', __name__,
                  template_folder='templates',
