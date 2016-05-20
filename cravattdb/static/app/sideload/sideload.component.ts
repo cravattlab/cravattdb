@@ -1,20 +1,19 @@
 import { Component } from '@angular/core';
-import { CanDeactivate, OnActivate, Router, RouteSegment } from '@angular/router';
+import { OnActivate } from '@angular/router';
 import { SideloadService } from './sideload.service'
 import { FORM_DIRECTIVES } from '@angular/common';
-import { Experiment } from '../experiments/experiment'
+import { InitializeDropdown } from '../directives/semantic-ui-init';
 
 @Component({
     templateUrl: 'static/app/sideload/sideload.html',
-    directives: [FORM_DIRECTIVES],
+    directives: [FORM_DIRECTIVES, InitializeDropdown],
     providers: [SideloadService]
 })
 
 export class SideloadComponent implements OnActivate {
-    bootstrap: {};
+    data: {};
     showErrors: boolean;
     errors: any[];
-    // model = new Experiment();
 
     constructor(
         private service: SideloadService
@@ -32,6 +31,6 @@ export class SideloadComponent implements OnActivate {
     }
 
     routerOnActivate() {
-        this.service.getSideload().then(sideload => this.bootstrap = sideload);
+        this.service.getData().then(d => this.data = d);
     }
 }
