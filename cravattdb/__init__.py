@@ -142,7 +142,7 @@ def add_experiment():
         name=request.form.get('name'),
         user_id=current_user.get_id(),
         organism_id=request.form.get('organism'),
-        experiment_type_id=request.form.get('experimentType'),
+        experiment_type_id=request.form.get('type'),
         probe_id=request.form.get('probe'),
         inhibitor_id=request.form.get('inhibitor'),
         file=request.files['file']

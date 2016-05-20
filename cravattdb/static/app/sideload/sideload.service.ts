@@ -1,28 +1,31 @@
 declare var bootstrap: any;
 
-import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Injectable, Inject } from '@angular/core';
+
 
 @Injectable()
 export class SideloadService {
     getData() { return Promise.resolve(bootstrap || {}); }
 
     submitForm(form) {
-        // var formData = new FormData();
+        let formData: FormData = new FormData();
+        let xhr: XMLHttpRequest = new XMLHttpRequest();
 
-        // for (var key in this.data) {
-        //     formData.append(key, this.data[key]);
-        // }
+        for (let key in form) {
+            formData.append(key, form[key]);
+        }
 
-        // // https://uncorkedstudios.com/blog/multipartformdata-file-upload-with-angularjs
-        // $http.put(
-        //     '/api/experiment',
-        //     formData,
-        //     {
-        //         transformRequest: angular.identity,
-        //         headers: { 'Content-Type': undefined }
-        //     }
-        // );
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    JSON.parse(xhr.response);
+                } else {
+                    // observer.error(xhr.response);
+                }
+            }
+        };
+
+        xhr.open('PUT', '/api/experiment', true);
+        xhr.send(formData);
     }
 }
