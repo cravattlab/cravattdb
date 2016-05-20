@@ -14,6 +14,7 @@ export class SideloadComponent implements OnActivate {
     data: {};
     showErrors: boolean;
     errors: any[];
+    file: File;
 
     constructor(
         private service: SideloadService
@@ -23,11 +24,12 @@ export class SideloadComponent implements OnActivate {
     }
 
     onSubmit(form: any): void {
-        console.log('you submitted value:', form); 
+        form.file = this.file;
+        this.service.submitForm(form);
     }
 
     onFileChange(e) {
-        console.log(e.target.files);
+        this.file = e.target.files[0];
     }
 
     routerOnActivate() {
