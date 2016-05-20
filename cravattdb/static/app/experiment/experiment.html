@@ -4,9 +4,17 @@
 
 <div id="controls">
     <div class="ui toggle checkbox">
-        <input type="checkbox" name="public" [checked]="byPeptide" (click)="toggleGrouping()">
+        <input type="checkbox" [checked]="byPeptide" (change)="byPeptide = !byPeptide">
         <label>Group by peptide</label>
+    </div>
+    <div class="ui toggle checkbox">
+        <input type="checkbox" [checked]="collapsed" (change)="collapsed = !collapsed">
+        <label>Collapse peptide entries</label>
     </div>
 </div>
 
-<experiment-data [id]="id" [byPeptide]="byPeptide"></experiment-data>
+<experiment-data
+    [id]="id"
+    [byPeptide]="byPeptide"
+    [collapsed]="collapsed"
+></experiment-data>

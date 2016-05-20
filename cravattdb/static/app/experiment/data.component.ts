@@ -11,20 +11,17 @@ import { GroupByPeptidePipe } from './groupByPeptide.pipe';
 })
 
 export class DataComponent implements OnInit {
-    @Input() id: Number
-    @Input() byPeptide: Boolean
+    @Input() id: number
+    @Input() byPeptide: boolean
+    @Input() collapsed: boolean;
 
     data: any[];
-    minRatio: Number;
-    maxRatio: Number;
+    minRatio: number;
+    maxRatio: number;
 
-    constructor(private service: DataService) { }
+    constructor(private service: DataService) {    }
 
     ngOnInit(): void {
         this.service.getData(this.id).then(d => this.data = d);
-    }
-
-    toggleGroup(): void {
-        this.byPeptide = !this.byPeptide;
     }
 }

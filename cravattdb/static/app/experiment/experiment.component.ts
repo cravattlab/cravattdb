@@ -14,16 +14,14 @@ export class ExperimentComponent implements OnActivate {
     maxRatio: number;
     id: number;
     byPeptide: boolean;
+    collapsed: boolean;
 
     constructor() {
         this.byPeptide = false;
+        this.collapsed = false;
     }
 
     routerOnActivate(curr: RouteSegment): void {
         this.id = +curr.getParam('id');
-    }
-
-    toggleGrouping(): void {
-        this.byPeptide = !this.byPeptide;
     }
 }

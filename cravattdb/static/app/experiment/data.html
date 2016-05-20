@@ -7,7 +7,7 @@
                 <th colspan="2">Description</th>
                 <th>Mean Ratio</th>
             </tr>
-            <tr>
+            <tr *ngIf="!collapsed">
                 <th>Sequence</th>
                 <th>Mass</th>
                 <th>Charge</th>
@@ -22,9 +22,11 @@
                 <td colspan="2">{{ row.description }}</td>
                 <td>{{ row.mean }}</td>
             </tr>
-            <tr *ngFor="let group of row.value">
-                <td *ngFor="let column of group">{{ column }}</td>
-            </tr>
+            <template [ngIf]="!collapsed">
+                <tr *ngFor="let group of row.value">
+                    <td *ngFor="let column of group">{{ column }}</td>
+                </tr>
+            </template>
         </tbody>
     </template>
 
@@ -34,7 +36,7 @@
                 <th colspan="6">Sequence</th>
                 <th>Mean Ratio</th>
             </tr>
-            <tr>
+            <tr *ngIf="!collapsed">
                 <th>Uniprot</th>
                 <th>Symbol</th>
                 <th>Description</th>
@@ -49,9 +51,11 @@
                 <td colspan="6">{{ row.groupKey }}</td>
                 <td>{{ row.mean }}</td>
             </tr>
-            <tr *ngFor="let group of row.value">
-                <td *ngFor="let column of group">{{ column }}</td>
-            </tr>
+            <template [ngIf]="!collapsed">
+                <tr *ngFor="let group of row.value">
+                    <td *ngFor="let column of group">{{ column }}</td>
+                </tr>
+            </template>
         </tbody>
     </template>
 </table>
