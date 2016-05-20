@@ -1,7 +1,7 @@
 """Helper methods for creating datasets."""
 from cravattdb.models.database import db, Dataset
 from zipfile import ZipFile
-from cravattdb import app
+# from cravattdb import app
 import csv
 import io
 import pathlib
@@ -45,7 +45,7 @@ def new_dataset(dataset_id, user_id, file):
 
 def unzip_cimage(file, user_id, dataset_id):
     extract_path = pathlib.Path(
-        app.instance_path,
+        # app.instance_path,
         'legacy',
         str(user_id),
         str(dataset_id)
