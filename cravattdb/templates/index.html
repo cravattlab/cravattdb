@@ -7,16 +7,17 @@
     <base href="/">
 
     <link rel="stylesheet" type="text/css" href="/static/bower_components/semantic/dist/semantic.min.css">
-    <link rel="stylesheet" href="/static/bower_components/datatables/media/css/jquery.dataTables.css">
     <link rel="stylesheet" type="text/css" href="/static/css/main.css">
 
     <!-- 1. Load libraries -->
-     <!-- Polyfill(s) for older browsers -->
-    <script src="/static/node_modules/es6-shim/es6-shim.min.js"></script>
-
     <script src="/static/node_modules/zone.js/dist/zone.js"></script>
     <script src="/static/node_modules/reflect-metadata/Reflect.js"></script>
-    <script src="/static/node_modules/systemjs/dist/system.src.js"></script>
+
+    <!-- Polyfill(s) for older browsers -->
+    <script src="/static/node_modules/es6-shim/es6-shim.min.js"></script>
+
+    <script src="/static/node_modules/systemjs/dist/system.js"></script>
+    <script src="/static/node_modules/rxjs/bundles/Rx.min.js"></script>
 
     <!-- 2. Configure SystemJS -->
     <script src="/static/systemjs.config.js"></script>
@@ -29,7 +30,9 @@
     <script src="/static/bower_components/semantic/dist/semantic.min.js"></script>
     {% if bootstrap %}
     <!-- bootstrapping code for application -->
-    <script type="text/javascript">window.bootstrap = {{ bootstrap | tojson | safe }};</script>
+    <script type="text/javascript">
+        window.bootstrap = {{ bootstrap | tojson | safe }};
+    </script>
     {% endif %}
 </head>
 <body ng-app="cravattdb">
@@ -37,5 +40,8 @@
     <div>User id: {{ id }}</div>
     <div>Meta: {{ meta }}</div>
     <div>Status: {{ info }}</div>
+    <script type="text/javascript">
+        $('select.dropdown').dropdown();
+    </script>
 </body>
 </html>

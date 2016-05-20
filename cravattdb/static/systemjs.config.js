@@ -4,16 +4,17 @@
   var map = {
     'app':                        'static/app', // 'dist',
     'lodash':                     'static/node_modules/lodash',
-    'rxjs':                       'static/node_modules/rxjs',
-    'angular2-in-memory-web-api': 'static/node_modules/angular2-in-memory-web-api',
+    // 'rxjs':                       'static/node_modules/rxjs',
+    // 'angular2-in-memory-web-api': 'static/node_modules/angular2-in-memory-web-api',
     '@angular':                   'static/node_modules/@angular'
   };
 
   // packages tells the System loader how to load when no filename and/or no extension
   var packages = {
     'app':                        { main: 'main.js',  defaultExtension: 'js' },
-    'rxjs':                       { defaultExtension: 'js' },
-    'angular2-in-memory-web-api': { defaultExtension: 'js' }
+    // 'rxjs':                       { defaultExtension: 'js' },
+    'angular2-in-memory-web-api': { defaultExtension: 'js' },
+    'lodash':                     { main: 'lodash.js', defaultExtension: 'js' }
   };
 
   var packageNames = [
@@ -24,14 +25,17 @@
     '@angular/platform-browser',
     '@angular/platform-browser-dynamic',
     '@angular/router',
-    '@angular/testing',
-    '@angular/upgrade',
-    'lodash'
+    '@angular/testing'
   ];
 
   // add package entries for angular packages in the form '@angular/common': { main: 'index.js', defaultExtension: 'js' }
+  // packageNames.forEach(function(pkgName) {
+  //   packages[pkgName] = { main: 'index.js', defaultExtension: 'js' };
+  // });
+
   packageNames.forEach(function(pkgName) {
-    packages[pkgName] = { main: 'index.js', defaultExtension: 'js' };
+    var name = pkgName.indexOf('/')>0 ? pkgName.split('/')[1] : pkgName; 
+    packages[pkgName] = { main: name + '.umd.js', defaultExtension: 'js' };
   });
 
   var config = {
