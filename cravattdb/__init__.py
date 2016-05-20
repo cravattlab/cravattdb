@@ -49,15 +49,6 @@ app.register_blueprint(users)
 app.register_blueprint(api, url_prefix='/api')
 
 
-def error_response(details, code):
-    return make_response(jsonify({'error': details}), code)
-
-
 @app.errorhandler(HTTPStatus.UNAUTHORIZED)
 def unauthorized(error):
-    return error_response(error.description, error.code)
-
-
-@app.errorhandler(HTTPStatus.CONFLICT)
-def dataset_exists(error):
-    return error_response(error.description, error.code)
+    return make_response(jsonify({'error': error.description}), error.code)

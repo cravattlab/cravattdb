@@ -1,8 +1,9 @@
 """Blueprint for front-end."""
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, make_response, jsonify
 from flask.ext.security import login_required
 from flask_security.core import current_user
+from http import HTTPStatus
 import cravattdb.api.api as api
 
 home = Blueprint('home', __name__,
@@ -48,3 +49,8 @@ def render_experiment(experiment_id):
             'id': experiment_id
         }
     })
+
+
+@home.app_errorhandler(HTTPStatus.CONFLICT)
+def dataset_exists(error):
+    return make_response(jsonify({'error': error.description}), error.code)
