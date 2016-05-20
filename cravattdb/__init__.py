@@ -8,11 +8,18 @@ from cravattdb.models.search import Search
 from cravattdb.models.tasks import process
 from cravattdb.models.database import db, User, Role
 from http import HTTPStatus
-import cravattdb.models.upload as upload
 import config.config as config
+import cravattdb.models.upload as upload
 import cravattdb.models.api as api
+import os
 
-app = Flask(__name__)
+instance_path = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)),
+    config.UPLOAD_FOLDER
+)
+
+app = Flask(__name__, instance_path=instance_path)
+
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = config.SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI

@@ -1,12 +1,19 @@
 """Helper methods for creating datasets."""
 from cravattdb.models.database import db, Dataset
+from zipfile import ZipFile
+from cravattdb import app
 import csv
 import io
+import pathlib
 
 
-def new_dataset(dataset_id, file):
+def new_dataset(dataset_id, user_id, file):
     dataset = create_dataset(dataset_id)
     db.create_all()
+
+    cimage_output_file = unzip_cimage(file, user_id, dataset_id)
+    return
+
     raw_data = preprocess(file)
     tsv = io.StringIO(raw_data)
 
@@ -33,7 +40,23 @@ def new_dataset(dataset_id, file):
             link=line[13]
         ))
 
-    db.session.commit()
+    # db.session.commit()
+
+
+def unzip_cimage(file, user_id, dataset_id):
+    extract_path = pathlib.Path(
+        app.instance_path,
+        'legacy',
+        str(user_id),
+        str(dataset_id)
+    )
+
+    print(str(extract_path))
+
+    with ZipFile(file, 'r') as cimage_zip:
+        cimage_zip.extractall(str(extract_path))
+
+    return
 
 
 def preprocess(file):

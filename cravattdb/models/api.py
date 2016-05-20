@@ -34,7 +34,7 @@ def add_experiment(name, user_id, organism_id, experiment_type_id, file, probe_i
     db.session.commit()
 
     # after commit since we need to get id
-    sideload.new_dataset(experiment.data.id, file)
+    sideload.new_dataset(experiment.data.id, int(user_id), file)
 
     result = organism_schema.dump(experiment.data)
 
