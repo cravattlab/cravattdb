@@ -19,7 +19,7 @@ export class DataComponent implements OnInit {
     minRatio: number;
     maxRatio: number;
 
-    constructor(private service: DataService) {    }
+    constructor(private service: DataService) { }
 
     ngOnInit(): void {
         this.service.getData(this.id).then(d => this.data = d);
