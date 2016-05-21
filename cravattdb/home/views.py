@@ -21,14 +21,7 @@ def index():
 @home.route('/sideload')
 @login_required
 def sideload_dataset():
-    bootstrap = {
-        **api.get_organism(),
-        **api.get_probe(),
-        **api.get_inhibitor(),
-        **api.get_experiment_type()
-    }
-
-    return render_template('index.html', bootstrap=bootstrap)
+    return render_template('index.html')
 
 
 @home.route('/experiments')

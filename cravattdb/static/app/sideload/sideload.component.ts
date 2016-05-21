@@ -28,11 +28,11 @@ export class SideloadComponent implements OnActivate {
         this.service.submitForm(form);
     }
 
-    onFileChange(e) {
+    onFileChange(e): void {
         this.file = e.target.files[0];
     }
 
-    routerOnActivate() {
-        this.service.getData().then(d => this.data = d);
+    routerOnActivate(): void {
+        this.service.getData().subscribe(d => this.data = d);
     }
 }

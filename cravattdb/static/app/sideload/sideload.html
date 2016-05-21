@@ -20,7 +20,7 @@
         <label>Organism</label>
         <select class="ui search selection dropdown" ngControl="organism" required>
             <option value="">Select Species</option>
-            <option *ngFor="let organism of data.organisms" value="{{ organism.id }}">{{ organism.display_name }}</option>
+            <option *ngFor="let organism of data?.organisms" value="{{ organism.id }}">{{ organism.display_name }}</option>
         </select>
     </div>
 
@@ -28,7 +28,7 @@
         <label>Experiment Type</label>
         <select class="ui search selection dropdown" ngControl="type" required>
             <option value="">Select Experiment Type</option>
-            <option *ngFor="let experimentType of data.experiment_types" value="{{ experimentType.id }}">{{ experimentType.name }}</option>
+            <option *ngFor="let experimentType of data?.experiment_types" value="{{ experimentType.id }}">{{ experimentType.name }}</option>
         </select>
     </div>
 
@@ -36,7 +36,7 @@
         <label>Probe</label>
         <select class="ui search selection dropdown" ngControl="probe">
             <option value="">Select Probe</option>
-            <option *ngFor="let probe of data.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+            <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
         </select>
     </div>
 
@@ -44,7 +44,7 @@
         <label>Inhibitor</label>
         <select class="ui search selection dropdown" ngControl="inhibitor">
             <option value="">Select Inhibitor</option>
-            <option *ngFor="let inhibitor of data.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name }}</option>
+            <option *ngFor="let inhibitor of data?.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name }}</option>
         </select>
     </div>
 
