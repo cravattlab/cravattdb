@@ -12,12 +12,12 @@ export class GroupByPeptidePipe implements PipeTransform {
         keyArr.forEach(key => {
             dataArr.push({
                 'groupKey': key,
-                'symbol': value[key][0][2],
-                'description': value[key][0][3],
+                'symbol': value[key][0][1],
+                'description': value[key][0][2],
                 'mean': (value[key].reduce(
-                    (a, b) => a + b[8], 0
+                    (a, b) => a + b[7], 0
                 ) / value[key].length).toFixed(1),
-                'value': value[key].map(d => d = [...d.slice(1,4), ...d.slice(5) ])
+                'columns': value[key].map(d => d = { data: [...d.slice(0, 3), ...d.slice(4, -1)], chromatogram: d.slice(-1) }),
             });
         });
 

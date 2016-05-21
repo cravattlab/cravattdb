@@ -6,6 +6,7 @@
                 <th>Symbol</th>
                 <th colspan="2">Description</th>
                 <th>Mean Ratio</th>
+                <th class="center aligned" rowspan="2"><i class="area chart big icon"></i></th>
             </tr>
             <tr *ngIf="!collapsed">
                 <th>Sequence</th>
@@ -21,10 +22,12 @@
                 <td>{{ row.symbol }}</td>
                 <td colspan="2">{{ row.description }}</td>
                 <td>{{ row.mean }}</td>
+                <td></td>
             </tr>
             <template [ngIf]="!collapsed">
-                <tr *ngFor="let group of row.value">
-                    <td *ngFor="let column of group">{{ column }}</td>
+                <tr *ngFor="let group of row.columns">
+                    <td *ngFor="let column of group.data">{{ column }}</td>
+                    <td class="center aligned"><a [href]="'legacy/1/' + id + '/chromatogram/' + group.chromatogram[0]"><i class="area chart link icon"></i></a></td>
                 </tr>
             </template>
         </tbody>
@@ -53,7 +56,8 @@
             </tr>
             <template [ngIf]="!collapsed">
                 <tr *ngFor="let group of row.value">
-                    <td *ngFor="let column of group">{{ column }}</td>
+                    <td *ngFor="let column of group.data">{{ column }}</td>
+                    <td class="center aligned"><a [href]="'legacy/1/' + id + '/chromatogram/' + group.chromatogram[0]"><i class="area chart link icon"></i></a></td>
                 </tr>
             </template>
         </tbody>

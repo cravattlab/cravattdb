@@ -11,8 +11,8 @@ import cravattdb.home.sideload as sideload
 experiment_schema = ExperimentSchema()
 dataset_schema = DatasetSchema(many=True)
 dataset_schema_summary = DatasetSchema(many=True, only=(
-    'peptide_index', 'ipi', 'symbol', 'description', 'sequence',
-    'mass', 'charge', 'segment', 'ratio'
+    'ipi', 'symbol', 'description', 'sequence',
+    'mass', 'charge', 'segment', 'ratio', 'entry'
 ))
 organism_schema = OrganismSchema()
 experiment_type_schema = ExperimentTypeSchema()

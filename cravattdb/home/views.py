@@ -18,6 +18,12 @@ def index():
     return render_template('index.html', meta=meta, id=current_user.email)
 
 
+@home.route('/user_id')
+@login_required
+def get_user_id():
+    return current_user.get_id()
+
+
 @home.route('/sideload')
 @login_required
 def sideload_dataset():

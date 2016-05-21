@@ -40,6 +40,7 @@ def add_experiment():
 
 @api.route('/experiment')
 @api.route('/experiment/<int:experiment_id>')
+@login_required
 def get_experiment(experiment_id=None):
     return jsonify(model.get_experiment(experiment_id))
 
