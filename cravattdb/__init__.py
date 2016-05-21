@@ -39,14 +39,16 @@ security = Security(app, user_datastore)
 
 # get da blueprints
 from .home.views import home
-from .api.views import api
 from .auto.views import auto
 from .users.views import users
+from .api.views import api
+from .legacy.views import legacy
 
 app.register_blueprint(home)
 app.register_blueprint(auto)
 app.register_blueprint(users)
 app.register_blueprint(api, url_prefix='/api')
+app.register_blueprint(legacy, url_prefix='/legacy')
 
 
 @app.errorhandler(HTTPStatus.UNAUTHORIZED)
