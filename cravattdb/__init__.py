@@ -3,6 +3,7 @@ from flask import Flask, jsonify, make_response
 from flask.ext.security import Security, SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
+from flask_admin import Admin
 from http import HTTPStatus
 import config.config as config
 import os
@@ -36,6 +37,9 @@ __init__.py). Be advised that this is a bad idea in general but here it is actua
 from .users.models import User, Role
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
+
+# Setup Flask-Admin
+admin = Admin(app, name='cravattdb', template_mode='bootstrap3')
 
 # get da blueprints
 from .home.views import home

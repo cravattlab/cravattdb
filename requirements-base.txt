@@ -1,6 +1,7 @@
 beautifulsoup4
 celery
 Flask
+Flask-Admin
 Flask-Failsafe
 Flask-Migrate
 Flask-Script

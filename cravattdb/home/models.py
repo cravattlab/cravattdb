@@ -1,7 +1,8 @@
 """Contains definitions of SQLAlchemy tables."""
 from sqlalchemy.dialects.postgresql import JSON
 from marshmallow import Schema, fields, post_load, post_dump
-from cravattdb import db
+from flask_admin.contrib.sqla import ModelView
+from cravattdb import db, admin
 
 Column = db.Column
 relationship = db.relationship
@@ -234,3 +235,11 @@ class InhibitorSchema(Schema):
     @post_dump(pass_many=True)
     def _wrap(self, data, many):
         return {'inhibitors': data} if many else data
+
+
+# Flask-Admin views defined here for convenience
+admin.add_view(ModelView(Probe, db.session))
+admin.add_view(ModelView(Inhibitor, db.session))
+admin.add_view(ModelView(Experiment, db.session))
+admin.add_view(ModelView(ExperimentType, db.session))
+admin.add_view(ModelView(Organism, db.session))
