@@ -17,8 +17,9 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "dependencies", type: "shell", inline: <<-SHELL
     # installing things
+    sudo add-apt-repository ppa:fkrull/deadsnakes
     sudo apt-get update
-    sudo apt-get install -y git python-pip
+    sudo apt-get install -y git python-pip python3.5
 
     curl -sSL https://get.docker.com/ | sh
     sudo pip install docker-compose

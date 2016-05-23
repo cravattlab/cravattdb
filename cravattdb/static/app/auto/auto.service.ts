@@ -1,12 +1,32 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import * as _ from 'lodash';
 
 @Injectable()
 export class AutoService {
     constructor(private http: Http) { }
 
-    getData() {}
+    getData(): Observable<{}> {
+        let observableBatch = [];
+
+        const urls: string[] = [
+            '/api/probe',
+            '/api/organism',
+            '/api/inhibitor',
+            '/api/experiment_type'
+        ];
+
+        urls.forEach(url => {
+            observableBatch.push(
+                this.http.get(url).map(this.extractData).catch(this.handleError)
+            )
+        });
+
+        return Observable.forkJoin(observableBatch, (...args) => {
+            return _.merge({}, ...args);
+        });
+    }
 
     private extractData(res: Response) {
         let body = res.json();

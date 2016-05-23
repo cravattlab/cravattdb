@@ -2,7 +2,7 @@
 
 # install requirements in virtual environment
 cd /home/cravattdb/cravattdb
-virtualenv env
+virtualenv --python=/usr/bin/python3.5 env
 source env/bin/activate
 pip install -r requirements.txt
 
