@@ -7,10 +7,10 @@ source env/bin/activate
 pip install -r requirements.txt
 
 # start celery daemon
-celery -A cravattdb.models.tasks worker --loglevel=info --detach
+celery -A cravattdb.auto.tasks worker --loglevel=info --detach
 
 # get client software
-cd /home/cravattdb/cravattdb/cravattdb
+cd /home/cravattdb/cravattdb/cravattdb/static
 npm install
 bower install -F
 
