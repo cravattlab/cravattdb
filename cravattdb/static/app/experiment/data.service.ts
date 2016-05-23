@@ -1,5 +1,3 @@
-declare var bootstrap: any;
-
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -9,14 +7,10 @@ export class DataService {
     constructor(private http: Http) { }
 
     getData(id): Promise<any> {
-        if (bootstrap.hasOwnProperty('experiment') && bootstrap.experiment.id === id) {
-            return Promise.resolve(bootstrap.experiment.data);
-        } else {
-            return this.http.get('/api/dataset/' + id)
-                .toPromise()
-                .then(this.extractData)
-                .catch(this.handleError);
-        }
+        return this.http.get('/api/dataset/' + id)
+            .toPromise()
+            .then(this.extractData)
+            .catch(this.handleError);
     }
 
     private extractData(res: Response) {

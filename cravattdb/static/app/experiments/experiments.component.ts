@@ -11,7 +11,7 @@ import { ExperimentsService } from './experiments.service'
 export class ExperimentsComponent implements OnInit {
     experiments: any[];
 
-    constructor(private service: ExperimentsService) {}
+    constructor(private service: ExperimentsService, private router: Router) {}
 
     ngOnInit() {
         this.service.getExperiments().then(experiments => this.experiments = experiments);
