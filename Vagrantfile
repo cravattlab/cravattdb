@@ -19,8 +19,14 @@ Vagrant.configure(2) do |config|
     # installing things
     sudo apt-get update
     sudo apt-get install -y git python-pip
+
     curl -sSL https://get.docker.com/ | sh
     sudo pip install docker-compose
+
+    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash
+    sudo apt-get install -y nodejs
+
+    sudo npm install -g typescript@latest typings@latest
 
     # setup ssh
     mkdir -p ~/.ssh

@@ -49,7 +49,7 @@ from .api.views import api
 from .legacy.views import legacy
 
 app.register_blueprint(home)
-app.register_blueprint(auto)
+app.register_blueprint(auto, url_prefix='/auto')
 app.register_blueprint(users)
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(legacy, url_prefix='/legacy')

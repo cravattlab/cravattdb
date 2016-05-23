@@ -17,6 +17,12 @@ auto = Blueprint('auto', __name__,
 redis = Redis(host='redis')
 
 
+@auto.route('/')
+@login_required
+def render_auto_home():
+    return render_template('index.html')
+
+
 @auto.route('/search/<name>', methods=['POST'])
 @login_required
 def search(name):

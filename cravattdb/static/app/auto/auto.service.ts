@@ -3,19 +3,14 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class ProbesService {
+export class AutoService {
     constructor(private http: Http) { }
 
-    getData(): Promise<any> {
-        return this.http.get('/api/probe')
-            .toPromise()
-            .then(this.extractData)
-            .catch(this.handleError);
-    }
+    getData() {}
 
     private extractData(res: Response) {
         let body = res.json();
-        return body.probes || {};
+        return body || {};
     }
 
     private handleError(error: any) {
