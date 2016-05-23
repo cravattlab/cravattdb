@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CanDeactivate, OnActivate, Router, RouteSegment, ROUTER_DIRECTIVES } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { ExperimentsService } from './experiments.service'
 
 @Component({
@@ -8,15 +8,12 @@ import { ExperimentsService } from './experiments.service'
     directives: [ROUTER_DIRECTIVES]
 })
 
-export class ExperimentsComponent implements OnActivate {
+export class ExperimentsComponent implements OnInit {
     experiments: any[];
 
-    constructor(
-        private service: ExperimentsService,
-        private router: Router
-    ) {}
+    constructor(private service: ExperimentsService) {}
 
-    routerOnActivate() {
+    ngOnInit() {
         this.service.getExperiments().then(experiments => this.experiments = experiments);
     }
 }
