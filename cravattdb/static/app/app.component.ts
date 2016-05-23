@@ -4,6 +4,7 @@ import { ExperimentsComponent } from './experiments/experiments.component'
 import { MainComponent } from './home/home.component'
 import { ExperimentComponent } from './experiment/experiment.component'
 import { SideloadComponent } from './sideload/sideload.component'
+import { ProbesComponent } from './probes/probes.component'
 
 @Component({
     selector: 'app',
@@ -15,7 +16,8 @@ import { SideloadComponent } from './sideload/sideload.component'
     { path: '/', component: MainComponent },
     { path: '/sideload', component: SideloadComponent },
     { path: '/experiments', component: ExperimentsComponent },
-    { path: '/experiment/:id', component: ExperimentComponent }
+    { path: '/experiment/:id', component: ExperimentComponent },
+    { path: '/probes', component: ProbesComponent }
 ])
 
 export class AppComponent {}

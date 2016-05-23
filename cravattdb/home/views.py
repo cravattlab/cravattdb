@@ -36,6 +36,12 @@ def render_experiments():
     return render_template('index.html')
 
 
+@home.route('/probes')
+@login_required
+def render_probes():
+    return render_template('index.html')
+
+
 @home.route('/experiment/<int:experiment_id>')
 @login_required
 def render_experiment(experiment_id):
