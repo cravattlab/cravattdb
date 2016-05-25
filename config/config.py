@@ -6,13 +6,13 @@ with open('config/database.yml', 'r') as f:
     database_settings = yaml.load(f)
 
 UPLOAD_FOLDER = 'uploads'
+CONVERT_URL = 'http://cravattwork.scripps.edu:5001'
 
 
 class Config(object):
     """Holds flask configuration."""
 
     DEBUG = False
-    CONVERT_URL = 'http://cravattwork.scripps.edu:5001'
 
     # Flask-Security
     SECRET_KEY = 'super-secret'
