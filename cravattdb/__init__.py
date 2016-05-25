@@ -19,8 +19,7 @@ app.config.from_object(config.DevelopmentConfig)
 mail = Mail(app)
 
 # Create database connection object
-db = SQLAlchemy()
-db.init_app(app)
+db = SQLAlchemy(app)
 
 """
 We register blue prints after setting up app and db so that we can import these
@@ -40,6 +39,7 @@ security = Security(app, user_datastore)
 
 # Setup Flask-Admin
 admin = Admin(app, name='cravattdb', template_mode='bootstrap3')
+
 
 # get da blueprints
 from .home.views import home
