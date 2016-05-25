@@ -6,7 +6,7 @@ from flask_security.core import current_user
 from .search import Search
 from .tasks import process
 from http import HTTPStatus
-from redis import Redis
+from redis import StrictRedis
 import cravattdb.auto.upload as upload
 
 
@@ -14,7 +14,7 @@ auto = Blueprint('auto', __name__,
                  template_folder='templates',
                  static_folder='static')
 
-redis = Redis(host='redis')
+redis = StrictRedis(host='redis')
 
 
 @auto.route('/')
@@ -23,14 +23,15 @@ def render_auto_home():
     return render_template('index.html')
 
 
-@auto.route('/search/<name>', methods=['POST'])
+@auto.route('/search', methods=['POST'])
 @login_required
-def search(name):
+def search():
+    name = request.form.get('name')
     search = Search(name)
 
     login = search.login(
-        request.form.get('username'),
-        request.form.get('password')
+        request.form.get('ip2_username'),
+        request.form.get('ip2_password')
     )
 
     if not login:
@@ -40,7 +41,7 @@ def search(name):
     # path is type pathlib.Path
     try:
         name, path = upload.upload(
-            request.files.getlist('file'),
+            request.files.getlist('files'),
             current_user.get_id(),
             name
         )
@@ -54,7 +55,7 @@ def search(name):
         name,
         path,
         request.form.get('organism'),
-        request.form.get('experiment_type')
+        request.form.get('type')
     )
 
     return 'hello'
@@ -64,5 +65,5 @@ def search(name):
 @login_required
 def status():
     user_id = current_user.get_id()
-    info = redis.hgetall(user_id)
+    info = redis.hgetall('user:{}'.format(user_id))
     return render_template('index.html', id=current_user.email, info=info)

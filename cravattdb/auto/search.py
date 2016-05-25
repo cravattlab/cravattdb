@@ -1,17 +1,23 @@
-import json, time
+"""Perform search of dataset on IP2."""
 from .ip2 import IP2
+import json
+import time
+
 
 class Search:
+    """Perform search of dataset on IP2."""
+
     def __init__(self, name):
-        # dataset name
+        """Initialize Search with dataset name."""
         self.name = name
 
     def login(self, username, password):
+        """Login to IP2 and keep reference to session."""
         self._ip2 = IP2(self.name)
         return self._ip2.login(username, password)
 
     def search(self, organism, experiment_type, file_paths):
-        # setup search params
+        """Initiate search on IP2."""
         params = self._get_params(experiment_type)
         database = self._get_database_path(organism)
 
@@ -54,8 +60,8 @@ class Search:
             start = time.clock()
 
             try:
-                info = self._ip2.check_job_status()
-            except LookupError as e:
+                self._ip2.check_job_status()
+            except LookupError:
                 # job was not found, the job is finished or something went
                 # horribly wrong
                 return self._ip2.get_dtaselect()

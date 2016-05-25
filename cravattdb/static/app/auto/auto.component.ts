@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AutoService } from './auto.service'
 import { FORM_DIRECTIVES } from '@angular/common';
 import { InitializeDropdown } from '../directives/semantic-ui-init';
+import * as _ from 'lodash';
 
 @Component({
     templateUrl: 'static/app/auto/auto.html',
@@ -10,10 +11,10 @@ import { InitializeDropdown } from '../directives/semantic-ui-init';
 })
 
 export class AutoComponent implements OnInit {
-    data: {};
+    data: {} = {};
     showErrors: boolean = false;
     errors: any[] = [];
-    files: File[];
+    files: any[] = [];
 
     constructor(private service: AutoService) {}
 
@@ -22,6 +23,10 @@ export class AutoComponent implements OnInit {
     }
 
     onFileChange(e): void {
-        this.files = e.target.files;
+        this.files = _.values(e.target.files);
+    }
+
+    onSubmit(form: any): void {
+        this.service.submitForm(form, this.files);
     }
 }

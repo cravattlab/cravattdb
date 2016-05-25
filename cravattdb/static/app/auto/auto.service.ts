@@ -3,6 +3,8 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 
+declare var $: any
+
 @Injectable()
 export class AutoService {
     constructor(private http: Http) { }
@@ -26,6 +28,30 @@ export class AutoService {
         return Observable.forkJoin(observableBatch, (...args) => {
             return _.merge({}, ...args);
         });
+    }
+
+    submitForm(form, files:File[]) {
+        // Yes, I'm using fucking jQuery because the Http module blows right now.
+        // And fuck XMLHttpRequest too. Couldn't they make a nice abstraction?
+        let formData: FormData = new FormData();
+
+        for (let key in form) {
+            formData.append(key, form[key]);
+        }
+
+        for (let file of files) {
+            formData.append('files', file, file.name);
+        }
+
+        $.ajax({
+            url: '/auto/search',
+            method: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            processData: false,
+            contentType: false
+        }).done(d => console.log(d));
     }
 
     private extractData(res: Response) {

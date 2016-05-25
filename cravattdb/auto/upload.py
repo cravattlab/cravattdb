@@ -1,13 +1,20 @@
 """Handles uploads of .RAW files."""
-import pathlib
-import config.config as config
 from werkzeug import secure_filename
+from cravattdb import app
+import pathlib
 
 
 def upload(files, username, name):
     name = secure_filename(name)
     username = secure_filename(username)
-    path = pathlib.Path(config.UPLOAD_FOLDER, username, name)
+
+    path = pathlib.Path(
+        app.instance_path,
+        'processing',
+        username,
+        name
+    )
+
     path.mkdir(parents=True)
 
     for i, f in enumerate(sorted(files, key=lambda f: f.filename)):

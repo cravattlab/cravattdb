@@ -1,13 +1,15 @@
-import requests, re
+"""Rough interface to IP2."""
 from bs4 import BeautifulSoup
 from distutils.util import strtobool
+import requests
+import re
+
 
 class IP2:
-    ''' 
-    Helper class to programatically upload and search datasets on IP2.
-    Each instance of the class is tied to an experiment
-    '''
+    """Helper class to programatically upload and search datasets on IP2."""
+
     def __init__(self, name=None):
+        """Provide sensible defaults."""
         # self._db = Database()
         self.dataset_name = name
         self.project_id = 0
@@ -16,7 +18,7 @@ class IP2:
         self.search_id = None
 
     def search(self, params, file_paths):
-        ''' convenience method '''
+        """Convenience method."""
         self.set_project_id()
         self.create_experiment()
         self.set_experiment_id()
@@ -25,7 +27,7 @@ class IP2:
         self.prolucid_search(params)
 
     def login(self, username, password):
-        ''' login to IP2 '''
+        """Login to IP2."""
         login_req = requests.post('http://goldfish.scripps.edu/ip2/j_security_check', {
             'j_username': username,
             'j_password': password,
@@ -34,14 +36,15 @@ class IP2:
         })
 
         self.cookies = login_req.history[0].cookies
+        print (login_req.url)
         return 'error' not in login_req.url
 
     def logout(self):
-        ''' log out of IP2 '''
+        """Log out of IP2."""
         requests.get('http://goldfish.scripps.edu/ip2/logout.jsp', cookies=self.cookies)
 
     def set_project_id(self):
-        ''' get project id for cravattdb project or else create new project '''
+        """Get project id for cravattdb project or else create new project."""
         project_id = self._find_project_id()
 
         if not project_id:
@@ -52,12 +55,13 @@ class IP2:
         return project_id
 
     def set_experiment_id(self):
+        """After uploading experiment, fetch the id."""
         exp_req = requests.get(
-            'http://goldfish.scripps.edu/ip2/viewExperiment.html', 
+            'http://goldfish.scripps.edu/ip2/viewExperiment.html',
             {
                 'projectName': self.project_name,
                 'pid': self.project_id
-            }, 
+            },
             cookies=self.cookies
         )
 
@@ -65,20 +69,21 @@ class IP2:
         forms = soup.find_all('form', action='editExperiment.html')
 
         for form in forms:
-            sampleInput = form.find('input', attrs={'name':'sampleName'}, value=self.dataset_name)
-            if sampleInput:
+            sample_input = form.find('input', attrs={'name': 'sampleName'}, value=self.dataset_name)
+            if sample_input:
                 self.experiment_id = int(form.find('input', attrs={'name': 'expId'})['value'])
                 return
 
     def set_experiment_path(self):
+        """Get path to experiment and save as property."""
         path_req = requests.get(
-            'http://goldfish.scripps.edu/ip2/eachExperiment.html', 
+            'http://goldfish.scripps.edu/ip2/eachExperiment.html',
             {
                 'experimentId': self.experiment_id,
                 'projectName': self.project_name,
                 'pid': self.project_id
             },
-            cookies = self.cookies
+            cookies=self.cookies
         )
 
         soup = BeautifulSoup(path_req.text)
@@ -86,10 +91,8 @@ class IP2:
         path = re.search('"expPath":\s"([\w/]+)"', text)
         self.experiment_path = path.group(1)
 
-
     def create_experiment(self):
-        ''' create experiment under project '''
-
+        """Create experiment under project."""
         requests.post(
             'http://goldfish.scripps.edu/ip2/addExperiment.html',
             {
@@ -107,25 +110,23 @@ class IP2:
         )
 
     def upload_spectra(self, file_paths):
-        ''' upload .ms2 files '''
-        
+        """Upload .ms2 files."""
         for path in file_paths:
             with path.open() as f:
-                r = requests.post(
+                requests.post(
                     'http://goldfish.scripps.edu/helper/spectraUpload.jsp',
                     {
-                        'Filename':  path.name,
+                        'Filename': path.name,
                         'expPath': self.experiment_path,
                         'row2ms': 'false',
                         'Upload': 'Submit Query'
                     },
-                    cookies = self.cookies,
-                    files = { 'Filedata': f }
+                    cookies=self.cookies,
+                    files={'Filedata': f}
                 )
 
     def prolucid_search(self, params):
-        ''' perform prolucid search '''
-
+        """Perform prolucid search."""
         params.update({
             'expId': self.experiment_id,
             'expPath': self.experiment_path,
@@ -143,7 +144,7 @@ class IP2:
         )
 
     def check_job_status(self):
-        ''' check if job is finished '''
+        """Check if job is finished."""
         session_text = requests.get('http://goldfish.scripps.edu/ip2/dwr/engine.js').text
         session_id = re.search('_origScriptSessionId\s=\s"(\w+)"', session_text).group(1)
 
@@ -160,7 +161,7 @@ class IP2:
                 'batchId': 0
             },
             cookies=self.cookies,
-            headers={ 'content-type': 'plain/text' }
+            headers={'content-type': 'plain/text'}
         )
 
         # find sample and get identifier
@@ -175,7 +176,7 @@ class IP2:
         info = re.findall('s' + id + '\.(\w+)=([\w"\._\-\s]+);', status_req.text)
         info = dict(info)
 
-        # massaging 
+        # massaging
         info['finished'] = bool(strtobool(info['finished']))
         info['jobId'] = int(info['jobId'])
         info['progress'] = float(info['progress'])
@@ -187,15 +188,15 @@ class IP2:
         return info
 
     def get_dtaselect(self):
-        ''' finally grab what we came for '''
+        """Finally grab what we came for."""
         path_req = requests.get(
-            'http://goldfish.scripps.edu/ip2/eachExperiment.html', 
+            'http://goldfish.scripps.edu/ip2/eachExperiment.html',
             {
                 'experimentId': self.experiment_id,
                 'projectName': self.project_name,
                 'pid': self.project_id
             },
-            cookies = self.cookies
+            cookies=self.cookies
         )
 
         soup = BeautifulSoup(path_req.text)
@@ -229,9 +230,9 @@ class IP2:
             return False
 
     def _create_new_project(self):
-        ''' create new ip2 project for cravattdb experiments '''
+        """Create new ip2 project for cravattdb experiments."""
         requests.post(
-            'http://goldfish.scripps.edu/ip2/addProject.html', 
+            'http://goldfish.scripps.edu/ip2/addProject.html',
             {
                 'projectName': self.project_name,
                 'desc': ''
