@@ -237,6 +237,13 @@ class InhibitorSchema(Schema):
         return {'inhibitors': data} if many else data
 
 
+class Instrument(db.Model):
+    """Describes mass spec instruments."""
+
+    id = Column(db.Integer, primary_key=True)
+    name = Column(db.String(80))
+
+
 # Flask-Admin views defined here for convenience
 admin.add_view(ModelView(Probe, db.session))
 admin.add_view(ModelView(Inhibitor, db.session))
