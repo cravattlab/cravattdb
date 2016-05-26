@@ -6,15 +6,9 @@ from flask_mail import Mail
 from flask_admin import Admin
 from http import HTTPStatus
 import config.config as config
-import os
-
-instance_path = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)),
-    config.UPLOAD_FOLDER
-)
 
 # setup da app
-app = Flask(__name__, instance_path=instance_path)
+app = Flask(__name__, instance_path=str(config.INSTANCE_PATH))
 app.config.from_object(config.DevelopmentConfig)
 mail = Mail(app)
 
@@ -22,7 +16,7 @@ mail = Mail(app)
 db = SQLAlchemy(app)
 
 # Setup Flask-Admin
-admin = Admin(app, name='cravattdb', template_mode='bootstrap3')
+admin = Admin(app, name=config.PROJECT_NAME, template_mode='bootstrap3')
 
 """
 We register blue prints after setting up app and db so that we can import these
