@@ -1,6 +1,7 @@
 """Rough interface to IP2."""
 from bs4 import BeautifulSoup
 from distutils.util import strtobool
+from urllib.parse import parse_qs, urlparse
 import requests
 import re
 
@@ -36,7 +37,6 @@ class IP2:
         })
 
         self.cookies = login_req.history[0].cookies
-        print (login_req.url)
         return 'error' not in login_req.url
 
     def logout(self):
@@ -87,9 +87,10 @@ class IP2:
         )
 
         soup = BeautifulSoup(path_req.text)
-        text = soup.find('div', class_='add_spectra').find('script', text=re.compile(r'.+expPath.+')).contents[0]
-        path = re.search('"expPath":\s"([\w/]+)"', text)
-        self.experiment_path = path.group(1)
+        wrap = soup.find('div', class_='add_quality_check_details')
+        link = wrap.find_all('a')[1].attrs['href']
+        query_string = urlparse(link).query
+        self.experiment_path = parse_qs(query_string)['expPath'][0]
 
     def create_experiment(self):
         """Create experiment under project."""
@@ -112,17 +113,42 @@ class IP2:
     def upload_spectra(self, file_paths):
         """Upload .ms2 files."""
         for path in file_paths:
-            with path.open() as f:
+            with open(str(path), 'rb') as f:
                 requests.post(
-                    'http://goldfish.scripps.edu/helper/spectraUpload.jsp',
-                    {
-                        'Filename': path.name,
-                        'expPath': self.experiment_path,
-                        'row2ms': 'false',
-                        'Upload': 'Submit Query'
+                    'http://goldfish.scripps.edu/ip2/fileUploadAction.html',
+                    params={
+                        'filePath': self.experiment_path
+                    },
+                    data={
+                        'name': path.name,
+                        'chunk': 0,
+                        'chunks': 1
                     },
                     cookies=self.cookies,
-                    files={'Filedata': f}
+                    files={'file': (path.name, f, 'application/octet-stream')}
+                )
+
+                requests.post(
+                    'http://goldfish.scripps.edu/ip2/fileUploadAction.html',
+                    params={
+                        'fileFileName': path.name,
+                        'filePath': self.experiment_path,
+                        'startProcess': 'completed',
+                        'type': 'spectra'
+                    },
+                    cookies=self.cookies
+                )
+
+                requests.post(
+                    'http://goldfish.scripps.edu/ip2/fileUploadAction.html',
+                    params={
+                        'fileFileName': path.name,
+                        'filePath': self.experiment_path,
+                        'startProcess': 'post',
+                        'type': 'spectra',
+                        'flag': 'ko'
+                    },
+                    cookies=self.cookies
                 )
 
     def prolucid_search(self, params):
