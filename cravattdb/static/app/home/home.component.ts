@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
+import { HomeService } from './home.service';
+
 
 @Component({
-    template: `
-        <h1>This the main component.</h1>
-    `
+    templateUrl: 'static/app/home/home.html',
+    providers: [HomeService]
 })
 
-export class MainComponent { }
+export class MainComponent {
+    constructor(private service: HomeService) {}
+}
