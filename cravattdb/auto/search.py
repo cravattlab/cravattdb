@@ -30,19 +30,19 @@ class Search:
         return link
 
     def _get_params(self, experiment_type):
-        with open('static/search_params/search_params.json') as f:
+        with open('cravattdb/auto/search_params/search_params.json') as f:
             params_map = json.loads(f.read())
 
         if experiment_type not in params_map:
             raise KeyError('Search params are not available for this experiment_type')
 
-        with open('static/search_params/' + params_map[experiment_type]) as f:
+        with open('cravattdb/auto/search_params/' + params_map[experiment_type]) as f:
             params = json.loads(f.read())
 
         return params
 
     def _get_database_path(self, organism):
-        with open('static/search_params/databases.json') as f:
+        with open('cravattdb/auto/search_params/databases.json') as f:
             database_map = json.loads(f.read())
 
         if organism not in database_map:

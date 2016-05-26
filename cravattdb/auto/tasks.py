@@ -4,21 +4,21 @@ from pathlib import PurePath
 from redis import StrictRedis
 import cravattdb.auto.convert as convert
 import cravattdb.auto.quantify as quantify
-import config.config as config
 
-app = Celery('tasks', broker='amqp://guest@rabbitmq//')
-
+celery = Celery('tasks', broker='amqp://guest@rabbitmq//')
 redis = StrictRedis(host='redis')
 
 
-@app.task
+@celery.task
 def process(search, user_id, name, path, organism, experiment_type):
     # convert .raw to .ms2
     # removing first bit of file path since that is the upload folder
     set_status = update_status(user_id, name)
     set_status('converting')
 
-    convert_status = convert.convert(PurePath(path).relative_to(config.UPLOAD_FOLDER).as_posix())
+    corrected_path = PurePath(*path.parts[path.parts.index('processing') + 1:])
+    convert_status = convert.convert(corrected_path.as_posix())
+
     converted_paths = [path.joinpath(f) for f in convert_status['files_converted']]
     set_status('searching ip2')
 

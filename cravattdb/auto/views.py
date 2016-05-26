@@ -5,6 +5,7 @@ from flask.ext.security import login_required
 from flask_security.core import current_user
 from .search import Search
 from .tasks import process
+from cravattdb.home.models import ExperimentType, Organism
 from http import HTTPStatus
 from redis import StrictRedis
 import cravattdb.auto.upload as upload
@@ -54,8 +55,8 @@ def search():
         current_user.get_id(),
         name,
         path,
-        request.form.get('organism'),
-        request.form.get('type')
+        Organism.query.get(request.form.get('organism')).display_name,
+        ExperimentType.query.get(request.form.get('type')).name
     )
 
     return 'hello'
