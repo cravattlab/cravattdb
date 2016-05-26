@@ -11,7 +11,6 @@ class IP2:
 
     def __init__(self, name=None):
         """Provide sensible defaults."""
-        # self._db = Database()
         self.dataset_name = name
         self.project_id = 0
         self.loggedOn = False
@@ -20,10 +19,10 @@ class IP2:
 
     def search(self, params, file_paths):
         """Convenience method."""
-        self.set_project_id()
+        self.project_id = self.get_project_id()
         self.create_experiment()
-        self.set_experiment_id()
-        self.set_experiment_path()
+        self.experiment_id = self.get_experiment_id()
+        self.experiment_path = self.get_experiment_path()
         self.upload_spectra(file_paths)
         self.prolucid_search(params)
 
@@ -43,7 +42,7 @@ class IP2:
         """Log out of IP2."""
         requests.get('http://goldfish.scripps.edu/ip2/logout.jsp', cookies=self.cookies)
 
-    def set_project_id(self):
+    def get_project_id(self):
         """Get project id for cravattdb project or else create new project."""
         project_id = self._find_project_id()
 
@@ -51,10 +50,9 @@ class IP2:
             self._create_new_project()
             project_id = self._find_project_id()
 
-        self.project_id = project_id
         return project_id
 
-    def set_experiment_id(self):
+    def get_experiment_id(self):
         """After uploading experiment, fetch the id."""
         exp_req = requests.get(
             'http://goldfish.scripps.edu/ip2/viewExperiment.html',
@@ -71,10 +69,9 @@ class IP2:
         for form in forms:
             sample_input = form.find('input', attrs={'name': 'sampleName'}, value=self.dataset_name)
             if sample_input:
-                self.experiment_id = int(form.find('input', attrs={'name': 'expId'})['value'])
-                return
+                return int(form.find('input', attrs={'name': 'expId'})['value'])
 
-    def set_experiment_path(self):
+    def get_experiment_path(self):
         """Get path to experiment and save as property."""
         path_req = requests.get(
             'http://goldfish.scripps.edu/ip2/eachExperiment.html',
@@ -90,7 +87,7 @@ class IP2:
         wrap = soup.find('div', class_='add_quality_check_details')
         link = wrap.find_all('a')[1].attrs['href']
         query_string = urlparse(link).query
-        self.experiment_path = parse_qs(query_string)['expPath'][0]
+        return parse_qs(query_string)['expPath'][0]
 
     def create_experiment(self):
         """Create experiment under project."""
