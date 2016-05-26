@@ -21,6 +21,9 @@ mail = Mail(app)
 # Create database connection object
 db = SQLAlchemy(app)
 
+# Setup Flask-Admin
+admin = Admin(app, name='cravattdb', template_mode='bootstrap3')
+
 """
 We register blue prints after setting up app and db so that we can import these
 when needed. From the Flask gods themselves regarding circular imports:
@@ -36,9 +39,6 @@ __init__.py). Be advised that this is a bad idea in general but here it is actua
 from .users.models import User, Role
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
-
-# Setup Flask-Admin
-admin = Admin(app, name='cravattdb', template_mode='bootstrap3')
 
 
 # get da blueprints

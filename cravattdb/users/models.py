@@ -1,7 +1,8 @@
 """User models."""
-from cravattdb import db
 from flask.ext.security import UserMixin, RoleMixin
+from flask_admin.contrib.sqla import ModelView
 from sqlalchemy.dialects.postgresql import JSON
+from cravattdb import db, admin
 
 Column = db.Column
 relationship = db.relationship
@@ -36,3 +37,7 @@ class User(db.Model, UserMixin):
         secondary=roles_users,
         backref=db.backref('users', lazy='dynamic')
     )
+
+# Flask-Admin views defined here for convenience
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Role, db.session))
