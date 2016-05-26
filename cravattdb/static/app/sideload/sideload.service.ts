@@ -59,7 +59,7 @@ export class SideloadService {
             }
         };
 
-        xhr.open('PUT', '/api/experiment', true);
+        xhr.open('PUT', '/api/sideload', true);
         xhr.send(formData);
     }
 }

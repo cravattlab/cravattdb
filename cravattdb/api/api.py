@@ -5,7 +5,7 @@ from cravattdb.home.models import (
     Experiment, Dataset, ExperimentType, Organism, Probe, Inhibitor,
     OrganismSchema, ExperimentTypeSchema, ExperimentSchema, DatasetSchema, ProbeSchema, InhibitorSchema
 )
-import cravattdb.home.sideload as sideload
+import csv
 
 
 experiment_schema = ExperimentSchema()
@@ -20,7 +20,7 @@ probe_schema = ProbeSchema()
 inhibitor_schema = InhibitorSchema()
 
 
-def add_experiment(name, user_id, organism_id, experiment_type_id, file, probe_id=0, inhibitor_id=0):
+def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id=0, inhibitor_id=0):
     experiment = experiment_schema.load({
         'name': name,
         'user_id': int(user_id),
@@ -33,12 +33,82 @@ def add_experiment(name, user_id, organism_id, experiment_type_id, file, probe_i
     db.session.add(experiment.data)
     db.session.commit()
 
-    # after commit since we need to get id
-    sideload.new_dataset(experiment.data.id, int(user_id), file)
-
-    result = organism_schema.dump(experiment.data)
-
+    result = experiment_schema.dump(experiment.data)
     return result.data
+
+
+def add_experiment_with_data(name, user_id, organism_id, experiment_type_id, file, probe_id=0, inhibitor_id=0):
+    experiment = add_experiment(
+        name=name,
+        user_id=user_id,
+        organism_id=organism_id,
+        experiment_type_id=experiment_type_id,
+        probe_id=probe_id,
+        inhibitor_id=inhibitor_id,
+    )
+
+    add_dataset(experiment['id'], user_id, file)
+
+    return experiment
+
+
+def add_dataset(experiment_id, user_id, output_file_path):
+    dataset = create_dataset(experiment_id)
+    db.create_all()
+
+    with output_file_path.open('r') as f:
+        # skip first line
+        f.readline()
+
+        for line in csv.reader(f, delimiter='\t'):
+            db.session.add(dataset(
+                peptide_index=line[0],
+                ipi=line[1],
+                description=line[2],
+                symbol=line[3],
+                sequence=line[4],
+                mass=line[5],
+                charge=line[6],
+                segment=line[7],
+                ratio=line[8],
+                intensity=line[9],
+                num_ms2_peaks=line[10].split('/')[0],
+                num_candidate_peaks=line[10].split('/')[1],
+                max_light_intensity=line[10].split('/')[2],
+                light_noise=line[10].split('/')[3],
+                max_heavy_intensity=line[10].split('/')[4],
+                heavy_noise=line[10].split('/')[5],
+                rsquared=line[11],
+                entry=line[12],
+                link=line[13]
+            ))
+
+    db.session.commit()
+
+
+def create_dataset(dataset_id):
+    """Return new Dataset objects for SQLAlchemy.
+
+    Takes advantage of inheritance and segregates datasets by experiment id
+
+    Arguments:
+        id {Integer} -- Corresponds to experiment id
+    """
+    dataset_name = 'dataset_{}'.format(dataset_id)
+
+    props = {
+        '__tablename__': dataset_name,
+        '__mapper_args__': {'polymorphic_identity': dataset_id},
+        'id': db.Column(db.Integer, db.ForeignKey('datasets.id'), primary_key=True)
+    }
+
+    # "the dark side of type"
+    # https://jeffknupp.com/blog/2013/12/28/improve-your-python-metaclasses-and-dynamic-classes-with-type/
+    return type(
+        dataset_name,
+        (Dataset,),
+        props
+    )
 
 
 def get_experiment(experiment_id=None, flat=False):
@@ -97,7 +167,7 @@ def get_dataset(experiment_id):
             break
         except AssertionError:
             # class definition for dynamic class does not exist on current metadata
-            sideload.create_dataset(experiment_id)
+            create_dataset(experiment_id)
 
     return result
 

@@ -3,6 +3,7 @@
 from flask import Blueprint, jsonify, request
 from flask.ext.security import login_required
 from flask_security.core import current_user
+from cravattdb.home.sideload import sideload_experiment
 import cravattdb.api.api as model
 
 api = Blueprint('api', __name__,
@@ -24,10 +25,10 @@ def get_experiments():
     return jsonify(model.get_experiment(flat=True))
 
 
-@api.route('/experiment', methods=['PUT'])
+@api.route('/sideload', methods=['PUT'])
 @login_required
-def add_experiment():
-    return jsonify(model.add_experiment(
+def sideload():
+    return jsonify(sideload_experiment(
         name=request.form.get('name'),
         user_id=current_user.get_id(),
         organism_id=request.form.get('organism'),
