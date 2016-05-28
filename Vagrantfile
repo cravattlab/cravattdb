@@ -17,28 +17,35 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "dependencies", type: "shell", inline: <<-SHELL
     # installing things
-    sudo add-apt-repository ppa:fkrull/deadsnakes
+    add-apt-repository ppa:fkrull/deadsnakes
     curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash
 
-    sudo apt-get update
-    sudo apt-get install -y git python-pip python3.5 cifs-utils nodejs
+    apt-get update
+    apt-get install -y git python-pip python3.5 cifs-utils nodejs
 
     curl -sSL https://get.docker.com/ | sh
-    sudo pip install docker-compose
-    sudo npm install -g typescript@latest typings@latest
+    # add vagrant user to docker group so we don't have to prefix every docker
+    # command with sudo
+    adduser vagrant docker
+    pip install docker-compose
+    npm install -g typescript@latest typings@latest
+  SHELL
 
-    # setup ssh
+  config.vm.provision "ssh-setup", type: "shell", privileged: false, inline: <<-SHELL
     mkdir -p ~/.ssh
     chmod 700 ~/.ssh
     ssh-keyscan -H github.com >> ~/.ssh/known_hosts
     ssh -T git@github.com
   SHELL
 
-  config.vm.provision "code", type: "shell", inline: <<-SHELL
-    # don't forget the code
-    git clone git@github.com:/cravattlab/cimage-minimal.git github/cimage-minimal
-    git clone git@github.com:/cravattlab/cravattdb.git github/cravattdb
-    chown -R vagrant:vagrant github
+  config.vm.provision "code", type: "shell", privileged: false, inline: <<-SHELL
+    git clone git@github.com:/cravattlab/cimage-minimal.git ~/github/cimage-minimal
+    git clone git@github.com:/cravattlab/cravattdb.git ~/github/cravattdb
+  SHELL
+
+  config.vm.provision "goodies", type: "shell", privileged: false, inline: <<-SHELL
+    echo "alias dc='docker-compose'" >> ~/.bashrc
+    echo "alias ac='docker attach cravattdb_cravattdb_1'"  >> ~/.bashrc
   SHELL
 
 end
