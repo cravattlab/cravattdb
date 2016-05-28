@@ -21,7 +21,9 @@ inhibitor_schema = InhibitorSchema()
 
 
 def search(term):
-    return term
+    data = Dataset.query.filter_by(symbol=term)
+    result = dataset_schema_summary.dump(data)
+    return result.data
 
 
 def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id=0, inhibitor_id=0):
