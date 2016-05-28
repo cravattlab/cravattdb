@@ -1,15 +1,26 @@
-{% if security.registerable or security.recoverable or security.confirmable %}
-<h2>Menu</h2>
-<ul>
-  <li><a href="{{ url_for_security('login') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}">Login</a></li>
-  {% if security.registerable %}
-  <li><a href="{{ url_for_security('register') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}">Register</a><br/></li>
-  {% endif %}
-  {% if security.recoverable %}
-  <li><a href="{{ url_for_security('forgot_password') }}">Forgot password</a><br/></li>
-  {% endif %}
-  {% if security.confirmable %}
-  <li><a href="{{ url_for_security('send_confirmation') }}">Confirm account</a></li>
-  {% endif %}
-</ul>
-{% endif %}
+{% macro menu_item(page, text, keepNext) %}
+    {% set active_page = url_for(request.endpoint) %}
+    <a class="{{ 'active' if active_page == url_for_security(page) }} item" href="{{ url_for_security(page) }}{% if keepNext and 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}">{{ text }}</a>
+{% endmacro %}
+
+<div class="ui top inverted fixed menu">
+    {% if current_user.is_authenticated %}
+
+    <div class="header item">Hello {{ current_user.email }}</div>
+    {{ menu_item('logout', 'Logout', false)}}
+
+    {% else %}
+
+    {{ menu_item('login', 'Login', true) }}
+    {{ menu_item('register', 'Register', true) }}
+
+    {% if security.recoverable %}
+    {{ menu_item('forgot_password', 'Forgot password', false) }}
+    {% endif %}
+
+    {% endif %}
+
+    {% if security.confirmable %}
+    {{ menu_item('send_confirmation', 'Confirm account', false) }}
+    {% endif %}
+</div>
