@@ -20,14 +20,18 @@ probe_schema = ProbeSchema()
 inhibitor_schema = InhibitorSchema()
 
 
+def search(term):
+    return term
+
+
 def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id=0, inhibitor_id=0):
     experiment = experiment_schema.load({
         'name': name,
         'user_id': int(user_id),
         'organism_id': int(organism_id),
         'experiment_type_id': int(experiment_type_id),
-        'probe_id': int(probe_id),
-        'inhibitor_id': int(inhibitor_id)
+        'probe_id': int(probe_id or 0) or None,
+        'inhibitor_id': int(inhibitor_id or 0) or None
     })
 
     db.session.add(experiment.data)
@@ -148,8 +152,12 @@ def get_experiment(experiment_id=None, flat=False):
 
         for item in filtered:
             item['organism'] = item['organism']['name']
-            item['inhibitor'] = item['inhibitor']['name']
-            item['probe'] = item['probe']['name']
+
+            if item['inhibitor']:
+                item['inhibitor'] = item['inhibitor']['name']
+
+            if item['probe']:
+                item['probe'] = item['probe']['name']
 
         return {
             'headers': list(filtered[0].keys()),

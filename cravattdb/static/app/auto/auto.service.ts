@@ -36,7 +36,9 @@ export class AutoService {
         let formData: FormData = new FormData();
 
         for (let key in form) {
-            formData.append(key, form[key]);
+            if (form[key]) {
+                formData.append(key, form[key]);
+            }
         }
 
         for (let file of files) {

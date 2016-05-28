@@ -11,6 +11,11 @@ api = Blueprint('api', __name__,
                 static_folder='static')
 
 
+@api.route('/search/<string:term>')
+def search(term):
+    return term
+
+
 @api.route('/dataset/<int:experiment_id>')
 def get_dataset(experiment_id):
     raw = model.get_dataset(experiment_id)

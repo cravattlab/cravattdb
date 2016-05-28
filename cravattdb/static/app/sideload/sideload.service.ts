@@ -46,7 +46,9 @@ export class SideloadService {
         let xhr: XMLHttpRequest = new XMLHttpRequest();
 
         for (let key in form) {
-            formData.append(key, form[key]);
+            if (form[key]) {
+                formData.append(key, form[key]);
+            }
         }
 
         xhr.onreadystatechange = () => {

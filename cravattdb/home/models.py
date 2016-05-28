@@ -1,6 +1,6 @@
 """Contains definitions of SQLAlchemy tables."""
 from sqlalchemy.dialects.postgresql import JSON
-from marshmallow import Schema, fields, post_load, post_dump
+from marshmallow import Schema, fields, pre_load, post_load, post_dump
 from flask_admin.contrib.sqla import ModelView
 from cravattdb import db, admin
 
@@ -60,6 +60,10 @@ class ExperimentSchema(Schema):
     additional_search_params = fields.String()
     additional_quant_params = fields.String()
     annotations = fields.String()
+
+    @pre_load
+    def _filter_experiment(self, data):
+        return {k: v for k, v in data.items() if v is not None}
 
     @post_load
     def _make_experiment(self, data):
