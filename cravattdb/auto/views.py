@@ -49,14 +49,21 @@ def search():
     except FileExistsError:
         abort(HTTPStatus.CONFLICT)
 
+    organism_id = request.form.get('organism')
+    experiment_type_id = request.form.get('type')
+
     # continue processing in background with celery
     process.delay(
-        search,
-        current_user.get_id(),
-        name,
-        path,
-        Organism.query.get(request.form.get('organism')).display_name,
-        ExperimentType.query.get(request.form.get('type')).name
+        search=search,
+        user_id=current_user.get_id(),
+        name=name,
+        path=path,
+        organism_id=organism_id,
+        organism_name=Organism.query.get(organism_id).display_name,
+        experiment_type_id=experiment_type_id,
+        experiment_type_name=ExperimentType.query.get(experiment_type_id).name,
+        probe_id=int(request.form.get('probe')),
+        inhibitor_id=int(request.form.get('inhibitor'))
     )
 
     return 'hello'

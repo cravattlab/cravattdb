@@ -7,6 +7,7 @@ blinker==1.4
 celery==3.1.23
 Flask==0.10.1
 Flask-Admin==1.4.0
+Flask-AutoIndex==0.6
 Flask-Failsafe==0.2
 Flask-Login==0.3.2
 Flask-Mail==0.9.1
@@ -14,8 +15,10 @@ Flask-Migrate==1.8.0
 Flask-Principal==0.4.0
 Flask-Script==2.0.5
 Flask-Security==1.7.5
+Flask-Silk==0.2
 Flask-SQLAlchemy==2.1
 Flask-WTF==0.12
+future==0.15.2
 itsdangerous==0.24
 Jinja2==2.8
 kombu==3.0.35

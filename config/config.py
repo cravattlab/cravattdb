@@ -1,11 +1,17 @@
 """Main configuration file for project."""
 import yaml
+import os
+import pathlib
 
 # Database settings
 with open('config/database.yml', 'r') as f:
     database_settings = yaml.load(f)
 
-UPLOAD_FOLDER = 'uploads'
+PROJECT_NAME = 'cravattdb'
+PROJECT_HOME_PATH = pathlib.PurePath(os.path.realpath(__file__)).parents[1]
+SEARCH_PARAMS_PATH = PROJECT_HOME_PATH.joinpath(PROJECT_NAME, 'auto', 'search_params')
+INSTANCE_PATH = PROJECT_HOME_PATH.joinpath(PROJECT_NAME, 'uploads')
+
 CONVERT_URL = 'http://cravattwork.scripps.edu:5001'
 
 

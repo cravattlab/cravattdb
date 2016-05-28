@@ -1,19 +1,16 @@
 """Blueprint for legacy thangs."""
 
 from flask import Blueprint, send_from_directory
-from cravattdb import app
+from flask.ext.autoindex import AutoIndexBlueprint
 from pathlib import Path
+import config.config as config
 import math
 
 legacy = Blueprint('legacy', __name__,
                    template_folder='templates',
                    static_folder='static')
 
-
-@legacy.route('/<int:user_id>/<int:experiment_id>')
-def render_dataset(user_id, experiment_id):
-    dataset_path = _get_dataset_path(user_id, experiment_id)
-    return send_from_directory(dataset_path, 'combined_dta.html')
+AutoIndexBlueprint(legacy, browse_root=str(config.INSTANCE_PATH.joinpath('legacy')))
 
 
 @legacy.route('/<int:user_id>/<int:experiment_id>/chromatogram/<int:chromatogram_index>')
@@ -37,7 +34,7 @@ def render_chromatogram(user_id, experiment_id, chromatogram_index):
 
 def _get_dataset_path(user_id, experiment_id):
     path_to_legacy = Path(
-        app.instance_path,
+        config.INSTANCE_PATH,
         'legacy',
         str(user_id),
         str(experiment_id)
