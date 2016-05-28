@@ -13,7 +13,6 @@ celery -A cravattdb.auto.tasks worker --workdir="${PROJECT_HOME}" --loglevel=inf
 # get client software
 cd "${PROJECT_HOME}/cravattdb/static" || exit
 npm install
-bower install -F
 
 # run the server
 cd "${PROJECT_HOME}" || exit
