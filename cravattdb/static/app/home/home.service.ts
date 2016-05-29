@@ -6,9 +6,16 @@ import { Observable } from 'rxjs/Observable';
 export class HomeService {
     constructor(private http: Http) { }
 
+    getData(term): Promise<any> {
+        return this.http.get('/api/search/' + term)
+            .toPromise()
+            .then(this.extractData)
+            .catch(this.handleError);
+    }
+
     private extractData(res: Response) {
         let body = res.json();
-        return body.data || {};
+        return body || {};
     }
 
     private handleError(error: any) {

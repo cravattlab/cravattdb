@@ -1,5 +1,5 @@
 .container {
-    padding:10em 0;
+    margin-top:3em;
 }
 
 #file-select {
@@ -41,4 +41,8 @@ dd::after {
 #controls > div {
     display: block;
     margin-top: 0.5em;
+}
+
+#filters {
+    margin-top:1em;
 }
