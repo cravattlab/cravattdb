@@ -14,6 +14,10 @@ dataset_schema_summary = DatasetSchema(many=True, only=(
     'ipi', 'symbol', 'description', 'sequence',
     'mass', 'charge', 'segment', 'ratio', 'entry'
 ))
+dataset_schema_search = DatasetSchema(many=True, only=(
+    'ipi', 'symbol', 'description', 'sequence', 'ratio',
+    'experiment_id'
+))
 organism_schema = OrganismSchema()
 experiment_type_schema = ExperimentTypeSchema()
 probe_schema = ProbeSchema()
@@ -21,8 +25,16 @@ inhibitor_schema = InhibitorSchema()
 
 
 def search(term):
-    data = Dataset.query.filter_by(symbol=term)
-    result = dataset_schema_summary.dump(data)
+    for i in range(30):
+        get_dataset(i)
+
+    data = Dataset.query.filter(
+        (Dataset.ipi == term) |
+        (Dataset.symbol.like('{}%'.format(term))) |
+        (Dataset.description.like('%{}%'.format(term))) |
+        (Dataset.sequence.like('%{}%'.format(term)))
+    )
+    result = dataset_schema_search.dump(data)
     return result.data
 
 
