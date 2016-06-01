@@ -25,9 +25,6 @@ inhibitor_schema = InhibitorSchema()
 
 
 def search(term):
-    for i in range(30):
-        get_dataset(i)
-
     data = Dataset.query.filter(
         (Dataset.ipi == term) |
         (Dataset.symbol.like('{}%'.format(term))) |
