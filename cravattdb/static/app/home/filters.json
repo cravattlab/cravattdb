@@ -1,0 +1,67 @@
+{
+    "data" : [
+        {
+            "name": "species",
+            "display": "Species",
+            "options": [
+                {
+                    "value": 0,
+                    "display": "human",
+                    "active": false
+                }, {
+                    "value": 1,
+                    "display": "mouse",
+                    "active": false
+                }
+            ]
+        }, {
+            "name": "experiment-type",
+            "display": "Experiment Type",
+            "options": [
+                {
+                    "value": 0,
+                    "display": "mudpit",
+                    "active": false
+                }, {
+                    "value": 1,
+                    "display": "redime",
+                    "active": false
+                }
+            ]
+        }, {
+            "name": "user",
+            "display": "User",
+            "options": [
+                {
+                    "value": 0,
+                    "display": "Radu",
+                    "active": false
+                }, {
+                    "value": 1,
+                    "display": "Kenneth",
+                    "active": false
+                }
+            ]
+        }, {
+            "name": "probe",
+            "display": "Probe",
+            "options": [
+                {
+                    "value": 0,
+                    "display": "FP",
+                    "active": false
+                }
+            ]
+        }, {
+            "name": "inhibitor",
+            "display": "Inhibitor",
+            "options": [
+                {
+                    "value": 0,
+                    "display": "ABC99",
+                    "active": false
+                }
+            ]
+        }
+    ]
+}

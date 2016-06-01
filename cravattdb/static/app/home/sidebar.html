@@ -1,0 +1,11 @@
+<div #sidebar class="ui right sidebar">
+    <div class="ui inverted teal attached clearing segment">
+        <div class="ui header">
+            <ng-content select="header"></ng-content>
+        </div>
+    </div>
+    <div class="ui attached clearing segment">
+        <ng-content select="content"></ng-content>
+    </div>
+</div>
+<div class="pusher"></div>

@@ -6,8 +6,8 @@ import { Observable } from 'rxjs/Observable';
 export class HomeService {
     constructor(private http: Http) { }
 
-    getData(term): Promise<any> {
-        return this.http.get('/api/search/' + term)
+    getData(): Promise<any> {
+        return this.http.get('static/app/home/filters.json')
             .toPromise()
             .then(this.extractData)
             .catch(this.handleError);
@@ -15,7 +15,7 @@ export class HomeService {
 
     private extractData(res: Response) {
         let body = res.json();
-        return body || {};
+        return body.data || {};
     }
 
     private handleError(error: any) {

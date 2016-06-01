@@ -1,0 +1,13 @@
+:host > sidebar > .sidebar {
+    width:260px!important;
+}
+:host > filter-detail > sidebar > .sidebar {
+    width:255px!important;
+}
+sidebar .sidebar {
+    overflow-x:hidden;
+}
+sidebar .pusher {
+    top:0;
+    position:absolute!important;
+}

@@ -1,0 +1,15 @@
+<sidebar id="filter">
+    <header>Filter datasets by:</header>
+    <content>
+        <div class="ui vertical fluid menu">
+            <a *ngFor="let filter of filters" class="item" (click)="showFilterDetails(filter)">
+                {{ filter?.display }}
+                <i class="icon right caret"></i>
+            </a>
+        </div>
+
+        <button class="ui right floated primary button" (click)="done()">Done</button>
+    </content>
+</sidebar>
+
+<filter-detail [filter]="filter"></filter-detail>

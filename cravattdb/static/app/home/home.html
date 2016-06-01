@@ -1,29 +1,17 @@
-<div class="ui segment inverted grey tertiary">
+<div class="ui fluid container">
+    <div class="ui inverted grey segment attached">
+        <div class="ui fluid left icon action input">
+            <i class="search icon"></i>
+            <input type="text" placeholder="Le search by protein name">
+            <div class="ui icon primary button" (click)="filter.toggle()">
+                Filter
+                <i class="filter right icon"></i>
+            </div>
+        </div>
+    </div>
 
-    <div class="ui left icon fluid large input">
-        <input #term type="text" placeholder="Le search by protein name, UniProt, peptide, and gene description terms" (keyup.enter)="search(term.value)">
-        <i class="search icon"></i>
-        <button class="ui teal right labeled icon button">
-            Filter
-            <i class="filter icon"></i>
-        </button>
+    <div class="ui segment attached">
+        <filter-list [activeFilters]="activeFilters" (remove)="onFilterRemove($event.value)" (edit)="onFilterEdit($event.value)"></filter-list>
     </div>
-    <div id="filters" class="ui large blue labels">
-        <div class="ui label">
-            Experiment Type:
-            <div class="detail">isotop</div>
-            <i class="delete icon"></i>
-        </div>
-        <div class="ui label">
-            Species:
-            <div class="detail">human</div>
-            <i class="delete icon"></i>
-        </div>
-    </div>
+    <filter [filters]="filters" (filtersChange)="onFiltersChange($event.value)"></filter>
 </div>
-
-<table *ngIf="data" class="ui table">
-    <tr *ngFor="let row of data">
-        <td *ngFor="let column of row">{{ column }}</td>
-    </tr>
-</table>

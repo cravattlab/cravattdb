@@ -1,0 +1,22 @@
+<sidebar>
+    <header>{{ filter?.display }}</header>
+    <content>
+        <div class="ui vertical fluid menu">
+            <div class="item">
+                <div class="ui transparent icon input">
+                    <input #search type="text" placeholder="Search" [value]="term" (keyup)="term = search.value">
+                    <i class="search icon"></i>
+                </div>
+            </div>
+            <template ngFor let-item [ngForOf]="filter?.options">
+                <a *ngIf="item.display.startsWith(term)" class="item" [class.active]="item.active" (click)="item.active = !item.active">
+                    {{ item.display }}
+                    <i class="ui checkmark icon" [class.grey]="!item.active" [class.inverted]="!item.active"></i>
+                </a>
+            </template>
+
+        </div>
+        <button class="ui button" (click)="cancel()">Cancel</button>
+        <button class="ui primary button" (click)="done()">Done</button>
+    </content>
+</sidebar>
