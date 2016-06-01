@@ -13,7 +13,7 @@ api = Blueprint('api', __name__,
 
 @api.route('/search/<string:term>')
 def search(term):
-    return jsonify(model.search(term))
+    return jsonify({'data': model.search(term)})
 
 
 @api.route('/dataset/<int:experiment_id>')

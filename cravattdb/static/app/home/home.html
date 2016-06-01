@@ -2,7 +2,7 @@
     <div class="ui inverted grey segment attached">
         <div class="ui fluid left icon action input">
             <i class="search icon"></i>
-            <input type="text" placeholder="Le search by protein name">
+            <input #term type="text" placeholder="Le search by protein name" (keyup.enter)="search(term.value)">
             <div class="ui icon primary button" (click)="filter.toggle()">
                 Filter
                 <i class="filter right icon"></i>
@@ -14,4 +14,11 @@
         <filter-list [activeFilters]="activeFilters" (remove)="onFilterRemove($event.value)" (edit)="onFilterEdit($event.value)"></filter-list>
     </div>
     <filter [filters]="filters" (filtersChange)="onFiltersChange($event.value)"></filter>
+
+
+    <table *ngIf="data" class="ui table">
+        <tr *ngFor="let row of data">
+            <td *ngFor="let column of row">{{ column }}</td>
+        </tr>
+    </table>
 </div>

@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { HomeService } from './home.service';
 import { FilterComponent } from './filter.component';
 import { FilterListComponent } from './filter-list.component';
+import * as _ from 'lodash';
 
 @Component({
     templateUrl: 'static/app/home/home.html',
@@ -12,13 +13,25 @@ import { FilterListComponent } from './filter-list.component';
 
 export class HomeComponent implements OnInit {
     @ViewChild(FilterComponent) filter: FilterComponent;
+    data: any[];
     filters: any[];
     activeFilters: any[];
 
     constructor(private service: HomeService) {}
 
     ngOnInit() {
-        this.service.getData().then(d => this.filters = d);
+        this.service.getFilters().then(d => this.filters = d);
+    }
+
+    search(term) {
+        this.service.search(term).then(d => {
+            this.data = d.dataset.map(o => {
+                return _.values(o);
+            });
+
+            console.log(this.data);
+        } );
+        console.log(term, this.data);
     }
 
     onFiltersChange(filters) {
