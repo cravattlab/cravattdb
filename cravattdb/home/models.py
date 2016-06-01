@@ -79,7 +79,7 @@ class Dataset(db.Model):
 
     id = Column(db.Integer, primary_key=True)
     peptide_index = Column(db.Integer)
-    ipi = Column(db.Text)
+    uniprot = Column(db.Text)
     description = Column(db.Text)
     symbol = Column(db.Text)
     sequence = Column(db.Text)

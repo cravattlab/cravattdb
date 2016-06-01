@@ -75,7 +75,7 @@ def add_dataset(experiment_id, user_id, output_file_path):
         for line in csv.reader(f, delimiter='\t'):
             db.session.add(Dataset(
                 peptide_index=line[0],
-                ipi=line[1],
+                uniprot=line[1],
                 description=line[2],
                 symbol=line[3],
                 sequence=line[4],
