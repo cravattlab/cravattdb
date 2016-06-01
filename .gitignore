@@ -9,6 +9,7 @@ semantic
 vagrant-sync
 typings
 cravattdb/static/app/**/*.js
+secrets.prod.yml
 
 # Windows image file caches
 Thumbs.db

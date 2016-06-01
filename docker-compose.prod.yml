@@ -1,0 +1,7 @@
+cravattdb:
+    environment:
+        DEBUG: false
+postgres:
+    extends:
+        file: config/secrets.prod.yml
+        service: database

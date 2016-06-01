@@ -9,7 +9,7 @@ import config.config as config
 
 # setup da app
 app = Flask(__name__, instance_path=str(config.INSTANCE_PATH))
-app.config.from_object(config.DevelopmentConfig)
+app.config.from_object(config.config)
 mail = Mail(app)
 
 # Create database connection object

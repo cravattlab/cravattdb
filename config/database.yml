@@ -1,6 +1,0 @@
-database:
-    environment:
-        POSTGRES_PASSWORD: rZTkh5lD8LmfrepUf7Jq
-        DB_USER: cravattdb
-        DB_PASS: B6kVrq4rTPEcNnju39WF
-        DB_NAME: cravattdb
