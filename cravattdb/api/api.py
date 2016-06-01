@@ -68,6 +68,9 @@ def add_experiment_with_data(name, user_id, organism_id, experiment_type_id, fil
 
 
 def add_dataset(experiment_id, user_id, output_file_path):
+    # http://stackoverflow.com/a/1280823/383744
+    delchars = ''.join(c for c in map(chr, range(256)) if not c.isalnum())
+
     with output_file_path.open('r') as f:
         # skip first line
         f.readline()
@@ -79,6 +82,7 @@ def add_dataset(experiment_id, user_id, output_file_path):
                 description=line[2],
                 symbol=line[3],
                 sequence=line[4],
+                clean_sequence=line[4].translate(None, delchars),
                 mass=line[5],
                 charge=line[6],
                 segment=line[7],
