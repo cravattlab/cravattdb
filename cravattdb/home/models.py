@@ -77,7 +77,6 @@ class ExperimentSchema(Schema):
 class Dataset(db.Model):
     """Holds actual experimental dataset."""
 
-    __tablename__ = 'datasets'
     id = Column(db.Integer, primary_key=True)
     peptide_index = Column(db.Integer)
     ipi = Column(db.String(20))
@@ -99,10 +98,6 @@ class Dataset(db.Model):
     entry = Column(db.Integer)
     link = Column(db.String(100))
     experiment_id = Column(db.Integer)
-    __mapper_args__ = {
-        'polymorphic_identity': 'dataset',
-        'polymorphic_on': experiment_id
-    }
 
 
 class DatasetSchema(Schema):
@@ -128,6 +123,7 @@ class DatasetSchema(Schema):
     rsquared = fields.Float()
     entry = fields.Integer()
     link = fields.String()
+    experiment_id = fields.Integer()
 
     class Meta:
         """Additional settings."""
