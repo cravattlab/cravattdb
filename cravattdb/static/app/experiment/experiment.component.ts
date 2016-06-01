@@ -4,7 +4,7 @@ import { DataComponent } from './data.component'
 import { MetaComponent } from './meta.component'
 
 @Component({
-    select: 'experiment',
+    selector: 'experiment',
     templateUrl: 'static/app/experiment/experiment.html',
     directives: [DataComponent, MetaComponent]
 })
