@@ -1,57 +1,59 @@
-<h1 class="ui dividing header">Cravegas 0.1</h1>
+<div class="ui padded container">
+    <h1 class="ui dividing header">Cravegas 0.1</h1>
 
-<div class="ui error message" *ngIf="errors.length && showErrors">
-    <i class="close icon" (click)="showErrors = false"></i>
-    <div class="header">
-        There were some errors with your submission
+    <div class="ui error message" *ngIf="errors.length && showErrors">
+        <i class="close icon" (click)="showErrors = false"></i>
+        <div class="header">
+            There were some errors with your submission
+        </div>
+        <ul class="list">
+            <li *ngFor="let error of errors">{{ error }}</li>
+        </ul>
     </div>
-    <ul class="list">
-        <li *ngFor="let error of errors">{{ error }}</li>
-    </ul>
+
+    <form #f="ngForm" class="ui form" name="upload" (ngSubmit)="onSubmit(f.value)">
+        <div class="six wide required field">
+            <label>Dataset Name</label>
+            <input type="text" placeholder="Dataset Name" ngControl="name" required>
+        </div>
+
+        <div class="six wide required field">
+            <label>Organism</label>
+            <select class="ui search selection dropdown" ngControl="organism" required>
+                <option value="">Select Species</option>
+                <option *ngFor="let organism of data?.organisms" value="{{ organism.id }}">{{ organism.display_name }}</option>
+            </select>
+        </div>
+
+        <div class="six wide required field">
+            <label>Experiment Type</label>
+            <select class="ui search selection dropdown" ngControl="type" required>
+                <option value="">Select Experiment Type</option>
+                <option *ngFor="let experimentType of data?.experiment_types" value="{{ experimentType.id }}">{{ experimentType.name }}</option>
+            </select>
+        </div>
+
+        <div class="six wide field">
+            <label>Probe</label>
+            <select class="ui search selection dropdown" ngControl="probe">
+                <option value="">Select Probe</option>
+                <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+            </select>
+        </div>
+
+        <div class="six wide field">
+            <label>Inhibitor</label>
+            <select class="ui search selection dropdown" ngControl="inhibitor">
+                <option value="">Select Inhibitor</option>
+                <option *ngFor="let inhibitor of data?.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name }}</option>
+            </select>
+        </div>
+
+        <button class="ui primary button" type="submit">Submit</button>
+
+        <button type="button" class="ui button" onclick="document.getElementById('file-select').click()">
+            <i class="file outline icon"></i> Select Cimage Zip
+            <input type="file" id="file-select" (change)="onFileChange($event)" required />
+        </button>
+    </form>
 </div>
-
-<form #f="ngForm" class="ui form" name="upload" (ngSubmit)="onSubmit(f.value)">
-    <div class="six wide required field">
-        <label>Dataset Name</label>
-        <input type="text" placeholder="Dataset Name" ngControl="name" required>
-    </div>
-
-    <div class="six wide required field">
-        <label>Organism</label>
-        <select class="ui search selection dropdown" ngControl="organism" required>
-            <option value="">Select Species</option>
-            <option *ngFor="let organism of data?.organisms" value="{{ organism.id }}">{{ organism.display_name }}</option>
-        </select>
-    </div>
-
-    <div class="six wide required field">
-        <label>Experiment Type</label>
-        <select class="ui search selection dropdown" ngControl="type" required>
-            <option value="">Select Experiment Type</option>
-            <option *ngFor="let experimentType of data?.experiment_types" value="{{ experimentType.id }}">{{ experimentType.name }}</option>
-        </select>
-    </div>
-
-    <div class="six wide field">
-        <label>Probe</label>
-        <select class="ui search selection dropdown" ngControl="probe">
-            <option value="">Select Probe</option>
-            <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
-        </select>
-    </div>
-
-    <div class="six wide field">
-        <label>Inhibitor</label>
-        <select class="ui search selection dropdown" ngControl="inhibitor">
-            <option value="">Select Inhibitor</option>
-            <option *ngFor="let inhibitor of data?.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name }}</option>
-        </select>
-    </div>
-
-    <button class="ui primary button" type="submit">Submit</button>
-
-    <button type="button" class="ui button" onclick="document.getElementById('file-select').click()">
-        <i class="file outline icon"></i> Select Cimage Zip
-        <input type="file" id="file-select" (change)="onFileChange($event)" required />
-    </button>
-</form>

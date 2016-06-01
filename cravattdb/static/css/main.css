@@ -1,4 +1,7 @@
-.container {
+.attached.menu {
+    margin:0px!important;
+}
+.padded.container {
     margin-top:3em;
 }
 

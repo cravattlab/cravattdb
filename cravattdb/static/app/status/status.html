@@ -1,16 +1,18 @@
-<h1 class="ui dividing header">Cravegas Status</h1>
+<div class="ui padded container">
+    <h1 class="ui dividing header">Cravegas Status</h1>
 
-<table class="ui basic table">
-    <thead>
-        <tr>
-            <th>Dataset Name</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="item in status.experiments">
-            <td>{{ item.name }}</td>
-            <td>{{ item.status }}</td>
-        </tr>
-    </tbody>
-</table>
+    <table class="ui basic table">
+        <thead>
+            <tr>
+                <th>Dataset Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in status.experiments">
+                <td>{{ item.name }}</td>
+                <td>{{ item.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
