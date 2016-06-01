@@ -1,20 +1,22 @@
-<h2>Experiment Info:</h2>
+<div class="ui wide fluid container">
+    <h2>Experiment Info:</h2>
 
-<experiment-meta [id]="id"></experiment-meta>
+    <experiment-meta [id]="id"></experiment-meta>
 
-<div id="controls">
-    <div class="ui toggle checkbox">
-        <input type="checkbox" [checked]="byPeptide" (change)="byPeptide = !byPeptide">
-        <label>Group by peptide</label>
+    <div id="controls">
+        <div class="ui toggle checkbox">
+            <input type="checkbox" [checked]="byPeptide" (change)="byPeptide = !byPeptide">
+            <label>Group by peptide</label>
+        </div>
+        <div class="ui toggle checkbox">
+            <input type="checkbox" [checked]="collapsed" (change)="collapsed = !collapsed">
+            <label>Collapse peptide entries</label>
+        </div>
     </div>
-    <div class="ui toggle checkbox">
-        <input type="checkbox" [checked]="collapsed" (change)="collapsed = !collapsed">
-        <label>Collapse peptide entries</label>
-    </div>
+
+    <experiment-data
+        [id]="id"
+        [byPeptide]="byPeptide"
+        [collapsed]="collapsed"
+    ></experiment-data>
 </div>
-
-<experiment-data
-    [id]="id"
-    [byPeptide]="byPeptide"
-    [collapsed]="collapsed"
-></experiment-data>

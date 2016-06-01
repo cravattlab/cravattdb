@@ -4,6 +4,9 @@
 .padded.container {
     margin-top:3em;
 }
+.wide.fluid.container {
+    padding:3em;
+}
 
 #file-select {
     min-height: 100%;
