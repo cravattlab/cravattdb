@@ -262,6 +262,7 @@ class SampleType(db.Model):
 
 # Flask-Admin views defined here for convenience
 admin.add_view(ModelView(Probe, db.session))
+admin.add_view(ModelView(Dataset, db.session))
 admin.add_view(ModelView(Inhibitor, db.session))
 admin.add_view(ModelView(Experiment, db.session))
 admin.add_view(ModelView(ExperimentType, db.session))
