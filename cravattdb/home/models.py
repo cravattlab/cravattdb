@@ -244,6 +244,22 @@ class Instrument(db.Model):
     name = Column(db.Text)
 
 
+class CellLine(db.Model):
+    """Bah."""
+
+    id = Column(db.Integer, primary_key=True)
+    name = Column(db.Text)
+    description = Column(db.Text)
+    synonyms = Column(db.Text)
+
+
+class SampleType(db.Model):
+    """Define sample types such as tissue, cell, etc."""
+
+    id = Column(db.Integer, primary_key=True)
+    name = Column(db.Text)
+
+
 # Flask-Admin views defined here for convenience
 admin.add_view(ModelView(Probe, db.session))
 admin.add_view(ModelView(Inhibitor, db.session))
