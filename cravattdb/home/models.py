@@ -12,7 +12,7 @@ class Experiment(db.Model):
     """Holds experimental metadata."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.String(80))
+    name = Column(db.Text)
     date = Column(db.DateTime())
     user_id = Column(db.Integer, db.ForeignKey('user.id'))
     organism_id = Column(db.Integer, db.ForeignKey('organism.id'))
@@ -79,10 +79,11 @@ class Dataset(db.Model):
 
     id = Column(db.Integer, primary_key=True)
     peptide_index = Column(db.Integer)
-    ipi = Column(db.String(20))
+    ipi = Column(db.Text)
     description = Column(db.Text)
-    symbol = Column(db.String(20))
-    sequence = Column(db.String(100))
+    symbol = Column(db.Text)
+    sequence = Column(db.Text)
+    clean_sequence = Column(db.Text)
     mass = Column(db.Numeric)
     charge = Column(db.Integer)
     segment = Column(db.Integer)
@@ -96,7 +97,7 @@ class Dataset(db.Model):
     heavy_noise = Column(db.Numeric)
     rsquared = Column(db.Numeric)
     entry = Column(db.Integer)
-    link = Column(db.String(100))
+    link = Column(db.Text)
     experiment_id = Column(db.Integer)
 
 
@@ -139,7 +140,7 @@ class ExperimentType(db.Model):
     """Defines different experiment types."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.String(80))
+    name = Column(db.Text)
     search_params = Column(JSON)
     cimage_params = Column(JSON)
 
@@ -164,8 +165,8 @@ class Organism(db.Model):
 
     id = Column(db.Integer, primary_key=True)
     tax_id = Column(db.Integer)
-    name = Column(db.String(80))
-    display_name = Column(db.String(80))
+    name = Column(db.Text)
+    display_name = Column(db.Text)
 
 
 class OrganismSchema(Schema):
@@ -189,7 +190,7 @@ class Probe(db.Model):
     """Holds data about a particular probe."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.String(80))
+    name = Column(db.Text)
     iupac_name = Column(db.Text)
     inchi = Column(db.Text)
 
@@ -215,7 +216,7 @@ class Inhibitor(db.Model):
     """Holds data about a particular inhibitor."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.String(80))
+    name = Column(db.Text)
     iupac_name = Column(db.Text)
     inchi = Column(db.Text)
 
@@ -241,7 +242,7 @@ class Instrument(db.Model):
     """Describes mass spec instruments."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.String(80))
+    name = Column(db.Text)
 
 
 # Flask-Admin views defined here for convenience
