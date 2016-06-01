@@ -59,7 +59,7 @@ def add_experiment_with_data(name, user_id, organism_id, experiment_type_id, fil
         organism_id=organism_id,
         experiment_type_id=experiment_type_id,
         probe_id=probe_id,
-        inhibitor_id=inhibitor_id,
+        inhibitor_id=inhibitor_id
     )
 
     add_dataset(experiment['id'], user_id, file)
@@ -92,7 +92,8 @@ def add_dataset(experiment_id, user_id, output_file_path):
                 heavy_noise=line[10].split('/')[5],
                 rsquared=line[11],
                 entry=line[12],
-                link=line[13]
+                link=line[13],
+                experiment_id=experiment_id
             ))
 
     db.session.commit()
@@ -151,7 +152,6 @@ def get_experiment(experiment_id=None, flat=False):
 
 
 def get_dataset(experiment_id):
-
     dataset = Dataset.query.filter_by(experiment_id=experiment_id)
     result = dataset_schema_summary.dump(dataset).data
 
