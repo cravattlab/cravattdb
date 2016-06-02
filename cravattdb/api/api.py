@@ -11,11 +11,11 @@ import csv
 experiment_schema = ExperimentSchema()
 dataset_schema = DatasetSchema(many=True)
 dataset_schema_summary = DatasetSchema(many=True, only=(
-    'ipi', 'symbol', 'description', 'sequence',
+    'uniprot', 'symbol', 'description', 'sequence',
     'mass', 'charge', 'segment', 'ratio', 'entry'
 ))
 dataset_schema_search = DatasetSchema(many=True, only=(
-    'ipi', 'symbol', 'description', 'sequence', 'ratio',
+    'uniprot', 'symbol', 'description', 'sequence', 'ratio',
     'experiment_id'
 ))
 organism_schema = OrganismSchema()
@@ -95,7 +95,6 @@ def add_dataset(experiment_id, user_id, output_file_path):
                 heavy_noise=line[10].split('/')[5],
                 rsquared=line[11],
                 entry=line[12],
-                link=line[13],
                 experiment_id=experiment_id
             ))
 

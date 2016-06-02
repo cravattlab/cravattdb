@@ -105,7 +105,7 @@ class DatasetSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     peptide_index = fields.Integer()
-    ipi = fields.String()
+    uniprot = fields.String()
     description = fields.String()
     symbol = fields.String()
     sequence = fields.String()
