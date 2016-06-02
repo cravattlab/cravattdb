@@ -97,7 +97,7 @@ class Dataset(db.Model):
     heavy_noise = Column(db.Numeric)
     rsquared = Column(db.Numeric)
     entry = Column(db.Integer)
-    experiment_id = Column(db.Integer)
+    experiment_id = Column(db.Integer, db.ForeignKey('experiment.id'))
 
 
 class DatasetSchema(Schema):

@@ -6,6 +6,8 @@ from cravattdb.home.models import (
     OrganismSchema, ExperimentTypeSchema, ExperimentSchema, DatasetSchema, ProbeSchema, InhibitorSchema
 )
 import csv
+import itertools
+import statistics
 
 
 experiment_schema = ExperimentSchema()
@@ -15,7 +17,7 @@ dataset_schema_summary = DatasetSchema(many=True, only=(
     'mass', 'charge', 'segment', 'ratio', 'entry'
 ))
 dataset_schema_search = DatasetSchema(many=True, only=(
-    'uniprot', 'symbol', 'description', 'sequence', 'ratio',
+    'id', 'uniprot', 'symbol', 'description', 'sequence', 'ratio',
     'experiment_id'
 ))
 organism_schema = OrganismSchema()
@@ -27,12 +29,45 @@ inhibitor_schema = InhibitorSchema()
 def search(term):
     data = Dataset.query.filter(
         (Dataset.uniprot == term) |
-        (Dataset.symbol.like('{}%'.format(term))) |
-        (Dataset.description.like('%{}%'.format(term))) |
-        (Dataset.sequence.like('%{}%'.format(term)))
+        (Dataset.symbol.ilike('{}%'.format(term))) |
+        (Dataset.description.ilike('%{}%'.format(term))) |
+        (Dataset.clean_sequence.ilike('%{}%'.format(term)))
     )
-    result = dataset_schema_search.dump(data)
-    return result.data
+
+    result = dataset_schema_search.dump(data).data['dataset']
+
+    sorted_result = sorted(result, key=lambda x: x.get('uniprot'))
+    grouped_result = itertools.groupby(sorted_result, key=lambda x: x.get('uniprot'))
+
+    groups = []
+
+    for uniprot, group in grouped_result:
+        x = list(group)
+
+        temp = {
+            'uniprot': uniprot,
+            'description': x[0]['description'],
+            'symbol': x[0]['symbol'],
+            'data': []
+        }
+
+        experiment_sorted = sorted(list(x), key=lambda x: x.get('experiment_id'))
+        by_experiment = itertools.groupby(experiment_sorted, key=lambda x: x.get('experiment_id'))
+
+        for experiment_id, g in by_experiment:
+            items = list(g)
+
+            ratios = [x['ratio'] for x in items]
+
+            temp['data'].append({
+                'experiment': get_experiment(items[0]['experiment_id']),
+                'mean_ratio': '{:.2f}'.format(statistics.mean(ratios)),
+                'qp': len(ratios)
+            })
+
+        groups.append(temp)
+
+    return groups
 
 
 def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id=0, inhibitor_id=0):

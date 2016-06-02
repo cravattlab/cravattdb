@@ -3,6 +3,7 @@ import { HomeService } from './home.service';
 import { FilterComponent } from './filter.component';
 import { FilterListComponent } from './filter-list.component';
 import * as _ from 'lodash';
+import * as chroma from 'chroma-js';
 
 @Component({
     templateUrl: 'static/app/home/home.html',
@@ -13,25 +14,21 @@ import * as _ from 'lodash';
 
 export class HomeComponent implements OnInit {
     @ViewChild(FilterComponent) filter: FilterComponent;
-    data: any[];
+    data: {};
     filters: any[];
     activeFilters: any[];
+    scale: any;
 
-    constructor(private service: HomeService) {}
+    constructor(private service: HomeService) {
+        this.scale = chroma.scale('YlOrRd');
+    }
 
     ngOnInit() {
         this.service.getFilters().then(d => this.filters = d);
     }
 
     search(term) {
-        this.service.search(term).then(d => {
-            this.data = d.dataset.map(o => {
-                return _.values(o);
-            });
-
-            console.log(this.data);
-        } );
-        console.log(term, this.data);
+        this.service.search(term).then(d => this.data = d);
     }
 
     onFiltersChange(filters) {
