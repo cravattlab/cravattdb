@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<div class="ui segment attached">
+<div *ngIf="activeFilters" class="ui segment attached">
     <filter-list [activeFilters]="activeFilters" (remove)="onFilterRemove($event.value)" (edit)="onFilterEdit($event.value)"></filter-list>
 </div>
 <filter [filters]="filters" (filtersChange)="onFiltersChange($event.value)"></filter>
@@ -21,13 +21,14 @@
             <tr>
                 <th>Uniprot</th>
                 <th>Symbol</th>
-                <th colspan="6">Description</th>
+                <th colspan="7">Description</th>
             </tr>           
             <tr>
                 <th>Experiment ID</th>
                 <th>Experiment Name</th>
                 <th>Experiment Type</th>
                 <th>Organism</th>
+                <th>User</th>
                 <th>Probe</th>
                 <th>Inhibitor</th>
                 <th class="center aligned one wide">QP</th>
@@ -38,13 +39,14 @@
             <tr class="active">
                 <td>{{ row.uniprot }}</td>
                 <td>{{ row.symbol }}</td>
-                <td colspan="6">{{ row.description }}</td>
+                <td colspan="7">{{ row.description }}</td>
             </tr>
             <tr *ngFor="let column of row.data">
                 <td>{{ column.experiment.id }}</td>
                 <td>{{ column.experiment.name }}</td>
                 <td>{{ column.experiment.experiment_type.name }}</td>
                 <td>{{ column.experiment.organism.display_name }}</td>
+                <td>{{ column.experiment.user.email }}
                 <td>{{ column.experiment.probe.name }}</td>
                 <td>{{ column.experiment.inhibitor.name }}</td>
                 <td class="center aligned" [style.background-color]="scale(column.qp/100)">{{ column.qp }}</td>

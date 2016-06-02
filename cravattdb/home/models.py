@@ -1,6 +1,7 @@
 """Contains definitions of SQLAlchemy tables."""
 from sqlalchemy.dialects.postgresql import JSON
 from marshmallow import Schema, fields, pre_load, post_load, post_dump
+from cravattdb.users.models import UserSchema
 from cravattdb.utils.admin import AuthModelView
 from cravattdb import db, admin
 
@@ -49,6 +50,7 @@ class ExperimentSchema(Schema):
     name = fields.String()
     date = fields.DateTime()
     user_id = fields.Integer()
+    user = fields.Nested('UserSchema')
     organism_id = fields.Integer()
     organism = fields.Nested('OrganismSchema')
     experiment_type_id = fields.Integer()

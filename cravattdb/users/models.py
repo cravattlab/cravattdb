@@ -1,6 +1,7 @@
 """User models."""
 from flask.ext.security import UserMixin, RoleMixin
 from cravattdb.utils.admin import AuthModelView
+from marshmallow import Schema, fields
 from sqlalchemy.dialects.postgresql import JSON
 from cravattdb import db, admin
 
@@ -37,6 +38,14 @@ class User(db.Model, UserMixin):
         secondary=roles_users,
         backref=db.backref('users', lazy='dynamic')
     )
+
+
+class UserSchema(Schema):
+    """Marshmallow schema for User."""
+
+    id = fields.Integer(dump_only=True)
+    email = fields.String(dump_only=True)
+
 
 # Flask-Admin views defined here for convenience
 admin.add_view(AuthModelView(User, db.session))
