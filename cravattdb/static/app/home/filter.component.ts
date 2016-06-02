@@ -25,6 +25,10 @@ export class FilterComponent {
     toggle() {
         this.sidebar.toggle();
     }
+
+    cancel() {
+        this.sidebar.hide();
+    }
     
     done() {
         this.update();

@@ -18,4 +18,6 @@
         {{ render_field(register_user_form.submit, class='ui fluid large teal submit button') }}
     </div>
 </form>
+<a style="display:block; text-align:right;margin-top:1em;" href="{{ url_for_security('login') }}">Already have an account?</a>
+
 {% endblock %}

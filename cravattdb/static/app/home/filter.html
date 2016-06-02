@@ -7,8 +7,14 @@
                 <i class="icon right caret"></i>
             </a>
         </div>
-
-        <button class="ui right floated primary button" (click)="done()">Done</button>
+        <div class="ui two column grid">
+            <div class="column">
+                <button class="ui fluid button" (click)="cancel()">Cancel</button>
+            </div>
+            <div class="column">
+                <button class="ui fluid primary button" (click)="done()">Done</button>
+            </div>
+        </div>
     </content>
 </sidebar>
 
