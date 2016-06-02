@@ -10,6 +10,7 @@ vagrant-sync
 typings
 cravattdb/static/app/**/*.js
 secrets.prod.yml
+secrets.override.yml
 
 # Windows image file caches
 Thumbs.db
