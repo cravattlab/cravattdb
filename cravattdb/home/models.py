@@ -1,7 +1,7 @@
 """Contains definitions of SQLAlchemy tables."""
 from sqlalchemy.dialects.postgresql import JSON
 from marshmallow import Schema, fields, pre_load, post_load, post_dump
-from flask_admin.contrib.sqla import ModelView
+from cravattdb.utils.admin import AuthModelView
 from cravattdb import db, admin
 
 Column = db.Column
@@ -261,9 +261,9 @@ class SampleType(db.Model):
 
 
 # Flask-Admin views defined here for convenience
-admin.add_view(ModelView(Probe, db.session))
-admin.add_view(ModelView(Dataset, db.session))
-admin.add_view(ModelView(Inhibitor, db.session))
-admin.add_view(ModelView(Experiment, db.session))
-admin.add_view(ModelView(ExperimentType, db.session))
-admin.add_view(ModelView(Organism, db.session))
+admin.add_view(AuthModelView(Probe, db.session))
+admin.add_view(AuthModelView(Dataset, db.session))
+admin.add_view(AuthModelView(Inhibitor, db.session))
+admin.add_view(AuthModelView(Experiment, db.session))
+admin.add_view(AuthModelView(ExperimentType, db.session))
+admin.add_view(AuthModelView(Organism, db.session))

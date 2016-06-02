@@ -2,6 +2,8 @@
 from flask import Flask, jsonify, make_response
 from flask.ext.security import Security, SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
+# from cravattdb.utils.mail import Mail
+from cravattdb.utils.admin import AuthAdminIndexView
 from flask_mail import Mail
 from flask_admin import Admin
 from http import HTTPStatus
@@ -16,7 +18,10 @@ mail = Mail(app)
 db = SQLAlchemy(app)
 
 # Setup Flask-Admin
-admin = Admin(app, name=config.PROJECT_NAME, template_mode='bootstrap3')
+admin = Admin(app,
+              name=config.PROJECT_NAME,
+              template_mode='bootstrap3',
+              index_view=AuthAdminIndexView())
 
 """
 We register blue prints after setting up app and db so that we can import these
