@@ -16,9 +16,7 @@ class AuthAdminIndexView(_AuthBase, AdminIndexView):
     pass
 
 
-class AuthModelView(ModelView):
+class AuthModelView(_AuthBase, ModelView):
     """Verify that user is authenticated before rendering model view."""
 
-    def is_accessible(self):
-        """Verify that user is authenticated before rendering admin index."""
-        return False
+    pass

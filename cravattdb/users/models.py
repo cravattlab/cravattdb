@@ -1,6 +1,6 @@
 """User models."""
 from flask.ext.security import UserMixin, RoleMixin
-from flask_admin.contrib.sqla import ModelView
+from cravattdb.utils.admin import AuthModelView
 from sqlalchemy.dialects.postgresql import JSON
 from cravattdb import db, admin
 
@@ -39,5 +39,5 @@ class User(db.Model, UserMixin):
     )
 
 # Flask-Admin views defined here for convenience
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(Role, db.session))
+admin.add_view(AuthModelView(User, db.session))
+admin.add_view(AuthModelView(Role, db.session))
