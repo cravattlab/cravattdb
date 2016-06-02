@@ -2,19 +2,21 @@
 
   // map tells the System loader where to look for things
   var map = {
-    'app':                        'static/app', // 'dist',
-    'lodash':                     'static/node_modules/lodash',
-    // 'rxjs':                       'static/node_modules/rxjs',
+    'app': 'static/app', // 'dist',
+    'lodash': 'static/node_modules/lodash',
+    'chroma-js': 'static/node_modules/chroma-js/chroma.min.js',
+    // 'rxjs': 'static/node_modules/rxjs',
     // 'angular2-in-memory-web-api': 'static/node_modules/angular2-in-memory-web-api',
-    '@angular':                   'static/node_modules/@angular'
+    '@angular': 'static/node_modules/@angular'
   };
 
   // packages tells the System loader how to load when no filename and/or no extension
   var packages = {
-    'app':                        { main: 'main.js',  defaultExtension: 'js' },
-    // 'rxjs':                       { defaultExtension: 'js' },
+    'app': { main: 'main.js',  defaultExtension: 'js' },
+    // 'rxjs': { defaultExtension: 'js' },
     'angular2-in-memory-web-api': { defaultExtension: 'js' },
-    'lodash':                     { main: 'lodash.js', defaultExtension: 'js' }
+    'lodash': { main: 'lodash.js', defaultExtension: 'js' },
+    'chroma-js:': { main: 'chroma.min.js', defaultExtension: 'js' }
   };
 
   var packageNames = [
