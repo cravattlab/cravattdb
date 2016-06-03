@@ -18,9 +18,11 @@ def sideload_experiment(name, user_id, organism_id, experiment_type_id, file, pr
     experiment_id = experiment['id']
     cimage_data_path = _unzip_cimage(file, user_id, experiment_id)
 
+    dta_path = list(cimage_data_path.glob('dta*'))[0]
+
     output_file_path = pathlib.Path(
         cimage_data_path,
-        'dta',
+        dta_path,
         'output',
         'output_rt_10_sn_2.5.to_excel.txt'
     )
