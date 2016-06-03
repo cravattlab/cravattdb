@@ -1,7 +1,7 @@
 """Blueprint for front-end."""
 
 from flask import Blueprint, render_template, make_response, jsonify
-from flask.ext.security import login_required
+from flask_security import login_required, LoginForm
 from flask_security.core import current_user
 from http import HTTPStatus
 import cravattdb.api.api as api
@@ -53,6 +53,12 @@ def render_experiment(experiment_id):
             'id': experiment_id
         }
     })
+
+
+@home.route('/login_csrf')
+def login_csrf():
+    form = LoginForm()
+    return jsonify({'csrf_token': form.csrf_token.current_token})
 
 
 @home.app_errorhandler(HTTPStatus.CONFLICT)
