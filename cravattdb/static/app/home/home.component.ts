@@ -15,7 +15,7 @@ import * as chroma from 'chroma-js';
 
 export class HomeComponent implements OnInit {
     @ViewChild(FilterComponent) filter: FilterComponent;
-    private _data: {};
+    private _data: any[];
     filters: any[];
     activeFilters: any[];
     scale: any;
@@ -29,13 +29,12 @@ export class HomeComponent implements OnInit {
         this.service.getFilters().then(d => this.filters = d);
     }
 
-    set data(data: {}) {
-        console.log('data set');
+    set data(data: any[]) {
         this.searching = false;
         this._data = data;
     }
 
-    get data(): {} {
+    get data(): any[] {
         return this._data;
     }
 

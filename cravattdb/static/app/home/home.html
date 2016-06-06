@@ -16,7 +16,7 @@
 <filter [filters]="filters" (filtersChange)="onFiltersChange($event.value)"></filter>
 
 <div *ngIf="data" class="ui wide fluid container">
-    <table class="ui celled table">
+    <table *ngIf="data.length" class="ui celled table">
         <thead>
             <tr>
                 <th>Uniprot</th>
@@ -54,4 +54,5 @@
             </tr>
         </tbody>
     </table>
+    <div *ngIf="!data.length" class="ui warning message">No results for your query!</div>
 </div>
