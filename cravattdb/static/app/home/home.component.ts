@@ -6,8 +6,9 @@ import * as _ from 'lodash';
 import * as chroma from 'chroma-js';
 
 @Component({
-    templateUrl: 'static/app/home/home.html',
     selector: 'home',
+    templateUrl: 'static/app/home/home.html',
+    styleUrls: [ 'static/app/home/home.css' ],
     directives: [ FilterComponent, FilterListComponent ],
     providers: [ HomeService ]
 })

@@ -1,0 +1,19 @@
+.search-wrap {
+    transition: all 0.5s;
+}
+
+.search-centered {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+.search-centered > .input {
+    font-size: 2em;
+    width: 60%;
+}
+
+.search-wrap .input > .button {
+    font-size: 1em;
+}

@@ -1,5 +1,5 @@
 
-<div class="ui inverted grey segment attached">
+<div [ngClass]="{ 'search-centered': !term.value.length, 'segment': term.value.length }" class="search-wrap ui inverted grey attached">
     <div class="ui fluid left icon action input">
         <i class="search icon"></i>
         <input #term type="text" placeholder="Le search by protein name" (keyup.enter)="search(term.value)">
@@ -15,8 +15,8 @@
 </div>
 <filter [filters]="filters" (filtersChange)="onFiltersChange($event.value)"></filter>
 
-<div class="ui wide fluid container">
-    <table *ngIf="data" class="ui celled table">
+<div *ngIf="data" class="ui wide fluid container">
+    <table class="ui celled table">
         <thead>
             <tr>
                 <th>Uniprot</th>
