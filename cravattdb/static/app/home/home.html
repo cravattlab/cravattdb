@@ -1,6 +1,6 @@
 
 <div [ngClass]="{ 'search-centered': !term.value.length, 'segment': term.value.length }" class="search-wrap ui inverted grey attached">
-    <div class="ui fluid left icon action input">
+    <div [ngClass]="{ 'loading': searching }" class="ui fluid left icon action input">
         <i class="search icon"></i>
         <input #term type="text" placeholder="Le search by protein name" (keyup.enter)="search(term.value)">
         <div class="ui icon primary button" (click)="filter.toggle()">

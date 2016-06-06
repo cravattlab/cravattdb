@@ -15,10 +15,11 @@ import * as chroma from 'chroma-js';
 
 export class HomeComponent implements OnInit {
     @ViewChild(FilterComponent) filter: FilterComponent;
-    data: {};
+    private _data: {};
     filters: any[];
     activeFilters: any[];
     scale: any;
+    searching: boolean = false;
 
     constructor(private service: HomeService) {
         this.scale = chroma.scale('YlOrRd');
@@ -28,8 +29,21 @@ export class HomeComponent implements OnInit {
         this.service.getFilters().then(d => this.filters = d);
     }
 
+    set data(data: {}) {
+        console.log('data set');
+        this.searching = false;
+        this._data = data;
+    }
+
+    get data(): {} {
+        return this._data;
+    }
+
     search(term) {
-        this.service.search(term).then(d => this.data = d);
+        this.searching = true;
+        this.service.search(term)
+            .then(d => this.data = d)
+            .catch(e => this.searching = false);
     }
 
     onFiltersChange(filters) {
