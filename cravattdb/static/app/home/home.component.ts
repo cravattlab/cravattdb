@@ -1,4 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { HomeService } from './home.service';
 import { FilterComponent } from './filter.component';
 import { FilterListComponent } from './filter-list.component';
@@ -21,7 +22,7 @@ export class HomeComponent implements OnInit {
     scale: any;
     searching: boolean = false;
 
-    constructor(private service: HomeService) {
+    constructor(private service: HomeService, private router: Router) {
         this.scale = chroma.scale('YlOrRd');
     }
 
