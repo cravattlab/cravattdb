@@ -21,10 +21,9 @@
             <tr>
                 <th>Uniprot</th>
                 <th>Symbol</th>
-                <th colspan="7">Description</th>
+                <th colspan="6">Description</th>
             </tr>           
             <tr>
-                <th>Experiment ID</th>
                 <th>Experiment Name</th>
                 <th>Experiment Type</th>
                 <th>Organism</th>
@@ -39,10 +38,9 @@
             <tr class="active">
                 <td>{{ row.uniprot }}</td>
                 <td>{{ row.symbol }}</td>
-                <td colspan="7">{{ row.description }}</td>
+                <td colspan="6">{{ row.description }}</td>
             </tr>
             <tr *ngFor="let column of row.data">
-                <td>{{ column.experiment.id }}</td>
                 <td>{{ column.experiment.name }}</td>
                 <td>{{ column.experiment.experiment_type.name }}</td>
                 <td>{{ column.experiment.organism.display_name }}</td>
