@@ -28,7 +28,7 @@ Vagrant.configure(2) do |config|
     # command with sudo
     adduser vagrant docker
     pip install docker-compose
-    npm install -g typescript@latest typings@latest
+    npm install -g typescript typings concurrently gulp
   SHELL
 
   config.vm.provision "ssh-setup", type: "shell", privileged: false, inline: <<-SHELL
@@ -46,6 +46,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "goodies", type: "shell", privileged: false, inline: <<-SHELL
     echo "alias dc='docker-compose'" >> ~/.bashrc
     echo "alias ac='docker attach cravattdb_cravattdb_1'"  >> ~/.bashrc
+    echo "alias exc='docker exec -it cravattdb_cravattdb_1 /bin/bash'"" >> ~/.bashrc
   SHELL
 
 end
