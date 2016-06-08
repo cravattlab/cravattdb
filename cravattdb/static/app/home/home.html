@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<div *ngIf="activeFilters" class="ui segment attached">
+<div *ngIf="activeFilters?.length" class="ui segment attached">
     <filter-list [activeFilters]="activeFilters" (remove)="onFilterRemove($event.value)" (edit)="onFilterEdit($event.value)"></filter-list>
 </div>
 <filter [filters]="filters" (filtersChange)="onFiltersChange($event.value)"></filter>
