@@ -6,7 +6,6 @@
     'lodash': 'static/node_modules/lodash',
     'chroma-js': 'static/node_modules/chroma-js/chroma.min.js',
     // 'rxjs': 'static/node_modules/rxjs',
-    // 'angular2-in-memory-web-api': 'static/node_modules/angular2-in-memory-web-api',
     '@angular': 'static/node_modules/@angular'
   };
 
@@ -14,9 +13,7 @@
   var packages = {
     'app': { main: 'main.js',  defaultExtension: 'js' },
     // 'rxjs': { defaultExtension: 'js' },
-    'angular2-in-memory-web-api': { defaultExtension: 'js' },
-    'lodash': { main: 'lodash.js', defaultExtension: 'js' },
-    'chroma-js:': { main: 'chroma.min.js', defaultExtension: 'js' }
+    'lodash': { main: 'lodash.min.js', defaultExtension: 'js' }
   };
 
   var packageNames = [
