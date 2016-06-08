@@ -46,7 +46,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "goodies", type: "shell", privileged: false, inline: <<-SHELL
     echo "alias dc='docker-compose'" >> ~/.bashrc
     echo "alias ac='docker attach cravattdb_cravattdb_1'"  >> ~/.bashrc
-    echo "alias exc='docker exec -it cravattdb_cravattdb_1 /bin/bash'"" >> ~/.bashrc
+    echo "alias exc='docker exec -it cravattdb_cravattdb_1 /bin/bash'" >> ~/.bashrc
   SHELL
 
 end
