@@ -1,4 +1,15 @@
 <table class="ui selectable celled table" [ngSwitch]="byPeptide">
+    <tbody *ngIf="!data">
+        <tr>
+            <td style="padding:0" colspan="6">
+                <div style="height:100px" class="ui attached segment">
+                    <div class="ui active inverted dimmer">
+                        <div class="ui text medium loader">Loading Data</div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tbody>
     <template [ngSwitchWhen]="false">
         <thead>
             <tr>
