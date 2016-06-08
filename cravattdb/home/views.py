@@ -24,12 +24,6 @@ def get_user_id():
     return current_user.get_id()
 
 
-@home.route('/sideload')
-@login_required
-def sideload_dataset():
-    return render_template('index.html')
-
-
 @home.route('/experiments')
 @login_required
 def render_experiments():
