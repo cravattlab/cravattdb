@@ -1,13 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { AutoService } from './auto.service'
+import { Component, OnInit, NgZone } from '@angular/core';
 import { FORM_DIRECTIVES } from '@angular/common';
+import { Observable } from 'rxjs/Observable';
+import { AutoService } from './auto.service'
 import { InitializeDropdown } from '../directives/semantic-ui-init';
+
 import * as _ from 'lodash';
 
 @Component({
+    selector: 'auto',
     templateUrl: 'static/app/auto/auto.html',
     directives: [FORM_DIRECTIVES, InitializeDropdown],
-    providers: [AutoService]
+    providers: [ AutoService ]
 })
 
 export class AutoComponent implements OnInit {
@@ -15,8 +18,17 @@ export class AutoComponent implements OnInit {
     showErrors: boolean = false;
     errors: any[] = [];
     files: any[] = [];
+    progress: number = 0;
 
-    constructor(private service: AutoService) {}
+    constructor(private service: AutoService, private zone: NgZone) {
+        this.service.progress$.debounceTime(100).subscribe(progress => {
+            // struggle bus report:
+            // http://stackoverflow.com/a/37695136/383744
+            this.zone.run(() => {
+                this.progress = progress;
+            });
+        });
+    }
 
     ngOnInit(): void {
         this.service.getData().subscribe(d => this.data = d);
@@ -27,6 +39,10 @@ export class AutoComponent implements OnInit {
     }
 
     onSubmit(form: any): void {
-        this.service.submitForm(form, this.files);
+        let req = this.service.submitForm(form, this.files).subscribe(() => {
+            console.log('sent');
+        }, () => {
+            console.log('error');
+        });
     }
 }

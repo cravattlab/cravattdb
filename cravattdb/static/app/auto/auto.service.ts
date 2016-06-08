@@ -1,13 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
 import * as _ from 'lodash';
-
-declare var $: any
 
 @Injectable()
 export class AutoService {
-    constructor(private http: Http) { }
+
+    progress$: Observable<any>;
+    progressObserver: Observer<any>;
+
+    constructor(private http: Http) {
+        this.progress$ = new Observable(observer => {
+            this.progressObserver = observer;
+        }).share();
+    }
 
     getData(): Observable<{}> {
         let observableBatch = [];
@@ -30,30 +37,46 @@ export class AutoService {
         });
     }
 
-    submitForm(form, files:File[]) {
-        // Yes, I'm using fucking jQuery because the Http module blows right now.
-        // And fuck XMLHttpRequest too. Couldn't they make a nice abstraction?
-        let formData: FormData = new FormData();
+    submitForm(form, files: File[]): Observable<any> {
+        return new Observable(observer => {
+            const url = '/auto/search';
+            let formData: FormData = new FormData();
+            let xhr: XMLHttpRequest = new XMLHttpRequest();
 
-        for (let key in form) {
-            if (form[key]) {
-                formData.append(key, form[key]);
+            for (let key in form) {
+                if (form[key]) {
+                    formData.append(key, form[key]);
+                }
             }
-        }
 
-        for (let file of files) {
-            formData.append('files', file, file.name);
-        }
+            for (let file of files) {
+                formData.append('files', file, file.name);
+            }
 
-        $.ajax({
-            url: '/auto/search',
-            method: 'POST',
-            data: formData,
-            async: false,
-            cache: false,
-            processData: false,
-            contentType: false
-        }).done(d => console.log(d));
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        observer.next(JSON.parse(xhr.response));
+                        observer.complete();
+                    } else {
+                        observer.error(xhr.response);
+                    }
+                }
+            };
+
+            xhr.upload.onprogress = (event) => {
+                let progress = Math.round(event.loaded / event.total * 100);
+
+                this.progressObserver.next(progress);
+
+                if (progress === 100) {
+                    this.progressObserver.complete();
+                }
+            };
+
+            xhr.open('POST', url, true);
+            xhr.send(formData);
+        });
     }
 
     private extractData(res: Response) {
