@@ -9,9 +9,10 @@
     "removeComments": false,
     "noImplicitAny": false
   },
+  "resolution": {
+    "browser": "typings"
+  },
   "exclude": [
-    "node_modules",
-    "typings/index",
-    "typings/index.d.ts"
+    "node_modules"
   ]
 }
