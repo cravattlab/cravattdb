@@ -1,0 +1,22 @@
+dl {
+    width:40%;
+}
+
+dt {
+    float: left;
+    margin-right: 10%;
+    max-width: 30%;
+    font-weight: bold;
+}
+
+dd {
+    color: grey;
+    margin-left: 40%;
+    margin-bottom: .5em;
+}
+
+dd::after {
+    content: " ";
+    display: block;
+    clear: left;
+}

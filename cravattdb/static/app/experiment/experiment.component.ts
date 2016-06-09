@@ -6,7 +6,8 @@ import { MetaComponent } from './meta.component'
 @Component({
     selector: 'experiment',
     templateUrl: 'static/app/experiment/experiment.html',
-    directives: [DataComponent, MetaComponent]
+    styleUrls: [ 'static/app/experiment/experiment.css' ],
+    directives: [ DataComponent, MetaComponent ]
 })
 
 export class ExperimentComponent implements OnActivate {

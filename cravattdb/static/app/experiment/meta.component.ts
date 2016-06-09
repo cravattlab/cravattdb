@@ -4,12 +4,12 @@ import { MetaService } from './meta.service'
 @Component({
     selector: 'experiment-meta',
     templateUrl: 'static/app/experiment/meta.html',
-    providers: [MetaService]
+    styleUrls: [ 'static/app/experiment/meta.css' ],
+    providers: [ MetaService ]
 })
 
 export class MetaComponent implements OnInit {
     @Input() id: Number
-
     data: any[];
 
     constructor(private service: MetaService) { }

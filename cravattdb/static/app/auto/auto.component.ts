@@ -9,6 +9,7 @@ import * as _ from 'lodash';
 @Component({
     selector: 'auto',
     templateUrl: 'static/app/auto/auto.html',
+    styleUrls: [ 'static/app/auto/auto.css' ],
     directives: [FORM_DIRECTIVES, InitializeDropdown],
     providers: [ AutoService ]
 })
