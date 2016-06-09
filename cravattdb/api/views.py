@@ -21,7 +21,8 @@ def get_dataset(experiment_id):
     raw = model.get_dataset(experiment_id)
 
     return jsonify({
-        'data': [list(item.values()) for item in raw['dataset']]
+        'data': [list(item.values()) for item in raw['dataset']],
+        'headers': list(raw['dataset'][0].keys())
     })
 
 
