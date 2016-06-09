@@ -4,7 +4,6 @@
   var map = {
     'app': 'static/app', // 'dist',
     'lodash': 'static/node_modules/lodash',
-    'chroma-js': 'static/node_modules/chroma-js/chroma.min.js',
     // 'rxjs': 'static/node_modules/rxjs',
     '@angular': 'static/node_modules/@angular'
   };

@@ -4,7 +4,8 @@ import { HomeService } from './home.service';
 import { FilterComponent } from './filter.component';
 import { FilterListComponent } from './filter-list.component';
 import * as _ from 'lodash';
-import * as chroma from 'chroma-js';
+
+declare var chroma: any;
 
 @Component({
     selector: 'home',
