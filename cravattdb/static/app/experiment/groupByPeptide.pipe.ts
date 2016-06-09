@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 @Pipe({ name: 'groupByPeptide' })
 export class GroupByPeptidePipe implements PipeTransform {
     transform(value: any, args?: any[]): Object[] {
-        value = _.groupBy(value, 4);
+        value = _.groupBy(value, 3);
 
         let keyArr = Object.keys(value),
             dataArr = [];
@@ -17,7 +17,7 @@ export class GroupByPeptidePipe implements PipeTransform {
                 'mean': (value[key].reduce(
                     (a, b) => a + b[7], 0
                 ) / value[key].length).toFixed(1),
-                'columns': value[key].map(d => d = { data: [...d.slice(0, 3), ...d.slice(4, -1)], chromatogram: d.slice(-1) }),
+                'columns': value[key].map(d => d = { data: [ ...d.slice(0, 3), ...d.slice(4, -1) ], chromatogram: d.slice(-1) }),
             });
         });
 

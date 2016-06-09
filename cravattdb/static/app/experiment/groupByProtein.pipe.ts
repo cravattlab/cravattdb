@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 @Pipe({ name: 'groupByProtein' })
 export class GroupByProteinPipe implements PipeTransform {
     transform(value: any, args?: any[]): Object[] {
-        value = _.groupBy(value, 1);
+        value = _.groupBy(value, 0);
 
         let keyArr = Object.keys(value),
             dataArr = [];

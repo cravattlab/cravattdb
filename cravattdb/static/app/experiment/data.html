@@ -49,6 +49,7 @@
             <tr>
                 <th colspan="6">Sequence</th>
                 <th>Mean Ratio</th>
+                <th class="center aligned" rowspan="2"><i class="area chart big icon"></i></th>
             </tr>
             <tr *ngIf="!collapsed">
                 <th>Uniprot</th>
@@ -64,9 +65,10 @@
             <tr class="active">
                 <td colspan="6">{{ row.groupKey }}</td>
                 <td>{{ row.mean }}</td>
+                <td></td>
             </tr>
             <template [ngIf]="!collapsed">
-                <tr *ngFor="let group of row.value">
+                <tr *ngFor="let group of row.columns">
                     <td *ngFor="let column of group.data">{{ column }}</td>
                     <td class="center aligned"><a [href]="'legacy/1/' + id + '/chromatogram/' + group.chromatogram[0]"><i class="area chart link icon"></i></a></td>
                 </tr>
