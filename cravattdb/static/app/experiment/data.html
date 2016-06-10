@@ -32,12 +32,13 @@
                 <td>{{ row.groupKey }}</td>
                 <td>{{ row.symbol }}</td>
                 <td colspan="2">{{ row.description }}</td>
-                <td>{{ row.mean }}</td>
+                <td class="mean-ratio" [style.background-color]="scale(row.mean/20)">{{ row.mean }}</td>
                 <td></td>
             </tr>
             <template [ngIf]="!collapsed">
                 <tr *ngFor="let group of row.columns">
                     <td *ngFor="let column of group.data">{{ column }}</td>
+                    <td [style.background-color]="scale(group.ratio[0]/20)">{{ group.ratio[0] }}</td>
                     <td class="center aligned"><a [href]="'legacy/1/' + id + '/chromatogram/' + group.chromatogram[0]"><i class="area chart link icon"></i></a></td>
                 </tr>
             </template>
@@ -64,12 +65,13 @@
         <tbody *ngFor="let row of data | groupByPeptide">
             <tr class="active">
                 <td colspan="6">{{ row.groupKey }}</td>
-                <td>{{ row.mean }}</td>
+                <td class="mean-ratio" [style.background-color]="scale(row.mean/20)">{{ row.mean }}</td>
                 <td></td>
             </tr>
             <template [ngIf]="!collapsed">
                 <tr *ngFor="let group of row.columns">
                     <td *ngFor="let column of group.data">{{ column }}</td>
+                    <td [style.background-color]="scale(group.ratio[0]/20)">{{ group.ratio[0] }}</td>
                     <td class="center aligned"><a [href]="'legacy/1/' + id + '/chromatogram/' + group.chromatogram[0]"><i class="area chart link icon"></i></a></td>
                 </tr>
             </template>

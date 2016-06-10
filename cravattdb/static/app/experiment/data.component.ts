@@ -3,9 +3,12 @@ import { DataService } from './data.service';
 import { GroupByProteinPipe } from './groupByProtein.pipe';
 import { GroupByPeptidePipe } from './groupByPeptide.pipe';
 
+declare var chroma: any;
+
 @Component({
     selector: 'experiment-data',
     templateUrl: 'static/app/experiment/data.html',
+    styleUrls: [ 'static/app/experiment/data.css' ],
     providers: [DataService],
     pipes: [GroupByProteinPipe, GroupByPeptidePipe]
 })
@@ -18,6 +21,7 @@ export class DataComponent implements OnInit {
     data: any[];
     minRatio: number;
     maxRatio: number;
+    scale: any = chroma.scale('YlOrRd');
 
     constructor(private service: DataService) { }
 

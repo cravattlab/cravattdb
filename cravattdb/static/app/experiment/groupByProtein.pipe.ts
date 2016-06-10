@@ -17,7 +17,7 @@ export class GroupByProteinPipe implements PipeTransform {
                 'mean': (value[key].reduce(
                     (a, b) => a + b[7], 0
                 ) / value[key].length).toFixed(1),
-                'columns': value[key].map(d => d = { data: d.slice(3, -1), chromatogram: d.slice(-1) })
+                'columns': value[key].map(d => d = { data: d.slice(3, -2), ratio: d.slice(-2, -1), chromatogram: d.slice(-1) })
             });
         });
 

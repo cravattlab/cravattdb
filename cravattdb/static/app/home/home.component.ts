@@ -20,12 +20,10 @@ export class HomeComponent implements OnInit {
     private _data: any[];
     filters: any[];
     activeFilters: any[];
-    scale: any;
+    scale: any = chroma.scale('YlOrRd');
     searching: boolean = false;
 
-    constructor(private service: HomeService, private router: Router) {
-        this.scale = chroma.scale('YlOrRd');
-    }
+    constructor(private service: HomeService, private router: Router) { }
 
     ngOnInit() {
         this.service.getFilters().then(d => this.filters = d);
