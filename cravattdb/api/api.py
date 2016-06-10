@@ -30,8 +30,7 @@ def search(term):
     data = Dataset.query.filter(
         (Dataset.uniprot == term) |
         (Dataset.symbol.ilike('{}%'.format(term))) |
-        (Dataset.description.ilike('%{}%'.format(term))) |
-        (Dataset.clean_sequence.ilike('%{}%'.format(term)))
+        (Dataset.description.ilike('%{}%'.format(term)))
     )
 
     result = dataset_schema_search.dump(data).data['dataset']
