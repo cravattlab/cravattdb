@@ -38,6 +38,11 @@ def search(term):
     sorted_result = sorted(result, key=lambda x: x.get('uniprot'))
     grouped_result = itertools.groupby(sorted_result, key=lambda x: x.get('uniprot'))
 
+    # grab ids so we can look up experiment info by batch
+    experiment_ids = [item.get('experiment_id') for item in result]
+    experiments_data = get_experiments(set(experiment_ids))
+    experiments = {ex['id']: ex for ex in experiments_data['experiments']}
+
     groups = []
 
     for uniprot, group in grouped_result:
@@ -59,7 +64,7 @@ def search(term):
             ratios = [x['ratio'] for x in items]
 
             temp['data'].append({
-                'experiment': get_experiment(items[0]['experiment_id']),
+                'experiment': experiments[experiment_id],
                 'mean_ratio': '{:.2f}'.format(statistics.mean(ratios)),
                 'qp': len(ratios)
             })
@@ -185,6 +190,11 @@ def get_experiment(experiment_id=None, flat=False):
         }
     else:
         return result.data
+
+
+def get_experiments(experiment_ids):
+    experiments = Experiment.query.filter(Experiment.id.in_(experiment_ids))
+    return experiment_schema.dump(experiments, many=True).data
 
 
 def get_dataset(experiment_id):
