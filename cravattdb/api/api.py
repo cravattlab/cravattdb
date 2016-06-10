@@ -28,7 +28,7 @@ inhibitor_schema = InhibitorSchema()
 
 def search(term):
     data = Dataset.query.filter(
-        (Dataset.uniprot == term) |
+        (Dataset.uniprot.ilike(term)) |
         (Dataset.symbol.ilike('{}%'.format(term))) |
         (Dataset.description.ilike('%{}%'.format(term)))
     )
