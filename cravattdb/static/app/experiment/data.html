@@ -1,4 +1,4 @@
-<table class="ui selectable celled table" [ngSwitch]="byPeptide">
+<table class="ui sortable selectable celled table" [ngSwitch]="byPeptide">
     <tbody *ngIf="loading">
         <tr>
             <td style="padding:0" colspan="6">
@@ -16,8 +16,15 @@
                 <th>Uniprot</th>
                 <th>Symbol</th>
                 <th colspan="2">Description</th>
-                <th class="two wide center aligned">Mean Ratio</th>
-                <th class="one wide center aligned" rowspan="2"><i class="area chart big icon"></i></th>
+                <th
+                    class="two wide center aligned sorted"
+                    [ngClass]="{ 
+                        'descending': sortDirection['mean'] == Sort.Descending,
+                        'ascending': sortDirection['mean'] == Sort.Ascending
+                    }"
+                    (click)="sortDirection['mean'] = sortDirection['mean'] * -1; sort('mean', sortDirection['mean'])">Mean Ratio
+                </th>
+                <th class="one wide center aligned" rowspan="2" (click)="sort('mean')"><i class="area chart big icon"></i></th>
             </tr>
             <tr *ngIf="!collapsed">
                 <th>Sequence</th>

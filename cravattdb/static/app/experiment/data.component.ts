@@ -13,6 +13,11 @@ import { DataService } from './data.service';
 
 declare var chroma: Chroma.ChromaStatic;
 
+enum Sort {
+    Ascending = 1,
+    Descending = -1
+}
+
 // We're going to handle a lot of things manually inside this component.
 // Lots of data passing through which we want to avoid re-rendering
 // except when we know it is strictly necessary
@@ -37,6 +42,12 @@ export class DataComponent implements OnInit, OnChanges {
     data: any[];
     scale: any = chroma.scale('YlOrRd');
 
+    Sort = Sort;
+
+    sortDirection: { [ propName: string]: Sort } = {
+        'mean': Sort.Descending
+    };
+
     constructor(
         private service: DataService,
         private cd: ChangeDetectorRef
@@ -44,9 +55,11 @@ export class DataComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.service.getData(this.id).then(d => {
+            d.headers.push('mean');
             // save reference to pristine copy of data
             this._data = d;
             this.data = this.groupBy(this.byPeptide);
+            this.sort('mean', Sort.Descending);
         });
     }
 
@@ -60,6 +73,12 @@ export class DataComponent implements OnInit, OnChanges {
 
     getHeaderIndex(header: string): number {
         return this._data.headers.indexOf(header);
+    }
+
+    sort(header: string, direction: Sort): void {
+        const sortByIndex = this.getHeaderIndex(header);
+        this.data = _.sortBy(this.data, item => item[0][sortByIndex] * direction);
+        this.cd.markForCheck();
     }
 
     groupBy(byPeptide: boolean): any[] {
@@ -77,11 +96,16 @@ export class DataComponent implements OnInit, OnChanges {
             let mean = _.meanBy(group, ratioIndex);
             // add mean ratio as final element of first group member
             // I know this would be nicer on an object, but... we have to
-            // juggle around tens of thousands of these sometimes    
-            group[0].push(mean.toFixed(1));
+            // juggle around tens of thousands of these sometimes
+            //
+            // also this is not formatted using toFixed since we want it
+            // to stay a number, for details see:
+            // http://stackoverflow.com/a/29494612/383744 
+            group[0].push(Math.round(mean*1e2)/1e2);
             return group;
         });
 
+        this.cd.markForCheck();
         // processing data is finished, we can turn off progress spinner
         this.loading = false;
 
