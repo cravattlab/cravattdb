@@ -16,4 +16,4 @@ npm install
 
 # run the server
 cd "${PROJECT_HOME}" || exit
-python run.py
+python run.py runserver

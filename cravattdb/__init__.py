@@ -6,6 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 from cravattdb.utils.admin import AuthAdminIndexView
 from flask_mail import Mail
 from flask_admin import Admin
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 from http import HTTPStatus
 import config.config as config
 
@@ -16,6 +18,12 @@ mail = Mail(app)
 
 # Create database connection object
 db = SQLAlchemy(app)
+
+# Setup Flask-Migrate
+migrate = Migrate(app, db)
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
+
 
 # Setup Flask-Admin
 admin = Admin(app,
