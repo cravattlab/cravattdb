@@ -36,6 +36,7 @@ class _Config(object):
     # Flask
     DEBUG = False
     SECRET_KEY = _SECRETS['flask']['SECRET_KEY']
+    JSONIFY_PRETTYPRINT_REGULAR = False
 
     # Flask-Security
     SECURITY_PASSWORD_SALT = _SECRETS['flask-security']['SECURITY_PASSWORD_SALT']
