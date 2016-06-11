@@ -1,5 +1,5 @@
 <table class="ui selectable celled table" [ngSwitch]="byPeptide">
-    <tbody *ngIf="!data">
+    <tbody *ngIf="loading">
         <tr>
             <td style="padding:0" colspan="6">
                 <div style="height:100px" class="ui attached segment">
@@ -16,30 +16,33 @@
                 <th>Uniprot</th>
                 <th>Symbol</th>
                 <th colspan="2">Description</th>
-                <th>Mean Ratio</th>
-                <th class="center aligned" rowspan="2"><i class="area chart big icon"></i></th>
+                <th class="two wide center aligned">Mean Ratio</th>
+                <th class="one wide center aligned" rowspan="2"><i class="area chart big icon"></i></th>
             </tr>
             <tr *ngIf="!collapsed">
                 <th>Sequence</th>
                 <th>Mass</th>
-                <th>Charge</th>
-                <th>Segment</th>
-                <th>Ratio</th>
+                <th class="two wide center aligned">Charge</th>
+                <th class="two wide center aligned">Segment</th>
+                <th class="two wide center aligned">Ratio</th>
             </tr>
         </thead>
-        <tbody *ngFor="let row of data | groupByProtein">
+        <tbody *ngFor="let row of data">
             <tr class="active">
-                <td>{{ row.groupKey }}</td>
-                <td>{{ row.symbol }}</td>
-                <td colspan="2">{{ row.description }}</td>
-                <td class="mean-ratio" [style.background-color]="scale(row.mean/20)">{{ row.mean }}</td>
+                <td>{{ row[0][0] }}</td>
+                <td>{{ row[0][1] }}</td>
+                <td colspan="2">{{ row[0][2] }}</td>
+                <td class="center aligned mean-ratio" [style.background-color]="scale(row[0][9]/20)">{{ row[0][9] }}</td>
                 <td></td>
             </tr>
             <template [ngIf]="!collapsed">
-                <tr *ngFor="let group of row.columns">
-                    <td *ngFor="let column of group.data">{{ column }}</td>
-                    <td [style.background-color]="scale(group.ratio[0]/20)">{{ group.ratio[0] }}</td>
-                    <td class="center aligned"><a [href]="'legacy/1/' + id + '/chromatogram/' + group.chromatogram[0]"><i class="area chart link icon"></i></a></td>
+                <tr *ngFor="let column of row">
+                    <td>{{ column[3] }}</td>
+                    <td>{{ column[4] }}</td>
+                    <td class="two wide center aligned">{{ column[5] }}</td>
+                    <td class="two wide center aligned">{{ column[6] }}</td>
+                    <td class="two wide center aligned" [style.background-color]="scale(column[7]/20)">{{ column[7] }}</td>
+                    <td class="chromatogram center aligned"><a [href]="'legacy/1/' + id + '/chromatogram/' + column[8]"><i class="area chart link icon"></i></a></td>
                 </tr>
             </template>
         </tbody>
@@ -49,7 +52,7 @@
         <thead>
             <tr>
                 <th colspan="6">Sequence</th>
-                <th>Mean Ratio</th>
+                <th class="two wide center aligned">Mean Ratio</th>
                 <th class="center aligned" rowspan="2"><i class="area chart big icon"></i></th>
             </tr>
             <tr *ngIf="!collapsed">
@@ -57,22 +60,27 @@
                 <th>Symbol</th>
                 <th>Description</th>
                 <th>Mass</th>
-                <th>Charge</th>
-                <th>Segment</th>
-                <th>Ratio</th>
+                <th class="two wide center aligned">Charge</th>
+                <th class="two wide center aligned">Segment</th>
+                <th class="two wide center aligned">Ratio</th>
             </tr>
         </thead>
-        <tbody *ngFor="let row of data | groupByPeptide">
+        <tbody *ngFor="let row of data">
             <tr class="active">
-                <td colspan="6">{{ row.groupKey }}</td>
-                <td class="mean-ratio" [style.background-color]="scale(row.mean/20)">{{ row.mean }}</td>
+                <td colspan="6">{{ row[0][3] }}</td>
+                <td class="two wide center aligned mean-ratio" [style.background-color]="scale(row[0][9]/20)">{{ row[0][9] }}</td>
                 <td></td>
             </tr>
             <template [ngIf]="!collapsed">
-                <tr *ngFor="let group of row.columns">
-                    <td *ngFor="let column of group.data">{{ column }}</td>
-                    <td [style.background-color]="scale(group.ratio[0]/20)">{{ group.ratio[0] }}</td>
-                    <td class="center aligned"><a [href]="'legacy/1/' + id + '/chromatogram/' + group.chromatogram[0]"><i class="area chart link icon"></i></a></td>
+                <tr *ngFor="let column of row">
+                    <td>{{ column[0] }}</td>
+                    <td>{{ column[1] }}</td>
+                    <td>{{ column[2] }}</td>
+                    <td>{{ column[4] }}</td>
+                    <td class="two wide center aligned">{{ column[5] }}</td>
+                    <td class="two wide center aligned">{{ column[6] }}</td>
+                    <td class="two wide center aligned" [style.background-color]="scale(column[7]/20)">{{ column[7] }}</td>
+                    <td class="one wide center aligned"><a [href]="'legacy/1/' + id + '/chromatogram/' + column[8]"><i class="area chart link icon"></i></a></td>
                 </tr>
             </template>
         </tbody>
