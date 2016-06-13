@@ -31,6 +31,7 @@ class Experiment(db.Model):
     cell_type_id = Column(db.Integer, db.ForeignKey('cell_type.id'), index=True)
     instrument_id = Column(db.Integer, db.ForeignKey('instrument.id'), index=True)
     treatment_type_id = Column(db.Integer, db.ForeignKey('treatment_type.id'), index=True)
+    proteomic_fraction_id = Column(db.Integer, db.ForeignKey('proteomic_fraction.id'), index=True)
 
     # store things like concentration, duration etc
     treatment_details = Column(JSONB)
@@ -51,6 +52,7 @@ class Experiment(db.Model):
     cell_type = relationship('CellType', backref='experiments')
     instrument = relationship('Instrument', backref='experiments')
     treatment_type = relationship('TreatmentType', backref='experiments')
+    proteomic_fraction = relationship('ProteomicFraction', backref='experiments')
 
 
 class JSONField(fields.Field):
@@ -80,6 +82,7 @@ class ExperimentSchema(Schema):
     cell_type = fields.Nested('CellTypeSchema')
     instrument = fields.Nested('InstrumentSchema')
     treatment_type = fields.Nested('TreatmentTypeSchema')
+    proteomic_fraction = fields.Nested('ProtemicFractionSchema')
     additional_search_params = JSONField()
     additional_quant_params = JSONField()
     treatmentDetails = JSONField()
@@ -353,6 +356,31 @@ class CellTypeSchema(Schema):
     @post_dump(pass_many=True)
     def _wrap(self, data, many):
         return {'cell_types': data} if many else data
+
+
+class ProteomicFraction(db.Model):
+    """Define proteome fraction: soluble, membrane etc."""
+
+    id = Column(db.Integer, primary_key=True)
+    name = Column(db.Integer, index=True)
+    description = Column(db.Text, index=True)
+
+
+class ProteomicFractionSchema(Schema):
+    """Marshmallow schema for CellType."""
+
+    id = fields.Integer(dump_only=True)
+    name = fields.String()
+    description = fields.String()
+
+    @post_load
+    def _make_proteomic_fraction(self, data):
+        return ProteomicFraction(**data)
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        return {'proteomic_fractions': data} if many else data
+
 
 # Flask-Admin views defined here for convenience
 admin.add_view(AuthModelView(Probe, db.session))
