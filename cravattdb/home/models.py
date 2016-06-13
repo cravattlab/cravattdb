@@ -66,24 +66,24 @@ class JSONField(fields.Field):
 
 
 class ExperimentSchema(Schema):
-    """Marshmallow schema for Experiement."""
+    """Marshmallow schema for Experiment."""
 
     id = fields.Integer(dump_only=True)
     name = fields.String()
     date = fields.DateTime()
-    user_id = fields.Integer()
     user = fields.Nested('UserSchema')
-    organism_id = fields.Integer()
     organism = fields.Nested('OrganismSchema')
-    experiment_type_id = fields.Integer()
     experiment_type = fields.Nested('ExperimentTypeSchema')
-    probe_id = fields.Integer()
     probe = fields.Nested('ProbeSchema')
-    inhibitor_id = fields.Integer()
     inhibitor = fields.Nested('InhibitorSchema')
-    additional_search_params = fields.String()
-    additional_quant_params = fields.String()
-    annotations = fields.String()
+    sample_type = fields.Nested('SampleType')
+    cell_type = fields.Nested('CellType')
+    instrument = fields.Nested('Instrument')
+    treatment_type = fields.Nested('TreatmentType')
+    additional_search_params = JSONField()
+    additional_quant_params = JSONField()
+    treatmentDetails = JSONField()
+    annotations = JSONField()
 
     @pre_load
     def _filter_experiment(self, data):
@@ -268,12 +268,43 @@ class Instrument(db.Model):
     name = Column(db.Text, index=True)
 
 
+class InstrumentSchema(Schema):
+    """Marshmallow schema for Instrument."""
+
+    id = fields.Integer(dump_only=True)
+    name = fields.String()
+
+    @post_load
+    def _make_instrument(self, data):
+        return Instrument(**data)
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        return {'instruments': data} if many else data
+
+
 class TreatmentType(db.Model):
     """Type of treatment applied to proteome: in vitro etc."""
 
     id = Column(db.Integer, primary_key=True)
     name = Column(db.Text, index=True)
     description = Column(db.Text)
+
+
+class TreatmentTypeSchema(Schema):
+    """Marshmallow schema for TreatmentType."""
+
+    id = fields.Integer(dump_only=True)
+    name = fields.String()
+    description = fields.String()
+
+    @post_load
+    def _make_treatment_type(self, data):
+        return TreatmentType(**data)
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        return {'treatment_types': data} if many else data
 
 
 class SampleType(db.Model):
@@ -284,6 +315,22 @@ class SampleType(db.Model):
     description = Column(db.Text)
 
 
+class SampleTypeSchema(Schema):
+    """Marshmallow schema for SampleType."""
+
+    id = fields.Integer(dump_only=True)
+    name = fields.String()
+    description = fields.String()
+
+    @post_load
+    def _make_sample_type(self, data):
+        return SampleType(**data)
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        return {'sample_types': data} if many else data
+
+
 class CellType(db.Model):
     """Define type of cells used in experiment. Can be cell line or primary cell type."""
 
@@ -291,6 +338,21 @@ class CellType(db.Model):
     name = Column(db.Integer, index=True)
     description = Column(db.Text, index=True)
 
+
+class CellTypeSchema(Schema):
+    """Marshmallow schema for CellType."""
+
+    id = fields.Integer(dump_only=True)
+    name = fields.String()
+    description = fields.String()
+
+    @post_load
+    def _make_cell_type(self, data):
+        return CellType(**data)
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        return {'cell_types': data} if many else data
 
 # Flask-Admin views defined here for convenience
 admin.add_view(AuthModelView(Probe, db.session))
