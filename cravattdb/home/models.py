@@ -1,5 +1,5 @@
 """Contains definitions of SQLAlchemy tables."""
-from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.dialects.postgresql import JSON, JSONB
 from marshmallow import Schema, fields, pre_load, post_load, post_dump
 from cravattdb.users.models import UserSchema
 from cravattdb.utils.admin import AuthModelView
@@ -14,21 +14,43 @@ class Experiment(db.Model):
 
     id = Column(db.Integer, primary_key=True)
     name = Column(db.Text)
+    description = Column(db.Text)
+
+    # creation date
     date = Column(db.DateTime())
-    user_id = Column(db.Integer, db.ForeignKey('user.id'))
-    organism_id = Column(db.Integer, db.ForeignKey('organism.id'))
-    experiment_type_id = Column(db.Integer, db.ForeignKey('experiment_type.id'))
-    probe_id = Column(db.Integer, db.ForeignKey('probe.id'))
-    inhibitor_id = Column(db.Integer, db.ForeignKey('inhibitor.id'))
+    # modification time
+    modified = Column(db.DateTime())
+
+    user_id = Column(db.Integer, db.ForeignKey('user.id'), index=True)
+    organism_id = Column(db.Integer, db.ForeignKey('organism.id'), index=True)
+    experiment_type_id = Column(db.Integer, db.ForeignKey('experiment_type.id'), index=True)
+    probe_id = Column(db.Integer, db.ForeignKey('probe.id'), index=True)
+    inhibitor_id = Column(db.Integer, db.ForeignKey('inhibitor.id'), index=True)
+
+    sample_type_id = Column(db.Integer, db.ForeignKey('sample_type.id'), index=True)
+    cell_type_id = Column(db.Integer, db.ForeignKey('cell_type.id'), index=True)
+    instrument_id = Column(db.Integer, db.ForeignKey('instrument.id'), index=True)
+    treatment_type_id = Column(db.Integer, db.ForeignKey('treatment_type.id'), index=True)
+
+    # store things like concentration, duration etc
+    treatment_details = Column(JSONB)
+
+    # store overrides for parameters
     additional_search_params = Column(JSON)
     additional_quant_params = Column(JSON)
+
     annotations = Column(JSON)
+
     # bidirectional many-to-one relationships corresponding to foreign keys above
     user = relationship('User', backref='experiments')
     organism = relationship('Organism', backref='experiments')
     experiment_type = relationship('ExperimentType', backref='experiments')
     probe = relationship('Probe', backref='experiments')
     inhibitor = relationship('Inhibitor', backref='experiments')
+    sample_type = relationship('SampleType', backref='experiments')
+    cell_type = relationship('CellType', backref='experiments')
+    instrument = relationship('Instrument', backref='experiments')
+    treatment_type = relationship('TreatmentType', backref='experiments')
 
 
 class JSONField(fields.Field):
@@ -141,7 +163,7 @@ class ExperimentType(db.Model):
     """Defines different experiment types."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text)
+    name = Column(db.Text, index=True)
     search_params = Column(JSON)
     cimage_params = Column(JSON)
 
@@ -166,8 +188,8 @@ class Organism(db.Model):
 
     id = Column(db.Integer, primary_key=True)
     tax_id = Column(db.Integer)
-    name = Column(db.Text)
-    display_name = Column(db.Text)
+    name = Column(db.Text, index=True)
+    display_name = Column(db.Text, index=True)
 
 
 class OrganismSchema(Schema):
@@ -191,9 +213,9 @@ class Probe(db.Model):
     """Holds data about a particular probe."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text)
-    iupac_name = Column(db.Text)
-    inchi = Column(db.Text)
+    name = Column(db.Text, index=True)
+    iupac_name = Column(db.Text, index=True)
+    inchi = Column(db.Text, index=True)
 
 
 class ProbeSchema(Schema):
@@ -217,9 +239,9 @@ class Inhibitor(db.Model):
     """Holds data about a particular inhibitor."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text)
-    iupac_name = Column(db.Text)
-    inchi = Column(db.Text)
+    name = Column(db.Text, index=True)
+    iupac_name = Column(db.Text, index=True)
+    inchi = Column(db.Text, index=True)
 
 
 class InhibitorSchema(Schema):
@@ -243,23 +265,31 @@ class Instrument(db.Model):
     """Describes mass spec instruments."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text)
+    name = Column(db.Text, index=True)
 
 
-class CellLine(db.Model):
-    """Bah."""
+class TreatmentType(db.Model):
+    """Type of treatment applied to proteome: in vitro etc."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text)
+    name = Column(db.Text, index=True)
     description = Column(db.Text)
-    synonyms = Column(db.Text)
 
 
 class SampleType(db.Model):
     """Define sample types such as tissue, cell, etc."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text)
+    name = Column(db.Text, index=True)
+    description = Column(db.Text)
+
+
+class CellType(db.Model):
+    """Define type of cells used in experiment. Can be cell line or primary cell type."""
+
+    id = Column(db.Integer, primary_key=True)
+    name = Column(db.Integer, index=True)
+    description = Column(db.Text, index=True)
 
 
 # Flask-Admin views defined here for convenience
