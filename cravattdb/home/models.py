@@ -12,6 +12,8 @@ relationship = db.relationship
 class Experiment(db.Model):
     """Holds experimental metadata."""
 
+    __tablename__ = 'experiment'
+
     id = Column(db.Integer, primary_key=True)
     name = Column(db.Text)
     description = Column(db.Text)
@@ -42,6 +44,12 @@ class Experiment(db.Model):
 
     annotations = Column(JSON)
 
+    # set if this dataset is a replicate of another
+    replicate_of = Column(db.Integer, db.ForeignKey('experiment.id'), index=True)
+
+    # whether or not dataset should be publicly accessible
+    public = Column(db.Boolean)
+
     # bidirectional many-to-one relationships corresponding to foreign keys above
     user = relationship('User', backref='experiments')
     organism = relationship('Organism', backref='experiments')
@@ -53,6 +61,7 @@ class Experiment(db.Model):
     instrument = relationship('Instrument', backref='experiments')
     treatment_type = relationship('TreatmentType', backref='experiments')
     proteomic_fraction = relationship('ProteomicFraction', backref='experiments')
+    replicates = relationship('Experiment')
 
 
 class JSONField(fields.Field):
@@ -73,6 +82,7 @@ class ExperimentSchema(Schema):
     id = fields.Integer(dump_only=True)
     name = fields.String()
     date = fields.DateTime()
+    modified = fields.DateTime()
     user = fields.Nested('UserSchema')
     organism = fields.Nested('OrganismSchema')
     experiment_type = fields.Nested('ExperimentTypeSchema')
@@ -87,6 +97,8 @@ class ExperimentSchema(Schema):
     additional_quant_params = JSONField()
     treatmentDetails = JSONField()
     annotations = JSONField()
+    replicate_of = fields.Integer()
+    public = fields.Boolean()
 
     @pre_load
     def _filter_experiment(self, data):
