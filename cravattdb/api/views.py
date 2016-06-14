@@ -73,6 +73,75 @@ def add_organism():
     ))
 
 
+@api.route('/instrument')
+@api.route('/instrument/<int:instrument_id')
+def get_instrument(instrument_id):
+    return jsonify(model.get_instrument(instrument_id))
+
+
+@api.route('/instrument', methods=['PUT'])
+def add_instrument():
+    return jsonify(model.add_instrument(
+        name=request.args.get('name')
+    ))
+
+
+@api.route('/sample_type')
+@api.route('/sample_type/<int:sample_type_id')
+def get_sample_type(sample_type_id):
+    return jsonify(model.get_sample_type(sample_type_id))
+
+
+@api.route('/sample_type', methods=['PUT'])
+def add_sample_type():
+    return jsonify(model.add_sample_type(
+        name=request.args.get('name'),
+        description=request.args.get('description')
+    ))
+
+
+@api.route('/cell_type')
+@api.route('/cell_type/<int:cell_type_id')
+def get_cell_type(cell_type_id):
+    return jsonify(model.get_cell_type(cell_type_id))
+
+
+@api.route('/cell_type', methods=['PUT'])
+def add_cell_type():
+    return jsonify(model.add_cell_type(
+        name=request.args.get('name'),
+        description=request.args.get('description')
+    ))
+
+
+@api.route('/treatment_type')
+@api.route('/treatment_type/<int:treatment_type_id')
+def get_treatment_type(treatment_type_id):
+    return jsonify(model.get_treatment_type(treatment_type_id))
+
+
+@api.route('/treatment_type', methods=['PUT'])
+def add_treatment_type():
+    return jsonify(model.add_treatment_type(
+        name=request.args.get('name'),
+        description=request.args.get('description')
+    ))
+
+
+@api.route('/proteomic_fraction')
+@api.route('/proteomic_fraction/<int:proteomic_fraction_id')
+def get_proteomic_fraction(proteomic_fraction_id):
+    return jsonify(model.get_proteomic_fraction(proteomic_fraction_id))
+
+
+@api.route('/proteomic_fraction', methods=['PUT'])
+def add_proteomic_fraction():
+    return jsonify(model.add_proteomic_fraction(
+        name=request.args.get('name'),
+        description=request.args.get('description')
+    ))
+
+
 @api.route('/probe')
 @api.route('/probe/<int:probe_id>')
 def get_probe(probe_id=None):

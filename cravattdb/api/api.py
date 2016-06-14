@@ -17,13 +17,13 @@ dataset_schema_search = m.DatasetSchema(many=True, only=(
 ))
 organism_schema = m.OrganismSchema()
 experiment_type_schema = m.ExperimentTypeSchema()
-probe_schema = m.ProbeSchema()
-inhibitor_schema = m.InhibitorSchema()
+instrument_schema = m.InstrumentSchema()
 sample_type_schema = m.SampleTypeSchema()
 treatment_type_schema = m.TreatmentTypeSchema()
-instrument_schema = m.InstrumentSchema()
 cell_type_schema = m.CellTypeSchema()
 proteomic_fraction_schema = m.ProteomicFractionSchema()
+probe_schema = m.ProbeSchema()
+inhibitor_schema = m.InhibitorSchema()
 
 
 def _get_all(model, schema):
@@ -212,6 +212,85 @@ def add_organism(tax_id, name, display_name):
     db.session.commit()
     result = organism_schema.dump(organism.data)
 
+    return result.data
+
+
+def get_instrument(instrument_id=None):
+    return _get_all_or_one(m.Instrument, instrument_schema, instrument_id)
+
+
+def add_instrument(name, description):
+    instrument = instrument_schema.load({
+        'name': name
+    })
+
+    db.session.add(instrument.data)
+    db.session.commit()
+    result = instrument_schema.dump(instrument)
+    return result.data
+
+
+def get_sample_type(sample_type_id=None):
+    return _get_all_or_one(m.Sample_type, sample_type_schema, sample_type_id)
+
+
+def add_sample_type(name, description):
+    sample_type = sample_type_schema.load({
+        'name': name,
+        'description': description
+    })
+
+    db.session.add(sample_type.data)
+    db.session.commit()
+    result = sample_type_schema.dump(sample_type)
+    return result.data
+
+
+def get_cell_type(cell_type_id=None):
+    return _get_all_or_one(m.Cell_type, cell_type_schema, cell_type_id)
+
+
+def add_cell_type(name, description):
+    cell_type = cell_type_schema.load({
+        'name': name,
+        'description': description
+    })
+
+    db.session.add(cell_type.data)
+    db.session.commit()
+    result = cell_type_schema.dump(cell_type)
+    return result.data
+
+
+def get_treatment_type(treatment_type_id=None):
+    return _get_all_or_one(m.Treatment_type, treatment_type_schema, treatment_type_id)
+
+
+def add_treatment_type(name, description):
+    treatment_type = treatment_type_schema.load({
+        'name': name,
+        'description': description
+    })
+
+    db.session.add(treatment_type.data)
+    db.session.commit()
+    result = treatment_type_schema.dump(treatment_type)
+    return result.data
+
+
+def get_proteomic_fraction(proteomic_fraction_id=None):
+    return _get_all_or_one(m.Proteomic_fraction, proteomic_fraction_schema, proteomic_fraction_id)
+
+
+def add_proteomic_fraction(name, description):
+    proteomic_fraction = proteomic_fraction_schema.load({
+        'name': name,
+        'description': description
+    })
+
+    db.session.add(proteomic_fraction.data)
+    db.session.commit()
+    result = proteomic_fraction_schema.dump(proteomic_fraction)
     return result.data
 
 
