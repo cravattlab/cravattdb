@@ -16,6 +16,11 @@ def search(term):
     return jsonify({'data': model.search(term)})
 
 
+@api.route('/user_defined')
+def get_user_defined():
+    return jsonify(model.get_user_defined())
+
+
 @api.route('/dataset/<int:experiment_id>')
 def get_dataset(experiment_id):
     raw = model.get_dataset(experiment_id)

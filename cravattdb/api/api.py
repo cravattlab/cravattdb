@@ -1,36 +1,76 @@
 """Defines methods for interacting with database."""
 from cravattdb import db
-from collections import OrderedDict as OrderedDict
-from cravattdb.home.models import (
-    Experiment, Dataset, ExperimentType, Organism, Probe, Inhibitor,
-    OrganismSchema, ExperimentTypeSchema, ExperimentSchema, DatasetSchema, ProbeSchema, InhibitorSchema
-)
+import cravattdb.home.models as m
 import csv
 import itertools
 import statistics
 
-
-experiment_schema = ExperimentSchema()
-dataset_schema = DatasetSchema(many=True)
-dataset_schema_summary = DatasetSchema(many=True, only=(
+experiment_schema = m.ExperimentSchema()
+dataset_schema = m.DatasetSchema(many=True)
+dataset_schema_summary = m.DatasetSchema(many=True, only=(
     'uniprot', 'symbol', 'description', 'sequence',
     'mass', 'charge', 'segment', 'ratio', 'entry'
 ))
-dataset_schema_search = DatasetSchema(many=True, only=(
+dataset_schema_search = m.DatasetSchema(many=True, only=(
     'id', 'uniprot', 'symbol', 'description', 'sequence', 'ratio',
     'experiment_id'
 ))
-organism_schema = OrganismSchema()
-experiment_type_schema = ExperimentTypeSchema()
-probe_schema = ProbeSchema()
-inhibitor_schema = InhibitorSchema()
+organism_schema = m.OrganismSchema()
+experiment_type_schema = m.ExperimentTypeSchema()
+probe_schema = m.ProbeSchema()
+inhibitor_schema = m.InhibitorSchema()
+sample_type_schema = m.SampleTypeSchema()
+treatment_type_schema = m.TreatmentTypeSchema()
+instrument_schema = m.InstrumentSchema()
+cell_type_schema = m.CellTypeSchema()
+proteomic_fraction_schema = m.ProteomicFractionSchema()
+
+
+def _get_all(model, schema):
+    query = model.query.all()
+    return schema.dump(query, many=True).data
+
+
+def _get_all_or_one(model, schema, _id=None):
+    """Helper method which returns all results if _id is undefined.
+
+    Arguments:
+        model -- SQLAlchemy Model to query against
+        schema -- Marhsmallow schema to use when dumping data
+        _id  -- Optional primary key to query against.
+    """
+    if _id:
+        query = model.query.get(_id)
+    else:
+        query = model.query.all()
+
+    return schema.dump(query, many=_id is None).data
+
+
+def get_user_defined():
+    """Return all user definable types.
+
+    Utility method for use with forms and filters. Collects all user defined
+    *things* and returns them in one object. Saves on requests.
+    """
+    return {
+        **_get_all(m.ExperimentType, experiment_type_schema),
+        **_get_all(m.Organism, organism_schema),
+        **_get_all(m.Probe, probe_schema),
+        **_get_all(m.Inhibitor, inhibitor_schema),
+        **_get_all(m.SampleType, sample_type_schema),
+        **_get_all(m.TreatmentType, treatment_type_schema),
+        **_get_all(m.Instrument, instrument_schema),
+        **_get_all(m.CellType, cell_type_schema),
+        **_get_all(m.ProteomicFraction, proteomic_fraction_schema)
+    }
 
 
 def search(term):
-    data = Dataset.query.filter(
-        (Dataset.uniprot.ilike(term)) |
-        (Dataset.symbol.ilike('{}%'.format(term))) |
-        (Dataset.description.ilike('%{}%'.format(term)))
+    data = m.Dataset.query.filter(
+        (m.Dataset.uniprot.ilike(term)) |
+        (m.Dataset.symbol.ilike('{}%'.format(term))) |
+        (m.Dataset.description.ilike('%{}%'.format(term)))
     )
 
     result = dataset_schema_search.dump(data).data['dataset']
@@ -74,36 +114,9 @@ def search(term):
     return groups
 
 
-def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id=0, inhibitor_id=0):
-    experiment = experiment_schema.load({
-        'name': name,
-        'user_id': int(user_id),
-        'organism_id': int(organism_id),
-        'experiment_type_id': int(experiment_type_id),
-        'probe_id': int(probe_id or 0) or None,
-        'inhibitor_id': int(inhibitor_id or 0) or None
-    })
-
-    db.session.add(experiment.data)
-    db.session.commit()
-
-    result = experiment_schema.dump(experiment.data)
-    return result.data
-
-
-def add_experiment_with_data(name, user_id, organism_id, experiment_type_id, file, probe_id=0, inhibitor_id=0):
-    experiment = add_experiment(
-        name=name,
-        user_id=user_id,
-        organism_id=organism_id,
-        experiment_type_id=experiment_type_id,
-        probe_id=probe_id,
-        inhibitor_id=inhibitor_id
-    )
-
-    add_dataset(experiment['id'], user_id, file)
-
-    return experiment
+def get_dataset(experiment_id):
+    dataset = m.Dataset.query.filter_by(experiment_id=experiment_id)
+    return dataset_schema_summary.dump(dataset).data
 
 
 def add_dataset(experiment_id, user_id, output_file_path):
@@ -114,7 +127,7 @@ def add_dataset(experiment_id, user_id, output_file_path):
         f.readline()
 
         for line in csv.reader(f, delimiter='\t'):
-            db.session.add(Dataset(
+            db.session.add(m.Dataset(
                 peptide_index=line[0],
                 uniprot=line[1],
                 description=line[2],
@@ -141,132 +154,33 @@ def add_dataset(experiment_id, user_id, output_file_path):
 
 
 def get_experiment(experiment_id=None, flat=False):
-    many = experiment_id is None
-
-    if many:
-        experiment = Experiment.query.all()
-    else:
-        experiment = Experiment.query.get(experiment_id)
-
-    result = experiment_schema.dump(experiment, many=many)
-
-    if flat:
-        if many:
-            raw = result.data['experiments']
-        else:
-            raw = [result.data]
-
-        desired_keys = [
-            'id',
-            'name',
-            'organism',
-            'probe',
-            'inhibitor',
-            'date'
-        ]
-
-        filtered = []
-
-        for experiment in raw:
-            ordered = OrderedDict()
-
-            for key in desired_keys:
-                ordered[key] = experiment[key]
-
-            filtered.append(ordered)
-
-        for item in filtered:
-            item['organism'] = item['organism']['name']
-
-            if item['inhibitor']:
-                item['inhibitor'] = item['inhibitor']['name']
-
-            if item['probe']:
-                item['probe'] = item['probe']['name']
-
-        return {
-            'headers': list(filtered[0].keys()),
-            'data': [list(item.values()) for item in filtered]
-        }
-    else:
-        return result.data
+    return _get_all_or_one(m.Experiment, experiment_schema, experiment_id)
 
 
 def get_experiments(experiment_ids):
-    experiments = Experiment.query.filter(Experiment.id.in_(experiment_ids))
+    experiments = m.Experiment.query.filter(m.Experiment.id.in_(experiment_ids))
     return experiment_schema.dump(experiments, many=True).data
 
 
-def get_dataset(experiment_id):
-    dataset = Dataset.query.filter_by(experiment_id=experiment_id)
-    result = dataset_schema_summary.dump(dataset).data
+def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id=0, inhibitor_id=0):
+    experiment = experiment_schema.load({
+        'name': name,
+        'user_id': int(user_id),
+        'organism_id': int(organism_id),
+        'experiment_type_id': int(experiment_type_id),
+        'probe_id': int(probe_id or 0) or None,
+        'inhibitor_id': int(inhibitor_id or 0) or None
+    })
 
-    return result
+    db.session.add(experiment.data)
+    db.session.commit()
+
+    result = experiment_schema.dump(experiment.data)
+    return result.data
 
 
 def get_experiment_type(experiment_id=None):
-    if experiment_id:
-        experiment_type = ExperimentType.query.get(experiment_id)
-    else:
-        experiment_type = ExperimentType.query.all()
-
-    result = experiment_type_schema.dump(experiment_type, many=experiment_id is None)
-    return result.data
-
-
-def get_organism(organism_id=None):
-    if organism_id:
-        organism = Organism.query.get(organism_id)
-    else:
-        organism = Organism.query.all()
-
-    result = organism_schema.dump(organism, many=organism_id is None)
-    return result.data
-
-
-def get_probe(probe_id=None):
-    if probe_id:
-        probe = Probe.query.get(probe_id)
-    else:
-        probe = Probe.query.all()
-
-    result = probe_schema.dump(probe, many=probe_id is None)
-    return result.data
-
-
-def get_inhibitor(inhibitor_id=None):
-    if inhibitor_id:
-        inhibitor = Inhibitor.query.get(inhibitor_id)
-    else:
-        inhibitor = Inhibitor.query.all()
-
-    result = inhibitor_schema.dump(inhibitor, many=inhibitor_id is None)
-    return result.data
-
-
-def add_organism(tax_id, name, display_name):
-    organism = organism_schema.load({
-        'tax_id': tax_id,
-        'name': name,
-        'display_name': display_name
-    })
-
-    db.session.add(organism.data)
-    db.session.commit()
-    result = organism_schema.dump(organism.data)
-
-    return result.data
-
-
-def delete_organism(organism_id):
-    organism = Organism.query.get(organism_id)
-
-    if organism:
-        db.session.delete(organism)
-        db.session.commit()
-        return True
-    else:
-        return False
+    return _get_all_or_one(m.ExperimentType, experiment_type_schema, experiment_id)
 
 
 def add_experiment_type(name, search_params, cimage_params):
@@ -283,6 +197,28 @@ def add_experiment_type(name, search_params, cimage_params):
     return result.data
 
 
+def get_organism(organism_id=None):
+    return _get_all_or_one(m.Organism, organism_schema, organism_id)
+
+
+def add_organism(tax_id, name, display_name):
+    organism = organism_schema.load({
+        'tax_id': tax_id,
+        'name': name,
+        'display_name': display_name
+    })
+
+    db.session.add(organism.data)
+    db.session.commit()
+    result = organism_schema.dump(organism.data)
+
+    return result.data
+
+
+def get_probe(probe_id=None):
+    return _get_all_or_one(m.Probe, probe_schema, probe_id)
+
+
 def add_probe(name, iupac_name, inchi):
     probe = probe_schema.load({
         'name': name,
@@ -295,6 +231,10 @@ def add_probe(name, iupac_name, inchi):
     result = probe_schema.dump(probe.data)
 
     return result.data
+
+
+def get_inhibitor(inhibitor_id=None):
+    return _get_all_or_one(m.Inhibitor, inhibitor_schema, inhibitor_id)
 
 
 def add_inhibitor(name, iupac_name, inchi):

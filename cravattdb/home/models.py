@@ -82,7 +82,7 @@ class ExperimentSchema(Schema):
     cell_type = fields.Nested('CellTypeSchema')
     instrument = fields.Nested('InstrumentSchema')
     treatment_type = fields.Nested('TreatmentTypeSchema')
-    proteomic_fraction = fields.Nested('ProtemicFractionSchema')
+    proteomic_fraction = fields.Nested('ProteomicFractionSchema')
     additional_search_params = JSONField()
     additional_quant_params = JSONField()
     treatmentDetails = JSONField()
