@@ -178,7 +178,7 @@ class ExperimentType(db.Model):
     """Defines different experiment types."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text, index=True)
+    name = Column(db.Text, index=True, unique=True)
     search_params = Column(JSON)
     cimage_params = Column(JSON)
 
@@ -202,9 +202,9 @@ class Organism(db.Model):
     """Holds data related to model organisms."""
 
     id = Column(db.Integer, primary_key=True)
-    tax_id = Column(db.Integer)
-    name = Column(db.Text, index=True)
-    display_name = Column(db.Text, index=True)
+    tax_id = Column(db.Integer, unique=True)
+    name = Column(db.Text, index=True, unique=True)
+    display_name = Column(db.Text, index=True, unique=True)
 
 
 class OrganismSchema(Schema):
@@ -228,9 +228,9 @@ class Probe(db.Model):
     """Holds data about a particular probe."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text, index=True)
-    iupac_name = Column(db.Text, index=True)
-    inchi = Column(db.Text, index=True)
+    name = Column(db.Text, index=True, unique=True)
+    iupac_name = Column(db.Text, index=True, unique=True)
+    inchi = Column(db.Text, index=True, unique=True)
 
 
 class ProbeSchema(Schema):
@@ -254,9 +254,9 @@ class Inhibitor(db.Model):
     """Holds data about a particular inhibitor."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text, index=True)
-    iupac_name = Column(db.Text, index=True)
-    inchi = Column(db.Text, index=True)
+    name = Column(db.Text, index=True, unique=True)
+    iupac_name = Column(db.Text, index=True, unique=True)
+    inchi = Column(db.Text, index=True, unique=True)
 
 
 class InhibitorSchema(Schema):
@@ -280,7 +280,7 @@ class Instrument(db.Model):
     """Describes mass spec instruments."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text, index=True)
+    name = Column(db.Text, index=True, unique=True)
 
 
 class InstrumentSchema(Schema):
@@ -302,7 +302,7 @@ class TreatmentType(db.Model):
     """Type of treatment applied to proteome: in vitro etc."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text, index=True)
+    name = Column(db.Text, index=True, unique=True)
     description = Column(db.Text)
 
 
@@ -326,7 +326,7 @@ class SampleType(db.Model):
     """Define sample types such as tissue, cell, etc."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text, index=True)
+    name = Column(db.Text, index=True, unique=True)
     description = Column(db.Text)
 
 
@@ -350,7 +350,7 @@ class CellType(db.Model):
     """Define type of cells used in experiment. Can be cell line or primary cell type."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Integer, index=True)
+    name = Column(db.Integer, index=True, unique=True)
     description = Column(db.Text, index=True)
 
 
@@ -374,7 +374,7 @@ class ProteomicFraction(db.Model):
     """Define proteome fraction: soluble, membrane etc."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Integer, index=True)
+    name = Column(db.Integer, index=True, unique=True)
     description = Column(db.Text, index=True)
 
 
