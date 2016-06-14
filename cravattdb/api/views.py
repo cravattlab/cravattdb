@@ -74,7 +74,7 @@ def add_organism():
 
 
 @api.route('/instrument')
-@api.route('/instrument/<int:instrument_id')
+@api.route('/instrument/<int:instrument_id>')
 def get_instrument(instrument_id):
     return jsonify(model.get_instrument(instrument_id))
 
@@ -87,7 +87,7 @@ def add_instrument():
 
 
 @api.route('/sample_type')
-@api.route('/sample_type/<int:sample_type_id')
+@api.route('/sample_type/<int:sample_type_id>')
 def get_sample_type(sample_type_id):
     return jsonify(model.get_sample_type(sample_type_id))
 
@@ -101,7 +101,7 @@ def add_sample_type():
 
 
 @api.route('/cell_type')
-@api.route('/cell_type/<int:cell_type_id')
+@api.route('/cell_type/<int:cell_type_id>')
 def get_cell_type(cell_type_id):
     return jsonify(model.get_cell_type(cell_type_id))
 
@@ -115,7 +115,7 @@ def add_cell_type():
 
 
 @api.route('/treatment_type')
-@api.route('/treatment_type/<int:treatment_type_id')
+@api.route('/treatment_type/<int:treatment_type_id>')
 def get_treatment_type(treatment_type_id):
     return jsonify(model.get_treatment_type(treatment_type_id))
 
@@ -129,7 +129,7 @@ def add_treatment_type():
 
 
 @api.route('/proteomic_fraction')
-@api.route('/proteomic_fraction/<int:proteomic_fraction_id')
+@api.route('/proteomic_fraction/<int:proteomic_fraction_id>')
 def get_proteomic_fraction(proteomic_fraction_id):
     return jsonify(model.get_proteomic_fraction(proteomic_fraction_id))
 
