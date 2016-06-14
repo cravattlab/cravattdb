@@ -1,5 +1,5 @@
 <div class="ui padded container">
-    <h1 class="ui dividing header">Cravegas 0.1</h1>
+    <h1 class="ui dividing header">Upload a new dataset</h1>
 
     <div class="ui error message" *ngIf="errors.length && showErrors">
         <i class="close icon" (click)="showErrors = false"></i>
@@ -15,6 +15,11 @@
         <div class="six wide required field">
             <label>Dataset Name</label>
             <input type="text" placeholder="Dataset Name" ngControl="name" required>
+        </div>
+
+        <div class="six wide field">
+            <label>Description</label>
+            <textarea rows="2"></textarea>
         </div>
 
         <div class="six wide required field">
@@ -34,7 +39,17 @@
         </div>
 
         <div class="six wide field">
-            <label>Probe</label>
+            <label>Instrument</label>
+            <select class="ui search selection dropdown" ngControl="probe">
+                <option value="">Select Instrument</option>
+                <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+            </select>
+        </div>
+
+        <h4 class="ui dividing header">Treatment Information</h4>
+
+        <div class="six wide field">
+            <label>Treatment Type</label>
             <select class="ui search selection dropdown" ngControl="probe">
                 <option value="">Select Probe</option>
                 <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
@@ -42,19 +57,124 @@
         </div>
 
         <div class="six wide field">
-            <label>Inhibitor</label>
-            <select class="ui search selection dropdown" ngControl="inhibitor">
-                <option value="">Select Inhibitor</option>
-                <option *ngFor="let inhibitor of data?.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name }}</option>
+            <label>Proteomic Fraction</label>
+            <select class="ui search selection dropdown" ngControl="probe">
+                <option value="">Select Probe</option>
+                <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
             </select>
         </div>
+
+        <div class="three fields">
+            <div class="six wide field">
+                <label>Probe</label>
+                <select class="ui search selection dropdown" ngControl="probe">
+                    <option value="">Select Probe</option>
+                    <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+                </select>
+            </div>
+
+            <div class="three wide required field">
+                <label>Probe Concentration</label>
+                <div class="ui right labeled input">
+                    <input type="text" placeholder="Probe Concentration" ngControl="probe_concentration">
+                    <div class="ui dropdown label">
+                        <div class="text">&micro;M</div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <div class="item">nM</div>
+                            <div class="item">&micro;M</div>
+                            <div class="item">mM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="three wide required field">
+                <label>Treatment Time</label>
+                <div class="ui right labeled input">
+                    <input type="text" placeholder="Probe Concentration" ngControl="probe_concentration">
+                    <div class="ui basic label">hours</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="three fields">
+            <div class="six wide field">
+                <label>Inhibitor</label>
+                <select class="ui search selection dropdown" ngControl="inhibitor">
+                    <option value="">Select Inhibitor</option>
+                    <option *ngFor="let inhibitor of data?.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name }}</option>
+                </select>
+            </div>
+
+            <div class="three wide required field">
+                <label>Probe Concentration</label>
+                <div class="ui right labeled input">
+                    <input type="text" placeholder="Probe Concentration" ngControl="probe_concentration">
+                    <div class="ui dropdown label">
+                        <div class="text">&micro;M</div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <div class="item">nM</div>
+                            <div class="item">&micro;M</div>
+                            <div class="item">mM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="three wide required field">
+                <label>Treatment Time</label>
+                <div class="ui right labeled input">
+                    <input type="text" placeholder="Probe Concentration" ngControl="probe_concentration">
+                    <div class="ui basic label">hours</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grouped fields">
+            <label for="fruit">Inhibitor Treated Sample is Heavy or Light:</label>
+            <div class="field">
+                <div class="ui radio checkbox">
+                    <input type="radio" name="fruit" checked="" tabindex="0" class="hidden">
+                    <label>Heavy</label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui radio checkbox">
+                    <input type="radio" name="fruit" tabindex="0" class="hidden">
+                    <label>Light</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="two fields">
+            <div class="six wide field">
+                <label>Biological Origin</label>
+                <select class="ui search selection dropdown" ngControl="probe">
+                    <option value="">Select Probe</option>
+                    <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+                </select>
+            </div>
+
+            <div class="six wide field">
+                <label>Cell Type</label>
+                <select class="ui search selection dropdown" ngControl="probe">
+                    <option value="">Select Probe</option>
+                    <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+                </select>
+            </div>
+        </div>
+
+        <h4 class="ui dividing header">Search and Quantification</h4>
 
         <div class="six wide required field">
             <label>IP2 Username</label>
             <input type="text" placeholder="IP2 Username" ngControl="ip2_username" required>
         </div>
 
-            <div class="six wide required field">
+        <div class="six wide required field">
             <label>IP2 Password</label>
             <input type="password" placeholder="IP2 Password" ngControl="ip2_password" required>
         </div>
