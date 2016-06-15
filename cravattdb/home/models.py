@@ -350,7 +350,7 @@ class CellType(db.Model):
     """Define type of cells used in experiment. Can be cell line or primary cell type."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Integer, index=True, unique=True)
+    name = Column(db.Text, index=True, unique=True)
     description = Column(db.Text, index=True)
 
 
@@ -374,7 +374,7 @@ class ProteomicFraction(db.Model):
     """Define proteome fraction: soluble, membrane etc."""
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.Integer, index=True, unique=True)
+    name = Column(db.Text, index=True, unique=True)
     description = Column(db.Text, index=True)
 
 
@@ -401,3 +401,8 @@ admin.add_view(AuthModelView(Inhibitor, db.session))
 admin.add_view(AuthModelView(Experiment, db.session))
 admin.add_view(AuthModelView(ExperimentType, db.session))
 admin.add_view(AuthModelView(Organism, db.session))
+admin.add_view(AuthModelView(SampleType, db.session))
+admin.add_view(AuthModelView(CellType, db.session))
+admin.add_view(AuthModelView(Instrument, db.session))
+admin.add_view(AuthModelView(ProteomicFraction, db.session))
+admin.add_view(AuthModelView(TreatmentType, db.session))
