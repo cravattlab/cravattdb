@@ -14,6 +14,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.synced_folder "vagrant-sync/cimage-minimal", "/home/vagrant/github/cimage-minimal", create: true
   config.vm.synced_folder "vagrant-sync/cravattdb", "/home/vagrant/github/cravattdb", create: true
+  config.vm.synced_folder "vagrant-sync/cravattdb-cli", "/home/vagrant/github/cravattdb-cli", create: true
 
   config.vm.provision "dependencies", type: "shell", inline: <<-SHELL
     # installing things
@@ -41,6 +42,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "code", type: "shell", privileged: false, inline: <<-SHELL
     git clone git@github.com:/cravattlab/cimage-minimal.git ~/github/cimage-minimal
     git clone git@github.com:/cravattlab/cravattdb.git ~/github/cravattdb
+    git clone git@github.com:/cravattlab/cravattdb-cli.git ~/github/cravattdb-cli
   SHELL
 
   config.vm.provision "goodies", type: "shell", privileged: false, inline: <<-SHELL
