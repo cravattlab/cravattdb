@@ -219,7 +219,7 @@ def get_instrument(instrument_id=None):
     return _get_all_or_one(m.Instrument, instrument_schema, instrument_id)
 
 
-def add_instrument(name, description):
+def add_instrument(name):
     instrument = instrument_schema.load({
         'name': name
     })
