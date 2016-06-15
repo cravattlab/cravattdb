@@ -52,9 +52,9 @@ def get_experiment_type(type_id=None):
 @api.route('/experiment_type', methods=['PUT'])
 def add_experiment_type():
     return jsonify(model.add_experiment_type(
-        name=request.args.get('name'),
-        search_params=request.args.get('searchParams'),
-        cimage_params=request.args.get('cimageParams')
+        name=request.values.get('name'),
+        search_params=request.values.get('searchParams'),
+        cimage_params=request.values.get('cimageParams')
     ))
 
 
@@ -67,9 +67,9 @@ def get_organism(organism_id=None):
 @api.route('/organism', methods=['PUT'])
 def add_organism():
     return jsonify(model.add_organism(
-        tax_id=request.args.get('taxId'),
-        name=request.args.get('name'),
-        display_name=request.args.get('displayName')
+        tax_id=request.values.get('tax_id'),
+        name=request.values.get('name'),
+        display_name=request.values.get('display_name')
     ))
 
 
@@ -82,7 +82,7 @@ def get_instrument(instrument_id):
 @api.route('/instrument', methods=['PUT'])
 def add_instrument():
     return jsonify(model.add_instrument(
-        name=request.args.get('name')
+        name=request.values.get('name')
     ))
 
 
@@ -95,8 +95,8 @@ def get_sample_type(sample_type_id):
 @api.route('/sample_type', methods=['PUT'])
 def add_sample_type():
     return jsonify(model.add_sample_type(
-        name=request.args.get('name'),
-        description=request.args.get('description')
+        name=request.values.get('name'),
+        description=request.values.get('description')
     ))
 
 
@@ -109,8 +109,8 @@ def get_cell_type(cell_type_id):
 @api.route('/cell_type', methods=['PUT'])
 def add_cell_type():
     return jsonify(model.add_cell_type(
-        name=request.args.get('name'),
-        description=request.args.get('description')
+        name=request.values.get('name'),
+        description=request.values.get('description')
     ))
 
 
@@ -123,8 +123,8 @@ def get_treatment_type(treatment_type_id):
 @api.route('/treatment_type', methods=['PUT'])
 def add_treatment_type():
     return jsonify(model.add_treatment_type(
-        name=request.args.get('name'),
-        description=request.args.get('description')
+        name=request.values.get('name'),
+        description=request.values.get('description')
     ))
 
 
@@ -137,8 +137,8 @@ def get_proteomic_fraction(proteomic_fraction_id):
 @api.route('/proteomic_fraction', methods=['PUT'])
 def add_proteomic_fraction():
     return jsonify(model.add_proteomic_fraction(
-        name=request.args.get('name'),
-        description=request.args.get('description')
+        name=request.values.get('name'),
+        description=request.values.get('description')
     ))
 
 
@@ -151,9 +151,9 @@ def get_probe(probe_id=None):
 @api.route('/probe', methods=['PUT'])
 def add_probe():
     return jsonify(model.add_probe(
-        name=request.args.get('name'),
-        iupac_name=request.args.get('iupacName'),
-        inchi=request.args.get('inchi')
+        name=request.values.get('name'),
+        iupac_name=request.values.get('iupac_name'),
+        inchi=request.values.get('inchi')
     ))
 
 
@@ -166,9 +166,9 @@ def get_inhibitor(inhibitor_id=None):
 @api.route('/inhibitor', methods=['PUT'])
 def add_inhibitor():
     return jsonify(model.add_inhibitor(
-        name=request.args.get('name'),
-        iupac_name=request.args.get('iupacName'),
-        inchi=request.args.get('inchi')
+        name=request.values.get('name'),
+        iupac_name=request.values.get('iupac_name'),
+        inchi=request.values.get('inchi')
     ))
 
 
