@@ -1,6 +1,6 @@
 """Contains definitions of SQLAlchemy tables."""
 from sqlalchemy.dialects.postgresql import JSON, JSONB
-from marshmallow import Schema, fields, pre_load, post_load, post_dump
+from marshmallow import Schema, fields, pre_load, post_load, post_dump, validate
 from cravattdb.users.models import UserSchema
 from cravattdb.utils.admin import AuthModelView
 from cravattdb import db, admin
@@ -44,6 +44,14 @@ class Experiment(db.Model):
 
     annotations = Column(JSON)
 
+    # datasets can be quantified as Heavy/Light or Light/Heavy
+    # necessary due to cimage returning different results for H/L vs L/H
+    # it is sometimes desirable to switch between H/L and L/H
+    ratio_numerator = Column(db.Enum('L', 'H', name='ratio_numerator_types'), index=True)
+
+    # reference to dataset that is inversely quantified
+    inverse_ratio_id = Column(db.Integer, db.ForeignKey('experiment.id'), index=True)
+
     # set if this dataset is a replicate of another
     replicate_of = Column(db.Integer, db.ForeignKey('experiment.id'), index=True)
 
@@ -61,7 +69,8 @@ class Experiment(db.Model):
     instrument = relationship('Instrument', backref='experiments')
     treatment_type = relationship('TreatmentType', backref='experiments')
     proteomic_fraction = relationship('ProteomicFraction', backref='experiments')
-    replicates = relationship('Experiment')
+    replicates = relationship('Experiment', foreign_keys=[replicate_of])
+    inverted_dataset = relationship('Experiment', foreign_keys=[inverse_ratio_id])
 
 
 class JSONField(fields.Field):
@@ -80,24 +89,36 @@ class ExperimentSchema(Schema):
     """Marshmallow schema for Experiment."""
 
     id = fields.Integer(dump_only=True)
-    name = fields.String()
+    name = fields.String(required=True)
     date = fields.DateTime()
     modified = fields.DateTime()
-    user = fields.Nested('UserSchema')
-    organism = fields.Nested('OrganismSchema')
-    experiment_type = fields.Nested('ExperimentTypeSchema')
-    probe = fields.Nested('ProbeSchema')
-    inhibitor = fields.Nested('InhibitorSchema')
-    sample_type = fields.Nested('SampleTypeSchema')
-    cell_type = fields.Nested('CellTypeSchema')
-    instrument = fields.Nested('InstrumentSchema')
-    treatment_type = fields.Nested('TreatmentTypeSchema')
-    proteomic_fraction = fields.Nested('ProteomicFractionSchema')
+    user_id = fields.Integer(required=True)
+    user = fields.Nested('UserSchema', dump_only=True)
+    organism_id = fields.Integer()
+    organism = fields.Nested('OrganismSchema', dump_only=True)
+    experiment_type_id = fields.Integer(load_only=True)
+    experiment_type = fields.Nested('ExperimentTypeSchema', dump_only=True)
+    probe_id = fields.Integer(load_only=True)
+    probe = fields.Nested('ProbeSchema', dump_only=True)
+    inhibitor_id = fields.Integer(load_only=True)
+    inhibitor = fields.Nested('InhibitorSchema', dump_only=True)
+    sample_type_id = fields.Integer(load_only=True)
+    sample_type = fields.Nested('SampleTypeSchema', dump_only=True)
+    cell_type_id = fields.Integer(load_only=True)
+    cell_type = fields.Nested('CellTypeSchema', dump_only=True)
+    instrument_id = fields.Integer(load_only=True)
+    instrument = fields.Nested('InstrumentSchema', dump_only=True)
+    treatment_type_id = fields.Integer(load_only=True)
+    treatment_type = fields.Nested('TreatmentTypeSchema', dump_only=True)
+    proteomic_fraction_id = fields.Integer(load_only=True)
+    proteomic_fraction = fields.Nested('ProteomicFractionSchema', dump_only=True)
     additional_search_params = JSONField()
     additional_quant_params = JSONField()
     treatmentDetails = JSONField()
     annotations = JSONField()
+    ratio_numerator = fields.String()
     replicate_of = fields.Integer()
+    inverse_ratio_id = fields.Integer()
     public = fields.Boolean()
 
     @pre_load
