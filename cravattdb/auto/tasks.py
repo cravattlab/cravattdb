@@ -49,7 +49,7 @@ def process(search, user_id, name, path, organism_id, organism_name, experiment_
         organism_id=organism_id,
         experiment_type_id=experiment_type_id,
         probe_id=probe_id,
-        inhibitor_id=inhibitor_id,
+        inhibitor_id=inhibitor_id
     )
 
     experiment_id = experiment['id']
