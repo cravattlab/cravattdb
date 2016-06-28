@@ -1,5 +1,5 @@
-import { Component} from '@angular/core';
-import { OnActivate, RouteSegment } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { DataComponent } from './data.component'
 import { MetaComponent } from './meta.component'
 
@@ -10,7 +10,7 @@ import { MetaComponent } from './meta.component'
     directives: [ DataComponent, MetaComponent ]
 })
 
-export class ExperimentComponent implements OnActivate {
+export class ExperimentComponent implements OnInit {
     data: any[];
     minRatio: number;
     maxRatio: number;
@@ -18,12 +18,12 @@ export class ExperimentComponent implements OnActivate {
     byPeptide: boolean;
     collapsed: boolean;
 
-    constructor() {
+    constructor(private route: ActivatedRoute) {
         this.byPeptide = false;
         this.collapsed = false;
     }
 
-    routerOnActivate(curr: RouteSegment): void {
-        this.id = +curr.getParam('id');
+    ngOnInit() {
+        this.id = this.route.snapshot.params.id;
     }
 }
