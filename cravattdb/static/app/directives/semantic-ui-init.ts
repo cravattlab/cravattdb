@@ -3,20 +3,28 @@ import {Directive, ElementRef, OnInit, OnDestroy} from '@angular/core'
 
 declare var $: any
 
-@Directive({
-    selector: '.ui.dropdown'
-})
-
+@Directive({ selector: '.ui.dropdown' })
 export class InitializeDropdown implements OnInit, OnDestroy {
+    constructor(private el: ElementRef) {}
 
-    constructor(private el: ElementRef) {
-    }
-
-    public ngOnInit() {
+    ngOnInit() {
         $(this.el.nativeElement).dropdown();
     }
 
-    public ngOnDestroy() {
+    ngOnDestroy() {
         $(this.el.nativeElement).dropdown('destroy');
+    }
+}
+
+@Directive({ selector: '.ui.checkbox' })
+export class InitializeCheckbox implements OnInit, OnDestroy {
+    constructor(private el: ElementRef) { }
+
+    ngOnInit() {
+        $(this.el.nativeElement).checkbox();
+    }
+
+    ngOnDestroy() {
+        $(this.el.nativeElement).checkbox('destroy');
     }
 }

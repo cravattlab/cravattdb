@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { FORM_DIRECTIVES } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { AutoService } from './auto.service'
-import { InitializeDropdown } from '../directives/semantic-ui-init';
+import { InitializeDropdown, InitializeCheckbox } from '../directives/semantic-ui-init';
 
 import * as _ from 'lodash';
 
@@ -10,7 +10,7 @@ import * as _ from 'lodash';
     selector: 'auto',
     templateUrl: 'static/app/auto/auto.html',
     styleUrls: [ 'static/app/auto/auto.css' ],
-    directives: [FORM_DIRECTIVES, InitializeDropdown],
+    directives: [FORM_DIRECTIVES, InitializeDropdown, InitializeCheckbox],
     providers: [ AutoService ]
 })
 
