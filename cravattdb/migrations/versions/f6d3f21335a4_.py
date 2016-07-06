@@ -68,6 +68,16 @@ def upgrade():
     sa.Column('name', sa.Text(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('treatment_type',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.Text(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('cell_type',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.Text(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(length=255), nullable=True),
@@ -150,6 +160,8 @@ def downgrade():
     op.drop_table('experiment')
     op.drop_table('user')
     op.drop_table('sample_type')
+    op.drop_table('treatment_type')
+    op.drop_table('cell_type')
     op.drop_table('role')
     op.drop_table('probe')
     op.drop_table('organism')
