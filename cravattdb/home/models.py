@@ -114,7 +114,7 @@ class ExperimentSchema(Schema):
     proteomic_fraction = fields.Nested('ProteomicFractionSchema', dump_only=True)
     additional_search_params = JSONField()
     additional_quant_params = JSONField()
-    treatmentDetails = JSONField()
+    treatment_details = JSONField()
     annotations = JSONField()
     ratio_numerator = fields.String()
     replicate_of = fields.Integer()
@@ -232,7 +232,7 @@ class OrganismSchema(Schema):
     """Marshmallow schema for Organism."""
 
     id = fields.Integer(dump_only=True)
-    tax_id = fields.Integer()
+    tax_id = fields.Integer(allow_none=True)
     name = fields.String()
     display_name = fields.String()
 
@@ -259,8 +259,8 @@ class ProbeSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     name = fields.String()
-    iupac_name = fields.String()
-    inchi = fields.String()
+    iupac_name = fields.String(allow_none=True)
+    inchi = fields.String(allow_none=True)
 
     @post_load
     def _make_probe(self, data):
@@ -285,8 +285,8 @@ class InhibitorSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     name = fields.String()
-    iupac_name = fields.String()
-    inchi = fields.String()
+    iupac_name = fields.String(allow_none=True)
+    inchi = fields.String(allow_none=True)
 
     @post_load
     def _make_inhibitor(self, data):
@@ -332,7 +332,7 @@ class TreatmentTypeSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     name = fields.String()
-    description = fields.String()
+    description = fields.String(allow_none=True)
 
     @post_load
     def _make_treatment_type(self, data):
@@ -356,7 +356,7 @@ class SampleTypeSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     name = fields.String()
-    description = fields.String()
+    description = fields.String(allow_none=True)
 
     @post_load
     def _make_sample_type(self, data):
@@ -380,7 +380,7 @@ class CellTypeSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     name = fields.String()
-    description = fields.String()
+    description = fields.String(allow_none=True)
 
     @post_load
     def _make_cell_type(self, data):
@@ -404,7 +404,7 @@ class ProteomicFractionSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     name = fields.String()
-    description = fields.String()
+    description = fields.String(allow_none=True)
 
     @post_load
     def _make_proteomic_fraction(self, data):
