@@ -16,4 +16,5 @@ npm install
 
 # run the server
 cd "${PROJECT_HOME}" || exit
+python run.py db -d cravattdb/migrations upgrade
 python run.py runserver
