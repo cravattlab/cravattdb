@@ -26,7 +26,7 @@
             <label>Organism</label>
             <select class="ui search selection dropdown" ngControl="organism" required>
                 <option value="">Select Species</option>
-                <option *ngFor="let organism of data?.organisms" value="{{ organism.id }}">{{ organism.display_name }}</option>
+                <option *ngFor="let organism of data?.organisms" value="{{ organism.id }}">{{ organism.name }}</option>
             </select>
         </div>
 

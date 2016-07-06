@@ -69,7 +69,7 @@ def add_organism():
     return jsonify(model.add_organism(
         tax_id=request.values.get('tax_id'),
         name=request.values.get('name'),
-        display_name=request.values.get('display_name')
+        scientific_name=request.values.get('scientific_name')
     ))
 
 

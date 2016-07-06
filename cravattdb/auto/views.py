@@ -59,7 +59,7 @@ def search():
         name=name,
         path=path,
         organism_id=organism_id,
-        organism_name=Organism.query.get(organism_id).display_name,
+        organism_name=Organism.query.get(organism_id).name,
         experiment_type_id=experiment_type_id,
         experiment_type_name=ExperimentType.query.get(experiment_type_id).name,
         probe_id=int(request.form.get('probe')),

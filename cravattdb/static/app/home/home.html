@@ -43,7 +43,7 @@
             <tr *ngFor="let column of row.data" (click)="router.navigate(['/experiment', column.experiment.id])">
                 <td>{{ column.experiment.name }}</td>
                 <td>{{ column.experiment.experiment_type.name }}</td>
-                <td>{{ column.experiment.organism.display_name }}</td>
+                <td>{{ column.experiment.organism.name }}</td>
                 <td>{{ column.experiment.user.email }}
                 <td>{{ column.experiment.probe.name }}</td>
                 <td>{{ column.experiment.inhibitor.name }}</td>

@@ -191,11 +191,11 @@ def get_organism(organism_id=None):
     return _get_all_or_one(m.Organism, organism_schema, organism_id)
 
 
-def add_organism(tax_id, name, display_name):
+def add_organism(tax_id, name, scientific_name):
     organism = organism_schema.load({
         'tax_id': tax_id,
         'name': name,
-        'display_name': display_name
+        'scientific_name': scientific_name
     })
 
     db.session.add(organism.data)

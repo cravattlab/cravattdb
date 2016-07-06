@@ -223,18 +223,18 @@ class Organism(db.Model):
     """Holds data related to model organisms."""
 
     id = Column(db.Integer, primary_key=True)
-    tax_id = Column(db.Integer, unique=True)
     name = Column(db.Text, index=True, unique=True)
-    display_name = Column(db.Text, index=True, unique=True)
+    tax_id = Column(db.Integer, unique=True)
+    scientific_name = Column(db.Text, index=True, unique=True)
 
 
 class OrganismSchema(Schema):
     """Marshmallow schema for Organism."""
 
     id = fields.Integer(dump_only=True)
-    tax_id = fields.Integer(allow_none=True)
     name = fields.String()
-    display_name = fields.String()
+    tax_id = fields.Integer(allow_none=True)
+    scientific_name = fields.String(allow_none=True)
 
     @post_load
     def _make_organism(self, data):
