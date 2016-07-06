@@ -20,7 +20,7 @@ mail = Mail(app)
 db = SQLAlchemy(app)
 
 # Setup Flask-Migrate
-migrate = Migrate(app, db)
+migrate = Migrate(app, db, directory='cravattdb/migrations')
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
