@@ -162,21 +162,11 @@ def get_experiments(experiment_ids):
     return experiment_schema.dump(experiments, many=True).data
 
 
-def add_experiment(name, user_id, organism_id, experiment_type_id, probe_id=0, inhibitor_id=0):
-    experiment = experiment_schema.load({
-        'name': name,
-        'user_id': int(user_id),
-        'organism_id': int(organism_id),
-        'experiment_type_id': int(experiment_type_id),
-        'probe_id': int(probe_id or 0) or None,
-        'inhibitor_id': int(inhibitor_id or 0) or None
-    })
-
+def add_experiment(data):
+    experiment = experiment_schema.load(data)
     db.session.add(experiment.data)
     db.session.commit()
-
-    result = experiment_schema.dump(experiment.data)
-    return result.data
+    return experiment_schema.dump(experiment.data).data
 
 
 def get_experiment_type(experiment_id=None):
