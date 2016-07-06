@@ -51,4 +51,8 @@ Vagrant.configure(2) do |config|
     echo "alias exc='docker exec -it cravattdb_cravattdb_1 /bin/bash'" >> ~/.bashrc
   SHELL
 
+  config.vm.provision "app-startup", type: "shell", privileged: false, inline: <<-SHELL
+    cd ~/github/cravattdb && dc up -d
+  SHELL
+
 end
