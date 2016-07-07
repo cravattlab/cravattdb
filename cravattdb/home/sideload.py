@@ -5,17 +5,11 @@ import cravattdb.api.api as api
 import pathlib
 
 
-def sideload_experiment(name, user_id, organism_id, experiment_type_id, file, probe_id=0, inhibitor_id=0):
-    experiment = api.add_experiment(
-        name=name,
-        user_id=user_id,
-        organism_id=organism_id,
-        experiment_type_id=experiment_type_id,
-        probe_id=probe_id,
-        inhibitor_id=inhibitor_id,
-    )
-
+def sideload_experiment(data, user_id, file):
+    data.update({'user_id': user_id})
+    experiment = api.add_experiment(data)
     experiment_id = experiment['id']
+
     cimage_data_path = _unzip_cimage(file, user_id, experiment_id)
 
     dta_path = list(cimage_data_path.glob('dta*'))[0]

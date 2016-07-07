@@ -5,6 +5,7 @@ from flask.ext.security import login_required
 from flask_security.core import current_user
 from cravattdb.home.sideload import sideload_experiment
 import cravattdb.api.api as model
+import json
 
 api = Blueprint('api', __name__,
                 template_folder='templates',
@@ -176,11 +177,7 @@ def add_inhibitor():
 @login_required
 def sideload():
     return jsonify(sideload_experiment(
-        name=request.form.get('name'),
+        data=json.loads(request.values['data']),
         user_id=current_user.get_id(),
-        organism_id=request.form.get('organism'),
-        experiment_type_id=request.form.get('type'),
-        probe_id=request.form.get('probe'),
-        inhibitor_id=request.form.get('inhibitor'),
         file=request.files['file']
     ))
