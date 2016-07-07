@@ -221,7 +221,7 @@ def add_instrument(name):
 
 
 def get_sample_type(sample_type_id=None):
-    return _get_all_or_one(m.Sample_type, sample_type_schema, sample_type_id)
+    return _get_all_or_one(m.SampleType, sample_type_schema, sample_type_id)
 
 
 def add_sample_type(name, description):
@@ -237,7 +237,7 @@ def add_sample_type(name, description):
 
 
 def get_cell_type(cell_type_id=None):
-    return _get_all_or_one(m.Cell_type, cell_type_schema, cell_type_id)
+    return _get_all_or_one(m.CellType, cell_type_schema, cell_type_id)
 
 
 def add_cell_type(name, description):
@@ -253,7 +253,7 @@ def add_cell_type(name, description):
 
 
 def get_treatment_type(treatment_type_id=None):
-    return _get_all_or_one(m.Treatment_type, treatment_type_schema, treatment_type_id)
+    return _get_all_or_one(m.TreatmentType, treatment_type_schema, treatment_type_id)
 
 
 def add_treatment_type(name, description):
@@ -269,7 +269,7 @@ def add_treatment_type(name, description):
 
 
 def get_proteomic_fraction(proteomic_fraction_id=None):
-    return _get_all_or_one(m.Proteomic_fraction, proteomic_fraction_schema, proteomic_fraction_id)
+    return _get_all_or_one(m.ProteomicFraction, proteomic_fraction_schema, proteomic_fraction_id)
 
 
 def add_proteomic_fraction(name, description):
