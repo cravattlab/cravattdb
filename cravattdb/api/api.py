@@ -216,7 +216,7 @@ def add_instrument(name):
 
     db.session.add(instrument.data)
     db.session.commit()
-    result = instrument_schema.dump(instrument)
+    result = instrument_schema.dump(instrument.data)
     return result.data
 
 
@@ -232,7 +232,7 @@ def add_sample_type(name, description):
 
     db.session.add(sample_type.data)
     db.session.commit()
-    result = sample_type_schema.dump(sample_type)
+    result = sample_type_schema.dump(sample_type.data)
     return result.data
 
 
@@ -248,7 +248,7 @@ def add_cell_type(name, description):
 
     db.session.add(cell_type.data)
     db.session.commit()
-    result = cell_type_schema.dump(cell_type)
+    result = cell_type_schema.dump(cell_type.data)
     return result.data
 
 
@@ -264,7 +264,7 @@ def add_treatment_type(name, description):
 
     db.session.add(treatment_type.data)
     db.session.commit()
-    result = treatment_type_schema.dump(treatment_type)
+    result = treatment_type_schema.dump(treatment_type.data)
     return result.data
 
 
@@ -280,7 +280,7 @@ def add_proteomic_fraction(name, description):
 
     db.session.add(proteomic_fraction.data)
     db.session.commit()
-    result = proteomic_fraction_schema.dump(proteomic_fraction)
+    result = proteomic_fraction_schema.dump(proteomic_fraction.data)
     return result.data
 
 
