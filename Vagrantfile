@@ -36,19 +36,14 @@ Vagrant.configure(2) do |config|
     mkdir -p ~/.ssh
     chmod 700 ~/.ssh
     ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-    ssh -T git@github.com
+    # suppress non-zero exit status so that vagrant continues to run other
+    sh -c "ssh -T git@github.com; true"
   SHELL
 
   config.vm.provision "code", type: "shell", privileged: false, inline: <<-SHELL
     git clone git@github.com:/cravattlab/cimage-minimal.git ~/github/cimage-minimal
     git clone git@github.com:/cravattlab/cravattdb.git ~/github/cravattdb
     git clone git@github.com:/cravattlab/cravattdb-cli.git ~/github/cravattdb-cli
-  SHELL
-
-  config.vm.provision "goodies", type: "shell", privileged: false, inline: <<-SHELL
-    echo "alias dc='docker-compose'" >> ~/.bashrc
-    echo "alias ac='docker attach cravattdb_cravattdb_1'"  >> ~/.bashrc
-    echo "alias exc='docker exec -it cravattdb_cravattdb_1 /bin/bash'" >> ~/.bashrc
   SHELL
 
   config.vm.provision "app-startup", type: "shell", privileged: false, inline: <<-SHELL
