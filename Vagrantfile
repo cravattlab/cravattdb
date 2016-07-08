@@ -52,7 +52,7 @@ Vagrant.configure(2) do |config|
   SHELL
 
   config.vm.provision "app-startup", type: "shell", privileged: false, inline: <<-SHELL
-    cd ~/github/cravattdb && dc up -d
+    cd ~/github/cravattdb && docker-compose up -d
   SHELL
 
 end
