@@ -2,17 +2,20 @@
     <table class="ui selectable celled table">
         <thead>
             <tr>
-                <th>id</th>
-                <th>name</th> 
-                <th>organism</th> 
+                <th>name</th>
+                <th>organism</th>
                 <th>probe</th>
                 <th>inhibitor</th>
                 <th>date</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let row of experiments" (click)="router.navigate(['/experiment', row[0]])">
-                <td *ngFor="let column of row">{{ column }}</td>
+            <tr *ngFor="let e of experiments" (click)="router.navigate(['/experiment', e.id])">
+                <td>{{ e.name }}</td>
+                <td>{{ e.organism.name }}</td>
+                <td>{{ e.probe.name }}</td>
+                <td>{{ e.inhibitor.name }}</td>
+                <td>{{ e.date }}</td>
             </tr>
         </tbody>
     </table>

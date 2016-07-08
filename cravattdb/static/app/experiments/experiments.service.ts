@@ -15,7 +15,7 @@ export class ExperimentsService {
 
     private extractData(res: Response) {
         let body = res.json();
-        return body.data || {};
+        return body || {};
     }
 
     private handleError(error: any) {

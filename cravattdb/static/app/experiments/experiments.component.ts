@@ -14,6 +14,6 @@ export class ExperimentsComponent implements OnInit {
     constructor(private service: ExperimentsService, private router: Router) {}
 
     ngOnInit() {
-        this.service.getExperiments().then(experiments => this.experiments = experiments);
+        this.service.getExperiments().then(data => this.experiments = data.experiments);
     }
 }
