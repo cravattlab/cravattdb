@@ -2,20 +2,22 @@
     <table class="ui selectable celled table">
         <thead>
             <tr>
-                <th>name</th>
-                <th>organism</th>
-                <th>probe</th>
-                <th>inhibitor</th>
-                <th>date</th>
+                <th>Name</th>
+                <th>User</th>
+                <th>Cell Line</th>
+                <th>Organism</th>
+                <th>Probe</th>
+                <th>Inhibitor</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let e of experiments" (click)="router.navigate(['/experiment', e.id])">
                 <td>{{ e.name }}</td>
+                <td>{{ e.user.email }}</td>
+                <td>{{ e.cell_line }}</td>
                 <td>{{ e.organism.name }}</td>
                 <td>{{ e.probe.name }}</td>
                 <td>{{ e.inhibitor.name }}</td>
-                <td>{{ e.date }}</td>
             </tr>
         </tbody>
     </table>

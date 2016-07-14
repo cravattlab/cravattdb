@@ -14,7 +14,7 @@
     <form #f="ngForm" class="ui form" name="upload" (ngSubmit)="onSubmit(f.value)">
         <div class="six wide required field">
             <label>Dataset Name</label>
-            <input type="text" placeholder="Dataset Name" ngControl="name" required>
+            <input type="text" placeholder="Dataset name" ngControl="name" required>
         </div>
 
         <div class="six wide field">
@@ -25,7 +25,7 @@
         <div class="six wide required field">
             <label>Organism</label>
             <select class="ui search selection dropdown" ngControl="organism" required>
-                <option value="">Select Species</option>
+                <option value="">Select species</option>
                 <option *ngFor="let organism of data?.organisms" value="{{ organism.id }}">{{ organism.name }}</option>
             </select>
         </div>
@@ -33,16 +33,16 @@
         <div class="six wide required field">
             <label>Experiment Type</label>
             <select class="ui search selection dropdown" ngControl="type" required>
-                <option value="">Select Experiment Type</option>
+                <option value="">Select experiment type</option>
                 <option *ngFor="let experimentType of data?.experiment_types" value="{{ experimentType.id }}">{{ experimentType.name }}</option>
             </select>
         </div>
 
         <div class="six wide field">
             <label>Instrument</label>
-            <select class="ui search selection dropdown" ngControl="probe">
-                <option value="">Select Instrument</option>
-                <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+            <select class="ui search selection dropdown" ngControl="instrument">
+                <option value="">Select instrument</option>
+                <option *ngFor="let instrument of data?.instruments" value="{{ instrument.id }}">{{ instrument.name }}</option>
             </select>
         </div>
 
@@ -50,17 +50,17 @@
 
         <div class="six wide field">
             <label>Treatment Type</label>
-            <select class="ui search selection dropdown" ngControl="probe">
-                <option value="">Select Probe</option>
-                <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+            <select class="ui search selection dropdown" ngControl="treatment_type">
+                <option value="">Select treatment type</option>
+                <option *ngFor="let treatment_type of data?.treatment_types" value="{{ treatment_type.id }}">{{ treatment_type.name }}</option>
             </select>
         </div>
 
         <div class="six wide field">
             <label>Proteomic Fraction</label>
-            <select class="ui search selection dropdown" ngControl="probe">
-                <option value="">Select Probe</option>
-                <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+            <select class="ui search selection dropdown" ngControl="proteomic_fraction">
+                <option value="">Select proteomic fraction</option>
+                <option *ngFor="let proteomic_fraction of data?.proteomic_fractions" value="{{ proteomic_fraction.id }}">{{ proteomic_fraction.name }}</option>
             </select>
         </div>
 
@@ -68,7 +68,7 @@
             <div class="six wide field">
                 <label>Probe</label>
                 <select class="ui search selection dropdown" ngControl="probe">
-                    <option value="">Select Probe</option>
+                    <option value="">Select probe</option>
                     <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
                 </select>
             </div>
@@ -76,7 +76,7 @@
             <div class="three wide required field">
                 <label>Probe Concentration</label>
                 <div class="ui right labeled input">
-                    <input type="text" placeholder="Probe Concentration" ngControl="probe_concentration">
+                    <input type="text" placeholder="Probe concentration" ngControl="probe_concentration">
                     <div class="ui dropdown label">
                         <div class="text">&micro;M</div>
                         <i class="dropdown icon"></i>
@@ -92,7 +92,7 @@
             <div class="three wide required field">
                 <label>Treatment Time</label>
                 <div class="ui right labeled input">
-                    <input type="text" placeholder="Probe Concentration" ngControl="probe_concentration">
+                    <input type="text" placeholder="Treatment time" ngControl="treatment_time">
                     <div class="ui basic label">hours</div>
                 </div>
             </div>
@@ -102,15 +102,15 @@
             <div class="six wide field">
                 <label>Inhibitor</label>
                 <select class="ui search selection dropdown" ngControl="inhibitor">
-                    <option value="">Select Inhibitor</option>
+                    <option value="">Select inhibitor</option>
                     <option *ngFor="let inhibitor of data?.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name }}</option>
                 </select>
             </div>
 
             <div class="three wide required field">
-                <label>Probe Concentration</label>
+                <label>Inhibitor Concentration</label>
                 <div class="ui right labeled input">
-                    <input type="text" placeholder="Probe Concentration" ngControl="probe_concentration">
+                    <input type="text" placeholder="Inhibitor concentration" ngControl="inhibitor_concentration">
                     <div class="ui dropdown label">
                         <div class="text">&micro;M</div>
                         <i class="dropdown icon"></i>
@@ -127,7 +127,7 @@
             <div class="three wide required field">
                 <label>Treatment Time</label>
                 <div class="ui right labeled input">
-                    <input type="text" placeholder="Probe Concentration" ngControl="probe_concentration">
+                    <input type="text" placeholder="Treatment time" ngControl="treatment_time">
                     <div class="ui basic label">hours</div>
                 </div>
             </div>
@@ -151,18 +151,18 @@
 
         <div class="two fields">
             <div class="six wide field">
-                <label>Biological Origin</label>
-                <select class="ui search selection dropdown" ngControl="probe">
-                    <option value="">Select Probe</option>
-                    <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+                <label>Sample Type</label>
+                <select class="ui search selection dropdown" ngControl="sample_type">
+                    <option value="">Select sample type</option>
+                    <option *ngFor="let sample_type of data?.sample_types" value="{{ sample_type.id }}">{{ sample_type.name }}</option>
                 </select>
             </div>
 
             <div class="six wide field">
                 <label>Cell Type</label>
-                <select class="ui search selection dropdown" ngControl="probe">
-                    <option value="">Select Probe</option>
-                    <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+                <select class="ui search selection dropdown" ngControl="cell_type">
+                    <option value="">Select cell type</option>
+                    <option *ngFor="let cell_type of data?.cell_types" value="{{ cell_type.id }}">{{ cell_type.name }}</option>
                 </select>
             </div>
         </div>
@@ -171,12 +171,12 @@
 
         <div class="six wide required field">
             <label>IP2 Username</label>
-            <input type="text" placeholder="IP2 Username" ngControl="ip2_username" required>
+            <input type="text" placeholder="IP2 username" ngControl="ip2_username" required>
         </div>
 
         <div class="six wide required field">
             <label>IP2 Password</label>
-            <input type="password" placeholder="IP2 Password" ngControl="ip2_password" required>
+            <input type="password" placeholder="IP2 password" ngControl="ip2_password" required>
         </div>
 
         <div *ngIf="files.length" class="field">
