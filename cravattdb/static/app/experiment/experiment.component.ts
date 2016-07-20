@@ -24,6 +24,6 @@ export class ExperimentComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.id = this.route.snapshot.params.id;
+        this.id = this.route.snapshot.params['id'];
     }
 }

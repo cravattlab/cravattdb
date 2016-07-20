@@ -7,7 +7,6 @@ import {
     ChangeDetectorRef,
     SimpleChange
 } from '@angular/core';
-import * as imagesLoaded from 'imagesloaded';
 import * as _ from 'lodash';
 import { DataService } from './data.service';
 
@@ -93,7 +92,7 @@ export class DataComponent implements OnInit, OnChanges {
 
         grouped = grouped.map(group => {
             // mean by the ratio column
-            let mean = _.meanBy(group, ratioIndex);
+            let mean = _['meanBy'](group, ratioIndex);
             // add mean ratio as final element of first group member
             // I know this would be nicer on an object, but... we have to
             // juggle around tens of thousands of these sometimes
