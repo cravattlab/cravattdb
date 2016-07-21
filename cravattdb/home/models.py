@@ -26,23 +26,20 @@ class Experiment(db.Model):
     user_id = Column(db.Integer, db.ForeignKey('user.id'), index=True)
     organism_id = Column(db.Integer, db.ForeignKey('organism.id'), index=True)
     experiment_type_id = Column(db.Integer, db.ForeignKey('experiment_type.id'), index=True)
-    probe_id = Column(db.Integer, db.ForeignKey('probe.id'), index=True)
-    inhibitor_id = Column(db.Integer, db.ForeignKey('inhibitor.id'), index=True)
-
     sample_type_id = Column(db.Integer, db.ForeignKey('sample_type.id'), index=True)
     cell_type_id = Column(db.Integer, db.ForeignKey('cell_type.id'), index=True)
     instrument_id = Column(db.Integer, db.ForeignKey('instrument.id'), index=True)
     treatment_type_id = Column(db.Integer, db.ForeignKey('treatment_type.id'), index=True)
     proteomic_fraction_id = Column(db.Integer, db.ForeignKey('proteomic_fraction.id'), index=True)
 
-    # store things like concentration, duration etc
-    treatment_details = Column(JSONB)
+    # store things like probe, inhibitor, concentration
+    treatment = Column(JSONB)
 
     # store overrides for parameters
-    additional_search_params = Column(JSON)
-    additional_quant_params = Column(JSON)
+    search_params = Column(JSONB)
+    quant_params = Column(JSONB)
 
-    annotations = Column(JSON)
+    annotations = Column(JSONB)
 
     # datasets can be quantified as Heavy/Light or Light/Heavy
     # necessary due to cimage returning different results for H/L vs L/H
@@ -62,8 +59,6 @@ class Experiment(db.Model):
     user = relationship('User', backref='experiments')
     organism = relationship('Organism', backref='experiments')
     experiment_type = relationship('ExperimentType', backref='experiments')
-    probe = relationship('Probe', backref='experiments')
-    inhibitor = relationship('Inhibitor', backref='experiments')
     sample_type = relationship('SampleType', backref='experiments')
     cell_type = relationship('CellType', backref='experiments')
     instrument = relationship('Instrument', backref='experiments')
@@ -98,10 +93,6 @@ class ExperimentSchema(Schema):
     organism = fields.Nested('OrganismSchema', dump_only=True)
     experiment_type_id = fields.Integer(load_only=True)
     experiment_type = fields.Nested('ExperimentTypeSchema', dump_only=True)
-    probe_id = fields.Integer(load_only=True)
-    probe = fields.Nested('ProbeSchema', dump_only=True)
-    inhibitor_id = fields.Integer(load_only=True)
-    inhibitor = fields.Nested('InhibitorSchema', dump_only=True)
     sample_type_id = fields.Integer(load_only=True)
     sample_type = fields.Nested('SampleTypeSchema', dump_only=True)
     cell_type_id = fields.Integer(load_only=True)
@@ -112,9 +103,9 @@ class ExperimentSchema(Schema):
     treatment_type = fields.Nested('TreatmentTypeSchema', dump_only=True)
     proteomic_fraction_id = fields.Integer(load_only=True)
     proteomic_fraction = fields.Nested('ProteomicFractionSchema', dump_only=True)
-    additional_search_params = JSONField()
-    additional_quant_params = JSONField()
-    treatment_details = JSONField()
+    search_params = JSONField()
+    quant_params = JSONField()
+    treatment = JSONField()
     annotations = JSONField()
     ratio_numerator = fields.String()
     replicate_of = fields.Integer()
