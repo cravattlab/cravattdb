@@ -9,8 +9,8 @@
                 </div>
             </div>
             <template ngFor let-item [ngForOf]="filter?.options">
-                <a *ngIf="item.display.startsWith(term)" class="item" [class.active]="item.active" (click)="item.active = !item.active">
-                    {{ item.display }}
+                <a *ngIf="item.name.startsWith(term)" class="item" [class.active]="item.active" (click)="item.active = !item.active">
+                    {{ item.name }}
                     <i class="ui checkmark icon" [class.grey]="!item.active" [class.inverted]="!item.active"></i>
                 </a>
             </template>

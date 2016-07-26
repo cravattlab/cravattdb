@@ -1,9 +1,8 @@
 <div id="filters" class="ui large blue labels">
     <div *ngFor="let filter of activeFilters" class="ui label" (click)="editFilter(filter)">
         {{ filter.display }}:
-        <div *ngFor="let item of filter.options" class="detail">{{ item.display }}
+        <div *ngFor="let item of filter.options" class="detail">{{ item.name }}
             <i class="delete icon" (click)="removeFilter($event, filter)"></i>
         </div>
-        
     </div>
 </div>

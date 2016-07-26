@@ -26,7 +26,10 @@ export class HomeComponent implements OnInit {
     constructor(private service: HomeService, private router: Router) { }
 
     ngOnInit() {
-        this.service.getFilters().then(d => this.filters = d);
+        this.service.getFilters().then(d => {
+            d.forEach(f => f.options.forEach(o => o.active = false));
+            this.filters = d;
+        });
     }
 
     set data(data: any[]) {

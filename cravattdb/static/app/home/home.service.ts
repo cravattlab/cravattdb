@@ -14,7 +14,7 @@ export class HomeService {
     }
 
     getFilters(): Promise<any> {
-        return this.http.get('static/app/home/filters.json')
+        return this.http.get('/api/filters')
             .toPromise()
             .then(this.extractData)
             .catch(this.handleError);
