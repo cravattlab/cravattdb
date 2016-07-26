@@ -115,20 +115,6 @@ def add_cell_type():
     ))
 
 
-@api.route('/treatment_type')
-@api.route('/treatment_type/<int:treatment_type_id>')
-def get_treatment_type(treatment_type_id=None):
-    return jsonify(model.get_treatment_type(treatment_type_id))
-
-
-@api.route('/treatment_type', methods=['PUT'])
-def add_treatment_type():
-    return jsonify(model.add_treatment_type(
-        name=request.values.get('name'),
-        description=request.values.get('description')
-    ))
-
-
 @api.route('/proteomic_fraction')
 @api.route('/proteomic_fraction/<int:proteomic_fraction_id>')
 def get_proteomic_fraction(proteomic_fraction_id=None):

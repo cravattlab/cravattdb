@@ -29,13 +29,9 @@ class Experiment(db.Model):
     sample_type_id = Column(db.Integer, db.ForeignKey('sample_type.id'), index=True)
     cell_type_id = Column(db.Integer, db.ForeignKey('cell_type.id'), index=True)
     instrument_id = Column(db.Integer, db.ForeignKey('instrument.id'), index=True)
-    treatment_type_id = Column(db.Integer, db.ForeignKey('treatment_type.id'), index=True)
     proteomic_fraction_id = Column(db.Integer, db.ForeignKey('proteomic_fraction.id'), index=True)
 
-    # store things like probe, inhibitor, concentration
-    treatment = Column(JSONB)
-
-    # store overrides for parameters
+    # store search and quantification parameter data
     search_params = Column(JSONB)
     quant_params = Column(JSONB)
 
@@ -62,10 +58,10 @@ class Experiment(db.Model):
     sample_type = relationship('SampleType', backref='experiments')
     cell_type = relationship('CellType', backref='experiments')
     instrument = relationship('Instrument', backref='experiments')
-    treatment_type = relationship('TreatmentType', backref='experiments')
     proteomic_fraction = relationship('ProteomicFraction', backref='experiments')
     replicates = relationship('Experiment', foreign_keys=[replicate_of])
     inverted_dataset = relationship('Experiment', foreign_keys=[inverse_ratio_id])
+    treatments = relationship('Treatment', backref='experiment')
 
 
 class JSONField(fields.Field):
@@ -99,13 +95,11 @@ class ExperimentSchema(Schema):
     cell_type = fields.Nested('CellTypeSchema', dump_only=True)
     instrument_id = fields.Integer(load_only=True)
     instrument = fields.Nested('InstrumentSchema', dump_only=True)
-    treatment_type_id = fields.Integer(load_only=True)
-    treatment_type = fields.Nested('TreatmentTypeSchema', dump_only=True)
     proteomic_fraction_id = fields.Integer(load_only=True)
     proteomic_fraction = fields.Nested('ProteomicFractionSchema', dump_only=True)
     search_params = JSONField()
     quant_params = JSONField()
-    treatment = JSONField()
+    treatments = fields.Nested('TreatmentSchema', dump_only=True)
     annotations = JSONField()
     ratio_numerator = fields.String()
     replicate_of = fields.Integer()
@@ -123,6 +117,57 @@ class ExperimentSchema(Schema):
     @post_dump(pass_many=True)
     def _wrap(self, data, many):
         return {'experiments': data} if many else data
+
+
+class Treatment(db.Model):
+    """Describes types of treatment applied to a proteome in an experiment."""
+
+    id = Column(db.Integer, primary_key=True)
+    experiment_id = Column(db.Integer, db.ForeignKey('experiment.id'), index=True)
+    description = Column(db.Text)
+    method = Column(db.Enum('in vitro', 'in vivo', 'in situ', name='method_types'), index=True)
+    fraction = Column(db.Enum('L', 'H', name='fraction_types'), index=True)
+
+    # treatment time in hours
+    time = Column(db.Numeric)
+
+    # concentration in micromoles
+    concentration = Column(db.Numeric)
+
+    # the most common treatments are with inhibitors or probes
+    # only one of inhibitor_id, probe_id, or other should be set per row
+    inhibitor_id = Column(db.Integer, db.ForeignKey('inhibitor.id'), index=True)
+    probe_id = Column(db.Integer, db.ForeignKey('probe.id'), index=True)
+    # for storing other type of treatments
+    other = Column(db.Text)
+
+    inhibitor = relationship('Inhibitor', backref='treatments')
+    probe = relationship('Probe', backref='treatments')
+
+
+class TreatmentSchema(Schema):
+    """Marshmallow schema for Treatment."""
+
+    id = fields.Integer(dump_only=True)
+    experiment_id = fields.Integer(load_only=True)
+    description = fields.String()
+    method = fields.String()
+    fraction = fields.String()
+    time = fields.Float()
+    concentration = fields.Float()
+    inhibitor_id = fields.Integer(load_only=True)
+    inhibitor = fields.Nested('InhibitorSchema', dump_only=True)
+    probe_id = fields.Integer(load_only=True)
+    probe = fields.Nested('ProbeSchema', dump_only=True)
+    other = fields.String()
+
+    @post_load
+    def _make_treatment(self, data):
+        return Treatment(**data)
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        return {'treatments': data} if many else data
 
 
 class Dataset(db.Model):
@@ -310,30 +355,6 @@ class InstrumentSchema(Schema):
         return {'instruments': data} if many else data
 
 
-class TreatmentType(db.Model):
-    """Type of treatment applied to proteome: in vitro etc."""
-
-    id = Column(db.Integer, primary_key=True)
-    name = Column(db.Text, index=True, unique=True)
-    description = Column(db.Text)
-
-
-class TreatmentTypeSchema(Schema):
-    """Marshmallow schema for TreatmentType."""
-
-    id = fields.Integer(dump_only=True)
-    name = fields.String()
-    description = fields.String(allow_none=True)
-
-    @post_load
-    def _make_treatment_type(self, data):
-        return TreatmentType(**data)
-
-    @post_dump(pass_many=True)
-    def _wrap(self, data, many):
-        return {'treatment_types': data} if many else data
-
-
 class SampleType(db.Model):
     """Define sample types such as tissue, cell, etc."""
 
@@ -417,4 +438,3 @@ admin.add_view(AuthModelView(SampleType, db.session))
 admin.add_view(AuthModelView(CellType, db.session))
 admin.add_view(AuthModelView(Instrument, db.session))
 admin.add_view(AuthModelView(ProteomicFraction, db.session))
-admin.add_view(AuthModelView(TreatmentType, db.session))

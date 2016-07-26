@@ -6,6 +6,7 @@ import itertools
 import statistics
 
 experiment_schema = m.ExperimentSchema()
+treatment_schema = m.TreatmentSchema()
 dataset_schema = m.DatasetSchema(many=True)
 dataset_schema_summary = m.DatasetSchema(many=True, only=(
     'uniprot', 'symbol', 'description', 'sequence',
@@ -19,7 +20,6 @@ organism_schema = m.OrganismSchema()
 experiment_type_schema = m.ExperimentTypeSchema()
 instrument_schema = m.InstrumentSchema()
 sample_type_schema = m.SampleTypeSchema()
-treatment_type_schema = m.TreatmentTypeSchema()
 cell_type_schema = m.CellTypeSchema()
 proteomic_fraction_schema = m.ProteomicFractionSchema()
 probe_schema = m.ProbeSchema()
@@ -59,7 +59,6 @@ def get_user_defined():
         **_get_all(m.Probe, probe_schema),
         **_get_all(m.Inhibitor, inhibitor_schema),
         **_get_all(m.SampleType, sample_type_schema),
-        **_get_all(m.TreatmentType, treatment_type_schema),
         **_get_all(m.Instrument, instrument_schema),
         **_get_all(m.CellType, cell_type_schema),
         **_get_all(m.ProteomicFraction, proteomic_fraction_schema)
@@ -169,6 +168,19 @@ def add_experiment(data):
     return experiment_schema.dump(experiment.data).data
 
 
+def get_treatment(experiment_id):
+    treatment = m.Treatment.query.filter_by(experiment_id=experiment_id)
+    return treatment_schema.dump(treatment).data
+
+
+def add_treatment(data):
+    treatment = treatment_schema.load(data)
+    print(treatment)
+    db.session.add(treatment.data)
+    db.session.commit()
+    return treatment_schema.dump(treatment.data).data
+
+
 def get_experiment_type(experiment_id=None):
     return _get_all_or_one(m.ExperimentType, experiment_type_schema, experiment_id)
 
@@ -249,22 +261,6 @@ def add_cell_type(name, description):
     db.session.add(cell_type.data)
     db.session.commit()
     result = cell_type_schema.dump(cell_type.data)
-    return result.data
-
-
-def get_treatment_type(treatment_type_id=None):
-    return _get_all_or_one(m.TreatmentType, treatment_type_schema, treatment_type_id)
-
-
-def add_treatment_type(name, description):
-    treatment_type = treatment_type_schema.load({
-        'name': name,
-        'description': description
-    })
-
-    db.session.add(treatment_type.data)
-    db.session.commit()
-    result = treatment_type_schema.dump(treatment_type.data)
     return result.data
 
 
