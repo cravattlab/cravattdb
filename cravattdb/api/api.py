@@ -65,6 +65,25 @@ def get_user_defined():
     }
 
 
+def get_available_filters():
+    """Return list of all filters."""
+    user_defined = get_user_defined()
+    result = []
+
+    for item, data in user_defined.items():
+        # depluralize using the most naive method possible
+        if item.endswith('s'):
+            item = item[:-1]
+
+        result.append({
+            'name': item,
+            'display': item.replace('_', ' ').title(),
+            'options': data
+        })
+
+    return {'data': result}
+
+
 def search(term):
     data = m.Dataset.query.filter(
         (m.Dataset.uniprot.ilike(term)) |

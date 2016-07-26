@@ -22,6 +22,11 @@ def get_user_defined():
     return jsonify(model.get_user_defined())
 
 
+@api.route('/filters')
+def get_filters():
+    return jsonify(model.get_available_filters())
+
+
 @api.route('/dataset/<int:experiment_id>')
 def get_dataset(experiment_id):
     raw = model.get_dataset(experiment_id)
