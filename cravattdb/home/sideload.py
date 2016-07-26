@@ -6,10 +6,30 @@ import pathlib
 
 
 def sideload_experiment(data, user_id, file):
-    data.update({'user_id': user_id})
+    data['user_id'] = user_id
+    treatment_data = data.pop('treatment')
+
     experiment = api.add_experiment(data)
     experiment_id = experiment['id']
 
+    load_treatment(experiment_id, treatment_data)
+    load_data(user_id, experiment_id, file)
+
+    return experiment
+
+
+def load_treatment(experiment_id, treatment_data):
+    for fraction, fraction_data in treatment_data.items():
+        for item, data in fraction_data.items():
+            data.update({
+                'experiment_id': experiment_id,
+                'fraction': fraction,
+                '{}_id'.format(item): data.pop('id')
+            })
+            api.add_treatment(data)
+
+
+def load_data(user_id, experiment_id, file):
     cimage_data_path = _unzip_cimage(file, user_id, experiment_id)
 
     dta_path = list(cimage_data_path.glob('dta*'))[0]
@@ -22,8 +42,6 @@ def sideload_experiment(data, user_id, file):
     )
 
     api.add_dataset(experiment_id, int(user_id), output_file_path)
-
-    return experiment
 
 
 def _unzip_cimage(file, user_id, dataset_id):
