@@ -2,7 +2,7 @@
     <div class="search-box ui inverted grey attached" [ngClass]="{ 'segment': !!term }">
         <div [ngClass]="{ 'loading': searching }" class="ui fluid left icon action input">
             <i class="search icon"></i>
-            <input #searchInput type="text" [attr.value]="term" placeholder="Search by protein Uniprot ID, name, or description" autofocus (keyup.enter)="search(searchInput.value)">
+            <input #searchInput type="text" [value]="term" placeholder="Search by protein Uniprot ID, name, or description" autofocus (keyup.enter)="search(searchInput.value)">
             <div class="ui icon primary button" (click)="filter.toggle()">
                 Filter
                 <i class="filter right icon"></i>

@@ -37,12 +37,9 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.filters = d;
         });
 
-        this.sub = this.route.params.subscribe(params =>  {
-            this.term = params['term'];
-
-            if (this.term) {
-                this._search(this.term);
-            }
+        this.sub = this.route.params.subscribe(({term}) =>  {
+            this.term = term || '';
+            this._search(this.term);
         });
     }
 
@@ -72,6 +69,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     _search(term) {
+        if (!term) return;
         this.service.search(term)
             .then(d => this.data = d)
             .catch(e => this.searching = false);
