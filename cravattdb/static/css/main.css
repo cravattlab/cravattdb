@@ -1,11 +1,6 @@
 app.ui.fluid.container {
     height:calc(100% - 3em);
 }
-
-.attached.menu {
-    margin:0px!important;
-    height:3em;
-}
 .padded.container {
     margin-top:3em;
 }

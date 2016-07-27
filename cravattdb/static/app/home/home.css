@@ -12,6 +12,10 @@
     height: 100%;
 }
 
+.search-box {
+    font-size: 1.2em;
+}
+
 .search-centered > .search-box {
     width:100%;
     font-size: 2em;
