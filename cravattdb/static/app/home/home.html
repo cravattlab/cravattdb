@@ -29,8 +29,8 @@
                 <th>Experiment Type</th>
                 <th>Organism</th>
                 <th>User</th>
-                <th>Probe</th>
-                <th>Inhibitor</th>
+                <th>Probe(s)</th>
+                <th>Inhibitor(s)</th>
                 <th class="center aligned one wide">QP</th>
                 <th class="center aligned one wide">Mean Ratio</th>
             </tr>
@@ -46,8 +46,8 @@
                 <td>{{ column.experiment.experiment_type.name }}</td>
                 <td>{{ column.experiment.organism.name }}</td>
                 <td>{{ column.experiment.user.email }}
-                <td>{{ column.experiment.probe.name }}</td>
-                <td>{{ column.experiment.inhibitor.name }}</td>
+                <td>{{ column.experiment.probe }}</td>
+                <td>{{ column.experiment.inhibitor }}</td>
                 <td class="center aligned" [style.background-color]="scale(column.qp/100)">{{ column.qp }}</td>
                 <td class="center aligned" [style.background-color]="scale(column.mean_ratio/20)">{{ column.mean_ratio }}</td>
             </tr>

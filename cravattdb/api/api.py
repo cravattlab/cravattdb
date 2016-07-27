@@ -98,8 +98,12 @@ def search(term):
 
     # grab ids so we can look up experiment info by batch
     experiment_ids = [item.get('experiment_id') for item in result]
-    experiments_data = get_experiments(set(experiment_ids))
-    experiments = {ex['id']: ex for ex in experiments_data['experiments']}
+    experiments_data = get_experiments(set(experiment_ids))['experiments']
+
+    for ex in experiments_data:
+        ex.update(_aggregate_treatment_data(ex['treatments']))
+
+    experiments = {ex['id']: ex for ex in experiments_data}
 
     groups = []
 
@@ -130,6 +134,17 @@ def search(term):
         groups.append(temp)
 
     return groups
+
+
+def _aggregate_treatment_data(data):
+    types = ['inhibitor', 'probe']
+    aggregate = dict.fromkeys(types)
+
+    for t in types:
+        names = [y[t]['name'] for y in [x for x in data if x[t]]]
+        aggregate[t] = ', '.join(list(set(names)))
+
+    return aggregate
 
 
 def get_dataset(experiment_id):
