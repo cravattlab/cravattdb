@@ -52,13 +52,15 @@ export class HomeComponent implements OnInit {
         this.activeFilters = filters;
     }
     
-    onFilterRemove(filter) {
+    onFilterRemove({filter, item}) {
         let index = filter.index;
 
-        this.filters[index].options = this.filters[index].options.map(item => {
-            item.active = false;
-            return item;
-        })
+        this.filters[index].options = this.filters[index].options.map(i => {
+            if (i.id === item.id) {
+                i.active = false;
+            }
+            return i;
+        });
         
         this.filter.update();
     }

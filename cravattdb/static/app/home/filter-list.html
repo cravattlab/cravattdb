@@ -2,7 +2,7 @@
     <div *ngFor="let filter of activeFilters" class="ui label" (click)="editFilter(filter)">
         {{ filter.display }}:
         <div *ngFor="let item of filter.options" class="detail">{{ item.name }}
-            <i class="delete icon" (click)="removeFilter($event, filter)"></i>
+            <i class="delete icon" (click)="removeFilter($event, filter, item)"></i>
         </div>
     </div>
 </div>

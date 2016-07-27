@@ -13,11 +13,13 @@ export class FilterListComponent {
 
     constructor() {}
     
-    removeFilter(e, filter) {
+    removeFilter(e, filter, item) {
         e.stopPropagation();
 
+        console.log(filter, item);
+
         this.remove.emit({
-            value: filter
+            value: { filter: filter, item: item }
         });
     }
     
