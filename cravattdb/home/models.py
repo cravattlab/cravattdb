@@ -40,7 +40,7 @@ class Experiment(db.Model):
     # datasets can be quantified as Heavy/Light or Light/Heavy
     # necessary due to cimage returning different results for H/L vs L/H
     # it is sometimes desirable to switch between H/L and L/H
-    ratio_numerator = Column(db.Enum('L', 'H', name='ratio_numerator_types'), index=True)
+    quantification_numerator = Column(db.Enum('L', 'H', name='quantification_numerator_types'), index=True)
 
     # reference to dataset that is inversely quantified
     inverse_ratio_id = Column(db.Integer, db.ForeignKey('experiment.id'), index=True)
@@ -101,7 +101,7 @@ class ExperimentSchema(Schema):
     quant_params = JSONField()
     treatments = fields.Nested('TreatmentSchema', dump_only=True, many=True)
     annotations = JSONField()
-    ratio_numerator = fields.String()
+    quantification_numerator = fields.String()
     replicate_of = fields.Integer()
     inverse_ratio_id = fields.Integer()
     public = fields.Boolean()
