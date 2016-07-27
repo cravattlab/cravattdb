@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { Router, ROUTER_DIRECTIVES } from '@angular/router';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 import { HomeService } from './home.service';
 import { FilterComponent } from './filter.component';
 import { FilterListComponent } from './filter-list.component';
@@ -15,21 +15,39 @@ declare var chroma: any;
     providers: [ HomeService ]
 })
 
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
     @ViewChild(FilterComponent) filter: FilterComponent;
     private _data: any[];
+    private sub: any;
+    term: string = '';
     filters: any[];
     activeFilters: any[];
     scale: any = chroma.scale('YlOrRd');
     searching: boolean = false;
 
-    constructor(private service: HomeService, private router: Router) { }
+    constructor(
+        private service: HomeService,
+        private router: Router,
+        private route: ActivatedRoute
+    ) { }
 
     ngOnInit() {
         this.service.getFilters().then(d => {
             d.forEach(f => f.options.forEach(o => o.active = false));
             this.filters = d;
         });
+
+        this.sub = this.route.params.subscribe(params =>  {
+            this.term = params['term'];
+
+            if (this.term) {
+                this._search(this.term);
+            }
+        });
+    }
+
+    ngOnDestroy() {
+        this.sub.unsubscribe()
     }
 
     set data(data: any[]) {
@@ -42,7 +60,18 @@ export class HomeComponent implements OnInit {
     }
 
     search(term) {
-        this.searching = true;
+        let routeOptions: any[] = ['/search'];
+
+        if (term) {
+            routeOptions.push({ term: term });
+        }
+
+        this.searching = !!term;
+        this.term = term;
+        this.router.navigate(routeOptions);
+    }
+
+    _search(term) {
         this.service.search(term)
             .then(d => this.data = d)
             .catch(e => this.searching = false);

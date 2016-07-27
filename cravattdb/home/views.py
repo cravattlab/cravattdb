@@ -12,8 +12,10 @@ home = Blueprint('home', __name__,
 
 
 @home.route('/')
+@home.route('/search')
+@home.route('/search<string:matrix>')
 @login_required
-def index():
+def index(matrix=None):
     meta = current_user.meta
     return render_template('index.html', meta=meta, id=current_user.email)
 
