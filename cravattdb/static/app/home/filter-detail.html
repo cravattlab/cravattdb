@@ -9,20 +9,13 @@
                 </div>
             </div>
             <template ngFor let-item [ngForOf]="filter?.options">
-                <a *ngIf="item.name.startsWith(term)" class="item" [class.active]="item.active" (click)="item.active = !item.active">
+                <a *ngIf="item.name.startsWith(term)" class="item" [class.active]="item.active" (click)="toggleFilter(item)">
                     {{ item.name }}
                     <i class="ui checkmark icon" [class.grey]="!item.active" [class.inverted]="!item.active"></i>
                 </a>
             </template>
 
         </div>
-        <div class="ui two column grid">
-            <div class="column">
-                <button class="ui fluid button" (click)="cancel()">Cancel</button>
-            </div>
-            <div class="column">
-                <button class="ui fluid primary button" (click)="done()">Done</button>
-            </div>
-        </div>
+        <button class="ui fluid primary button" (click)="done()">OK</button>
     </content>
 </sidebar>

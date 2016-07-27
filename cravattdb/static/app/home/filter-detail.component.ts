@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, EventEmitter, Output } from '@angular/core';
 import { SidebarComponent } from './sidebar.component';
 
 @Component({
@@ -9,6 +9,7 @@ import { SidebarComponent } from './sidebar.component';
 
 export class FilterDetailComponent {
     @ViewChild(SidebarComponent) sidebar: SidebarComponent;
+    @Output() filterChange: EventEmitter<any> = new EventEmitter();
     filter: {};
     term: string = '';
     
@@ -20,11 +21,12 @@ export class FilterDetailComponent {
         this.sidebar.show();
     }
 
-    done() {
-        this.sidebar.hide();
+    toggleFilter(item) {
+        item.active = !item.active;
+        this.filterChange.emit({});
     }
-    
-    cancel() {
+
+    done() {
         this.sidebar.hide();
     }
 }
