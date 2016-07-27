@@ -99,7 +99,7 @@ class ExperimentSchema(Schema):
     proteomic_fraction = fields.Nested('ProteomicFractionSchema', dump_only=True)
     search_params = JSONField()
     quant_params = JSONField()
-    treatments = fields.Nested('TreatmentSchema', dump_only=True)
+    treatments = fields.Nested('TreatmentSchema', dump_only=True, many=True)
     annotations = JSONField()
     ratio_numerator = fields.String()
     replicate_of = fields.Integer()
@@ -167,7 +167,7 @@ class TreatmentSchema(Schema):
 
     @post_dump(pass_many=True)
     def _wrap(self, data, many):
-        return {'treatments': data} if many else data
+        return data
 
 
 class Dataset(db.Model):
