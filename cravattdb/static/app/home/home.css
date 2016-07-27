@@ -1,19 +1,28 @@
 .search-wrap {
     transition: all 0.5s;
+    display: flex;
+    flex-direction: column;
 }
 
 .search-centered {
-    align-items: center;
-    display: flex;
+    width: 60%;
+    margin: 0 auto;
+    align-items:center;
     justify-content: center;
     height: 100%;
 }
 
-.search-centered > .input {
+.search-centered > .search-box {
+    width:100%;
     font-size: 2em;
-    width: 60%;
 }
 
-.search-wrap .input > .button {
+.search-centered > .ui.segment.attached {
+    border: 0;
+    margin: 1em 0 0 0;
+    padding: 0;
+}
+
+.search-box .input > .button {
     font-size: 1em;
 }

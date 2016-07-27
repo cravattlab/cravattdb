@@ -1,18 +1,19 @@
-
-<div [ngClass]="{ 'search-centered': !term.value.length, 'segment': term.value.length }" class="search-wrap ui inverted grey attached">
-    <div [ngClass]="{ 'loading': searching }" class="ui fluid left icon action input">
-        <i class="search icon"></i>
-        <input #term type="text" placeholder="Search by protein Uniprot ID, name, or description" autofocus (keyup.enter)="search(term.value)">
-        <div class="ui icon primary button" (click)="filter.toggle()">
-            Filter
-            <i class="filter right icon"></i>
+<div class="search-wrap" [ngClass]="{ 'search-centered': !term.value.length, 'segment': term.value.length }">     
+    <div class="search-box ui inverted grey attached" [ngClass]="{ 'segment': term.value.length }">
+        <div [ngClass]="{ 'loading': searching }" class="ui fluid left icon action input">
+            <i class="search icon"></i>
+            <input #term type="text" placeholder="Search by protein Uniprot ID, name, or description" autofocus (keyup.enter)="search(term.value)">
+            <div class="ui icon primary button" (click)="filter.toggle()">
+                Filter
+                <i class="filter right icon"></i>
+            </div>
         </div>
+    </div>
+    <div *ngIf="activeFilters?.length" class="ui segment attached">
+        <filter-list [activeFilters]="activeFilters" (remove)="onFilterRemove($event.value)" (edit)="onFilterEdit($event.value)"></filter-list>
     </div>
 </div>
 
-<div *ngIf="activeFilters?.length" class="ui segment attached">
-    <filter-list [activeFilters]="activeFilters" (remove)="onFilterRemove($event.value)" (edit)="onFilterEdit($event.value)"></filter-list>
-</div>
 <filter [filters]="filters" (filtersChange)="onFiltersChange($event.value)"></filter>
 
 <div *ngIf="data" class="ui wide fluid container">
