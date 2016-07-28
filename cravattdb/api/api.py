@@ -99,10 +99,6 @@ def search(term):
     # grab ids so we can look up experiment info by batch
     experiment_ids = [item.get('experiment_id') for item in result]
     experiments_data = get_experiments(set(experiment_ids))['experiments']
-
-    for ex in experiments_data:
-        ex.update(_aggregate_treatment_data(ex['treatments']))
-
     experiments = {ex['id']: ex for ex in experiments_data}
 
     groups = []
@@ -203,12 +199,27 @@ def get_peptide_from_dataset(experiment_id, sequence):
 
 
 def get_experiment(experiment_id=None, flat=False):
-    return _get_all_or_one(m.Experiment, experiment_schema, experiment_id)
+    data = _get_all_or_one(m.Experiment, experiment_schema, experiment_id)
+
+    if 'experiments' in data:
+        experiments = data['experiments']
+    else:
+        experiments = [data]
+
+    for ex in experiments:
+        ex.update(_aggregate_treatment_data(ex['treatments']))
+
+    return data
 
 
 def get_experiments(experiment_ids):
     experiments = m.Experiment.query.filter(m.Experiment.id.in_(experiment_ids))
-    return experiment_schema.dump(experiments, many=True).data
+    data = experiment_schema.dump(experiments, many=True).data
+
+    for ex in data['experiments']:
+        ex.update(_aggregate_treatment_data(ex['treatments']))
+
+    return data
 
 
 def add_experiment(data):
