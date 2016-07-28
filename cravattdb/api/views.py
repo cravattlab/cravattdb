@@ -62,7 +62,7 @@ def get_experiment(experiment_id=None):
 
 @api.route('/experiments')
 def get_experiments():
-    return jsonify(model.get_experiment(flat=True))
+    return jsonify(model.get_experiment())
 
 
 @api.route('/experiment_type')

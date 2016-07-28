@@ -4,20 +4,22 @@
             <tr>
                 <th>Name</th>
                 <th>User</th>
-                <th>Cell Line</th>
+                <th>Sample Type</th>
+                <th>Cell Type</th>
                 <th>Organism</th>
-                <th>Probe</th>
-                <th>Inhibitor</th>
+                <th>Probe(s)</th>
+                <th>Inhibitor(s)</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let e of experiments" (click)="router.navigate(['/experiment', e.id])">
                 <td>{{ e.name }}</td>
                 <td>{{ e.user.email }}</td>
-                <td>{{ e.cell_line }}</td>
+                <td>{{ e.sample_type.name }}</td>
+                <td>{{ e.cell_type.name }}</td>
                 <td>{{ e.organism.name }}</td>
-                <td>{{ e.probe.name }}</td>
-                <td>{{ e.inhibitor.name }}</td>
+                <td>{{ e.probe }}</td>
+                <td>{{ e.inhibitor }}</td>
             </tr>
         </tbody>
     </table>
