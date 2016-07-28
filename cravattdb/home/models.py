@@ -204,6 +204,7 @@ class DatasetSchema(Schema):
     uniprot = fields.String()
     description = fields.String()
     symbol = fields.String()
+    clean_sequence = fields.String()
     sequence = fields.String()
     mass = fields.Float()
     charge = fields.Integer()
