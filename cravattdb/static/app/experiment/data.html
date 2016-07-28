@@ -10,7 +10,7 @@
             </td>
         </tr>
     </tbody>
-    <template [ngSwitchWhen]="false">
+    <template [ngSwitchCase]="false">
         <thead>
             <tr>
                 <th>Uniprot</th>
@@ -55,7 +55,7 @@
         </tbody>
     </template>
 
-    <template [ngSwitchWhen]="true">
+    <template [ngSwitchCase]="true">
         <thead>
             <tr>
                 <th colspan="6">Sequence</th>
