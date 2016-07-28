@@ -213,6 +213,9 @@ def get_experiment(experiment_id=None, flat=False):
 
 
 def get_experiments(experiment_ids):
+    if not experiment_ids:
+        return {'experiments': []}
+
     experiments = m.Experiment.query.filter(m.Experiment.id.in_(experiment_ids))
     data = experiment_schema.dump(experiments, many=True).data
 
