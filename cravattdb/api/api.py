@@ -186,6 +186,22 @@ def add_dataset(experiment_id, user_id, output_file_path):
     db.session.commit()
 
 
+def get_protein_from_dataset(experiment_id, uniprot_id):
+    dataset = m.Dataset.query.filter_by(
+        experiment_id=experiment_id,
+        uniprot=uniprot_id
+    )
+    return dataset_schema_summary.dump(dataset).data
+
+
+def get_peptide_from_dataset(experiment_id, sequence):
+    dataset = m.Dataset.query.filter_by(
+        experiment_id=experiment_id,
+        clean_sequence=sequence
+    )
+    return dataset_schema_summary.dump(dataset).data
+
+
 def get_experiment(experiment_id=None, flat=False):
     return _get_all_or_one(m.Experiment, experiment_schema, experiment_id)
 

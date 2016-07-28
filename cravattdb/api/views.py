@@ -37,6 +37,22 @@ def get_dataset(experiment_id):
     })
 
 
+@api.route('/dataset/<int:experiment_id>/protein/<string:uniprot_id>')
+def get_protein_data(experiment_id, uniprot_id):
+    raw = model.get_protein_from_dataset(experiment_id, uniprot_id)
+    return jsonify({
+        'data': raw['dataset']
+    })
+
+
+@api.route('/dataset/<int:experiment_id>/peptide/<string:sequence>')
+def get_peptide_data(experiment_id, sequence):
+    raw = model.get_peptide_from_dataset(experiment_id, sequence)
+    return jsonify({
+        'data': raw['dataset']
+    })
+
+
 @api.route('/experiment')
 @api.route('/experiment/<int:experiment_id>')
 @login_required

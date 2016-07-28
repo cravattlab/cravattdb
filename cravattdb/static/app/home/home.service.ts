@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 export class HomeService {
     constructor(private http: Http) { }
 
-    search(term): Promise<any> {
+    search(term, filters=[]): Promise<any> {
         return this.http.get('/api/search/' + term)
             .toPromise()
             .then(this.extractData)
@@ -18,6 +18,13 @@ export class HomeService {
             .toPromise()
             .then(this.extractData)
             .catch(this.handleError);
+    }
+
+    getDetail(experiment_id, uniprot): Promise<any> {
+        return this.http.get(`/api/dataset/${experiment_id}/protein/${uniprot}`)
+            .toPromise()
+            .then(this.extractData)
+            .catch(this.handleError)
     }
 
     private extractData(res: Response) {

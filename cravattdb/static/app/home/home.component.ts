@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     term: string = '';
     filters: any[];
     activeFilters: any[];
+    details: {} = {};
     scale: any = chroma.scale('YlOrRd');
     searching: boolean = false;
 
@@ -73,6 +74,42 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.service.search(term)
             .then(d => this.data = d)
             .catch(e => this.searching = false);
+    }
+
+    toggleDetail(experimentId, uniprot) {
+        // not very happy with this, a lot of initialization because I chose a
+        // nested object data structure. Could this be aleviated with an async
+        // pipe perhaps? Or maybe just a different data structure. Alas, it works.
+        if (!this.details.hasOwnProperty(experimentId)) {
+            this.details[experimentId] = {};
+        }
+
+        if (!this.details[experimentId].hasOwnProperty(uniprot)) {
+            this.details[experimentId][uniprot] = {};
+        }
+
+        let detail = (Object.keys(this.details[experimentId][uniprot]).length) ?
+            this.details[experimentId][uniprot] :
+            this.details[experimentId][uniprot] = { 'data': [], visible: false };
+
+        if (detail.data.length) {
+            detail.visible = !detail.visible;
+        } else {
+            this.service.getDetail(experimentId, uniprot)
+                .then(d => {
+                    detail.data = d;
+                    detail.visible = true;
+                });
+        }
+    }
+
+    isDetailVisible(experimentId, uniprot) {
+        if (!this.details.hasOwnProperty(experimentId)) return false;
+        if (!this.details[experimentId].hasOwnProperty(uniprot)) return false;
+
+        const detail = this.details[experimentId][uniprot];
+
+        return !!detail.data.length && detail.visible;
     }
 
     onFiltersChange(filters) {
