@@ -1,14 +1,16 @@
-# Michael Lazear, 2016
-# All rights reserved
-# mirage.py
-# defines classes and global variables for mirage software
+"""Defines classes and global variables for mirage software.
+
+mirage.py
+Michael Lazear, 2016
+All rights reserved
+"""
 
 import json
+
 
 class Peptide(object):
     accession = ''
     sequence = ''
-
 
     def __init__(self, accession=accession, sequence=sequence, ratios=dict()):
         self.accession = accession
@@ -41,25 +43,21 @@ class Peptide(object):
         return 1
 
 
-
-
 class Protein(object):
     accession = ''
     identifier = ''
     sequence = ''
-    #ontology = []
+    # ontology = []
     organism = ''
     mw = 0
 
-    def __init__(self, accession=accession, identifier=identifier, sequence=sequence, organism=organism, mw = 0):
-    
+    def __init__(self, accession=accession, identifier=identifier, sequence=sequence, organism=organism, mw=0):
         self.accession = accession
         self.identifier = identifier
         self.sequence = sequence
         self.organism = organism
         self.mw = 0
 
-    
     def __contains__(self, x):
         """ Search protein for X occuring in any string field """
         if type(x) == str:
@@ -75,7 +73,6 @@ class Protein(object):
     def __repr__(self):
         return json.dumps(self.__dict__, sort_keys=True, indent=2)
 
-    
     def load(self, dct):
         """Load from a JSON dictionary"""
         self.accession = dct['accession']
@@ -90,11 +87,10 @@ class Protein(object):
         ''' used so we don't get a PDB object '''
         return 1
 
+
 class ProteinDatabase(object):
-
-    #data = []
+    # data = []
     iter_index = 0
-
 
     @staticmethod
     def load(path):
@@ -158,7 +154,7 @@ class ProteinDatabase(object):
                 return x.sequence
         return ""
 
-    def __len__ (self):
+    def __len__(self):
         return len(self.data)
 
     def __contains__(self, obj):
@@ -179,7 +175,6 @@ class ProteinDatabase(object):
                 return False
         return True
 
-
     def __next__(self):
         if self.iter_index == len(self.data):
             self.iter_index = 0
@@ -189,9 +184,8 @@ class ProteinDatabase(object):
         return s
 
     def __repr__(self):
-        #return '\n'.join(map(str, self.data))
+        # return '\n'.join(map(str, self.data))
         return "ProteinDatabase object with " + str(len(self.data)) + " proteins"
-
 
 
 class PeptideContainer(object):
@@ -229,7 +223,7 @@ class PeptideContainer(object):
     # If there is one result, return the Protein object
     # If there is more than one result, return a ProteinDatabase object
     def search(self, key):
-        """ Can search the entire data set for any keyword, returns a Protein or ProteinDatabase object of results """
+        """Search the entire data set for any keyword, returns a Protein or ProteinDatabase object of results."""
         out = PeptideContainer(accession=self.accession)
         for x in self.peptides:
             if key in x:
@@ -257,17 +251,20 @@ class PeptideContainer(object):
         self.iter_index += 1
         return s
 
+
 def out(d):
-    """ Outputs a dictionary in pretty format """
+    """Output a dictionary in pretty format."""
     print(json.dumps(d, indent=2, sort_keys=True))
 
+
 def writeJSON(f, data):
-    """Writes a mirage.ProteinDatabase object to JSON file"""
+    """Write a mirage.ProteinDatabase object to JSON file."""
     file = open(f, 'w')
     for i in data:
         file.write(json.dumps(i.__dict__, sort_keys=True) + '\n')
     return
-    
+
+
 def readJSON(f):
     """Returns a mirage.ProteinDatabase object from JSON file"""
     file = open(f, 'r')
@@ -293,4 +290,3 @@ def readTab(f):
     for line in file:
         out.append(line.strip().split('\t'))
     return out
-
