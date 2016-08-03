@@ -16,19 +16,24 @@ def master_from_peptide(peptide):
     return peptide.split('.')[1]
 
 
-def findresidue(seq, subseq):
-    # if '*' in subseq and '.' in subseq:
-    #   subseq = subseq.split('.')[1]
-    #   pos = subseq.find('*')
-    #   subseq = subseq.replace('*', '')
-    #   aa = subseq[pos-1]
-    if '*' in subseq and '.' not in subseq:
+def findresidue(seq, subseq, residue='C'):
+    if '.' in subseq:
+        subseq = subseq.split('.')[1]
+
+    if '+' in subseq:
+        subseq = subseq.replace('+', '')
+
+    if '*' in subseq:
         pos = subseq.find('*')
         subseq = subseq.replace('*', '')
         aa = subseq[pos - 1]
     else:
-        pos = subseq.find('C')
+        pos = subseq.find(residue)
         aa = subseq[pos]
+        if aa != residue:
+            return 'FAIL'
+        # make sure that site of labelling is not affected between master peptide and tryptic peptide
+        pos += 1
 
     if subseq in seq:
         index = seq.find(subseq)
