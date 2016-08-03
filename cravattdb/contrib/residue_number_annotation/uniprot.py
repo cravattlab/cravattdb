@@ -121,21 +121,16 @@ def assemble(f):
     print(count, "protein sequences assembled")
     return upkb
 
-
-SWISSPROT_DAT = 'uniprot_sprot_human.dat'
-TREMBL_DAT = 'uniprot_trembl_human.dat'
-DATA_PATH = '/home/lazear/bin/Python/uniprot.json'
-
 data = []
 
 
-# returns a mirage.ProteinDatabase object
-def init(data_path=DATA_PATH, input_data_path=SWISSPROT_DAT):
+def init(data_path, input_data_path):
     """Return a mirage.ProteinDatabase object."""
-    if os.path.exists(DATA_PATH):
+    if os.path.exists(data_path):
         # print("Abridged UniProtKB data already assembled, loading")
-        data = mirage.ProteinDatabase.load(DATA_PATH)
+        data = mirage.ProteinDatabase.load(data_path)
     else:
         print("Abridged UniProtKB data not found...")
         data = assemble(input_data_path)
+        data.save(data_path)
     return data
