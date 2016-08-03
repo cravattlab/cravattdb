@@ -1,5 +1,5 @@
 """Blergh."""
-import uniprot
+from cravattdb.contrib.residue_number_annotation import uniprot
 from urllib.parse import urlparse
 import ftplib
 import pathlib

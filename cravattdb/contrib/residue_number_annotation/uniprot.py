@@ -3,8 +3,8 @@
 Outputs JSON files compatible with mirage.py objects
 """
 
+from cravattdb.contrib.residue_number_annotation import mirage
 import os.path
-import mirage
 import urllib
 
 
