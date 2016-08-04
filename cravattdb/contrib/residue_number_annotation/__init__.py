@@ -8,14 +8,17 @@ import gzip
 SWISSPROT_URL = urlparse(
     'ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/taxonomic_divisions/uniprot_sprot_human.dat.gz'
 )
-SWISSPROT_DAT = 'data/uniprot_sprot_human.dat'
-DATA_PATH = 'data/uniprot.json'
+ABS_PATH = pathlib.Path(__file__).parents[0]
+SWISSPROT_DAT = pathlib.Path(ABS_PATH, 'data/uniprot_sprot_human.dat')
+DATA_PATH = pathlib.Path(ABS_PATH, 'data/uniprot.json')
 
 
-def get_residue_number(uniprot_id, peptide):
+def get_residue_number(uniprot_id, peptide, db=None):
     """Return residue number for labeled cysteine in a given protein."""
     residue = None
-    db = get_db()
+
+    if not db:
+        db = get_db()
 
     try:
         residue = uniprot.get_residue_number(db, uniprot_id, peptide)
@@ -27,12 +30,12 @@ def get_residue_number(uniprot_id, peptide):
 
 def get_db():
     """Get a handle to uniprot db, downloading if necessary."""
-    if not pathlib.Path(DATA_PATH).exists() and not pathlib.Path(SWISSPROT_DAT).exists():
+    if not DATA_PATH.exists() and not SWISSPROT_DAT.exists():
         download_database()
 
     db = uniprot.init(
-        data_path=DATA_PATH,
-        input_data_path=SWISSPROT_DAT
+        data_path=str(DATA_PATH),
+        input_data_path=str(SWISSPROT_DAT)
     )
 
     cleanup_database_files()
@@ -45,7 +48,6 @@ def download_database():
     db_path = pathlib.Path(SWISSPROT_URL.path)
     archive_path = pathlib.Path('data', db_path.name)
 
-# ftp = ftplib.FTP(SWISSPROT_URL.netloc); ftp.login(); ftp.cwd(str(db_path.parent))
     with ftplib.FTP(SWISSPROT_URL.netloc) as ftp:
         ftp.login()
         ftp.cwd(str(db_path.parent))
@@ -54,7 +56,7 @@ def download_database():
         ftp.retrbinary(retr_command, open(str(archive_path), 'wb').write)
 
         with gzip.open(str(archive_path), 'r') as z:
-            with open(SWISSPROT_DAT, 'wb') as f:
+            with open(str(SWISSPROT_DAT), 'wb') as f:
                 f.writelines(z)
 
 
