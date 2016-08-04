@@ -1,6 +1,7 @@
 """Blergh."""
 from cravattdb.contrib.residue_number_annotation import uniprot
 from urllib.parse import urlparse
+from functools import partial
 import ftplib
 import pathlib
 import gzip
@@ -13,7 +14,14 @@ SWISSPROT_DAT = pathlib.Path(ABS_PATH, 'data/uniprot_sprot_human.dat')
 DATA_PATH = pathlib.Path(ABS_PATH, 'data/uniprot.json')
 
 
-def get_residue_number(uniprot_id, peptide, db=None):
+def get_residue_number(experiment_type):
+    if experiment_type == 'isotop':
+        return partial(_get_residue_number, db=get_db())
+    else:
+        return None
+
+
+def _get_residue_number(uniprot_id, peptide, db=None):
     """Return residue number for labeled cysteine in a given protein."""
     residue = None
 

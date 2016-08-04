@@ -1,5 +1,6 @@
 """Defines methods for interacting with database."""
 from cravattdb import db
+import cravattdb.contrib.residue_number_annotation as residue_number_annotation
 import cravattdb.home.models as m
 import csv
 import itertools
@@ -151,6 +152,9 @@ def get_dataset(experiment_id):
 def add_dataset(experiment_id, user_id, output_file_path):
     delchars = {ord(c): None for c in map(chr, range(256)) if not c.isalpha()}
 
+    experiment_type = get_experiment(experiment_id)['experiment_type']['name']
+    get_residue_number = residue_number_annotation.get_residue_number(experiment_type)
+
     with output_file_path.open('r') as f:
         # skip first line
         f.readline()
@@ -163,6 +167,7 @@ def add_dataset(experiment_id, user_id, output_file_path):
                 symbol=line[3],
                 sequence=line[4],
                 clean_sequence=line[4].translate(delchars),
+                residue_number=get_residue_number(line[1], line[4]) if get_residue_number else None,
                 mass=line[5],
                 charge=line[6],
                 segment=line[7],
