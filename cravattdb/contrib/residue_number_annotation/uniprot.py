@@ -17,11 +17,13 @@ def master_from_peptide(peptide):
 
 
 def findresidue(seq, subseq, residue='C'):
+    # map to remove all non alphabet chars, or *
+    delchars = {ord(c): None for c in map(chr, range(256)) if not c.isalpha() and not c == '*'}
+
     if '.' in subseq:
         subseq = subseq.split('.')[1]
 
-    if '+' in subseq:
-        subseq = subseq.replace('+', '')
+    subseq = subseq.translate(delchars)
 
     if '*' in subseq:
         pos = subseq.find('*')
