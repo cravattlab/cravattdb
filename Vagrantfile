@@ -1,6 +1,19 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+
+required_plugins = %w(vagrant-vbguest)
+
+plugins_to_install = required_plugins.select { |plugin| not Vagrant.has_plugin? plugin }
+if not plugins_to_install.empty?
+  puts "Installing plugins: #{plugins_to_install.join(' ')}"
+  if system "vagrant plugin install #{plugins_to_install.join(' ')}"
+    exec "vagrant #{ARGV.join(' ')}"
+  else
+    abort "Installation of one or more plugins has failed. Aborting."
+  end
+end
+
 Vagrant.configure(2) do |config|
 
   config.vm.box = "ubuntu/trusty64"
@@ -14,7 +27,6 @@ Vagrant.configure(2) do |config|
 
   config.vm.synced_folder "vagrant-sync/cimage-minimal", "/home/vagrant/github/cimage-minimal", create: true
   config.vm.synced_folder "vagrant-sync/cravattdb", "/home/vagrant/github/cravattdb", create: true
-  config.vm.synced_folder "vagrant-sync/cravattdb-cli", "/home/vagrant/github/cravattdb-cli", create: true
 
   config.vm.provision "dependencies", type: "shell", inline: <<-SHELL
     # installing things
@@ -41,9 +53,13 @@ Vagrant.configure(2) do |config|
   SHELL
 
   config.vm.provision "code", type: "shell", privileged: false, inline: <<-SHELL
-    git clone git@github.com:/cravattlab/cimage-minimal.git ~/github/cimage-minimal
-    git clone git@github.com:/cravattlab/cravattdb.git ~/github/cravattdb
-    git clone git@github.com:/cravattlab/cravattdb-cli.git ~/github/cravattdb-cli
+    git clone git@github.com:cravattlab/cimage-minimal.git ~/github/cimage-minimal
+    git clone git@github.com:cravattlab/cravattdb.git ~/github/cravattdb
+    cp -f /vagrant/.git/config ~/github/cravattdb/.git/config
+  SHELL
+
+  config.vm.provision "app-startup", type: "shell", privileged: false, inline: <<-SHELL
+    cd ~/github/cravattdb && docker-compose up -d
   SHELL
 
   config.vm.provision "app-startup", type: "shell", privileged: false, inline: <<-SHELL
