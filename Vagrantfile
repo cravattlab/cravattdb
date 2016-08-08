@@ -40,6 +40,9 @@ Vagrant.configure(2) do |config|
     # add vagrant user to docker group so we don't have to prefix every docker
     # command with sudo
     adduser vagrant docker
+    # update group for user so we don't have to log out before using docker commands
+    # without sudo
+    exec sudo su -l $USER
     pip install docker-compose
     npm install -g typescript typings concurrently gulp
   SHELL
@@ -48,7 +51,7 @@ Vagrant.configure(2) do |config|
     mkdir -p ~/.ssh
     chmod 700 ~/.ssh
     ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-    # suppress non-zero exit status so that vagrant continues to run other
+    # suppress non-zero exit status so that vagrant continues to run other provisioners
     sh -c "ssh -T git@github.com; true"
   SHELL
 
@@ -58,12 +61,15 @@ Vagrant.configure(2) do |config|
     cp -f /vagrant/.git/config ~/github/cravattdb/.git/config
   SHELL
 
-  config.vm.provision "app-startup", type: "shell", privileged: false, inline: <<-SHELL
-    cd ~/github/cravattdb && docker-compose up -d
+  config.vm.provision "goodies", type: "shell", privileged: false, inline: <<-SHELL
+    echo "alias dc='docker-compose'" >> ~/.bashrc
+    echo "alias ac='docker attach cravattdb_cravattdb_1'" >> ~/.bashrc
+    echo "alias exc='docker exec -it cravattdb_cravattdb_1 /bin/bash'" >> ~/.bashrc
   SHELL
 
   config.vm.provision "app-startup", type: "shell", privileged: false, inline: <<-SHELL
     cd ~/github/cravattdb && docker-compose up -d
+    echo "Server should be accessible on http://localhost:8080!"
   SHELL
 
 end
