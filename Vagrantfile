@@ -1,7 +1,15 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+private_key_file = ENV['private_key_file']
+private_key = ''
 
+if (private_key_file)
+  private_key = File.read(private_key_file.chomp)
+end
+
+# check to make sure that we have vbguest installed
+# this just makes syncing of folders work more reliably
 required_plugins = %w(vagrant-vbguest)
 
 plugins_to_install = required_plugins.select { |plugin| not Vagrant.has_plugin? plugin }
@@ -37,34 +45,49 @@ Vagrant.configure(2) do |config|
     apt-get install -y git python-pip python3.5 cifs-utils nodejs
 
     curl -sSL https://get.docker.com/ | sh
+    pip install docker-compose
+    npm install -g typescript typings concurrently gulp
+
     # add vagrant user to docker group so we don't have to prefix every docker
     # command with sudo
     adduser vagrant docker
-    # update group for user so we don't have to log out before using docker commands
-    # without sudo
-    exec sudo su -l $USER
-    pip install docker-compose
-    npm install -g typescript typings concurrently gulp
   SHELL
 
-  config.vm.provision "ssh-setup", type: "shell", privileged: false, inline: <<-SHELL
+  config.vm.provision "ssh-setup", type: "shell", privileged: false, args: [private_key], inline: <<-SHELL
     mkdir -p ~/.ssh
     chmod 700 ~/.ssh
+
+    # save private key
+    echo "$1" > ~/.ssh/github_rsa
+    chmod 400 ~/.ssh/github_rsa
+
+    {
+      echo 'Host github.com'
+      echo '  User git'
+      echo "  IdentityFile ${HOME}/.ssh/github_rsa"
+    } >> ~/.ssh/config
+
+    chmod 600 ~/.ssh/config
+
     ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-    # suppress non-zero exit status so that vagrant continues to run other provisioners
-    sh -c "ssh -T git@github.com; true"
+    eval "$(ssh-agent)"
+    ssh-add ~/.ssh/github_rsa
   SHELL
 
   config.vm.provision "code", type: "shell", privileged: false, inline: <<-SHELL
+    # clone from cravattlab org
     git clone git@github.com:cravattlab/cimage-minimal.git ~/github/cimage-minimal
     git clone git@github.com:cravattlab/cravattdb.git ~/github/cravattdb
+    # grab config from local fork
     cp -f /vagrant/.git/config ~/github/cravattdb/.git/config
   SHELL
 
   config.vm.provision "goodies", type: "shell", privileged: false, inline: <<-SHELL
-    echo "alias dc='docker-compose'" >> ~/.bashrc
-    echo "alias ac='docker attach cravattdb_cravattdb_1'" >> ~/.bashrc
-    echo "alias exc='docker exec -it cravattdb_cravattdb_1 /bin/bash'" >> ~/.bashrc
+    {
+      echo "alias dc='docker-compose'"
+      echo "alias ac='docker attach cravattdb_cravattdb_1'"
+      echo "alias exc='docker exec -it cravattdb_cravattdb_1 /bin/bash'"
+    } >> ~/.bashrc
   SHELL
 
   config.vm.provision "app-startup", type: "shell", privileged: false, inline: <<-SHELL
