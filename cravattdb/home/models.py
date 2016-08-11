@@ -52,16 +52,16 @@ class Experiment(db.Model):
     public = Column(db.Boolean)
 
     # bidirectional many-to-one relationships corresponding to foreign keys above
-    user = relationship('User', backref='experiments')
-    organism = relationship('Organism', backref='experiments')
-    experiment_type = relationship('ExperimentType', backref='experiments')
-    sample_type = relationship('SampleType', backref='experiments')
-    cell_type = relationship('CellType', backref='experiments')
-    instrument = relationship('Instrument', backref='experiments')
-    proteomic_fraction = relationship('ProteomicFraction', backref='experiments')
+    user = relationship('User', backref='experiments', lazy='joined')
+    organism = relationship('Organism', backref='experiments', lazy='joined')
+    experiment_type = relationship('ExperimentType', backref='experiments', lazy='joined')
+    sample_type = relationship('SampleType', backref='experiments', lazy='joined')
+    cell_type = relationship('CellType', backref='experiments', lazy='joined')
+    instrument = relationship('Instrument', backref='experiments', lazy='joined')
+    proteomic_fraction = relationship('ProteomicFraction', backref='experiments', lazy='joined')
     replicates = relationship('Experiment', foreign_keys=[replicate_of])
     inverted_dataset = relationship('Experiment', foreign_keys=[inverse_ratio_id])
-    treatments = relationship('Treatment', backref='experiment')
+    treatments = relationship('Treatment', backref='experiment', lazy='joined')
 
 
 class JSONField(fields.Field):
@@ -141,8 +141,8 @@ class Treatment(db.Model):
     # for storing other type of treatments
     other = Column(db.Text)
 
-    inhibitor = relationship('Inhibitor', backref='treatments')
-    probe = relationship('Probe', backref='treatments')
+    inhibitor = relationship('Inhibitor', backref='treatments', lazy='joined')
+    probe = relationship('Probe', backref='treatments', lazy='joined')
 
 
 class TreatmentSchema(Schema):
