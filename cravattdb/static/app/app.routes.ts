@@ -6,7 +6,7 @@ import { ProbesComponent } from './probes/probes.component';
 import { AutoComponent } from './auto/auto.component';
 
 export const routes: RouterConfig = [
-    // redirects are (2.0rc4) are the recommended way to do this
+    // redirects are the recommended way to do this in 2.0rc4
     // I'd prefer to be able to redirect to the same component to avoid reloads
     // but keep the empty url until we add a param (can't have params on 
     // empty route either)

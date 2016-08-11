@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UrlSegment } from '@angular/router';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
@@ -7,7 +8,8 @@ export class HomeService {
     constructor(private http: Http) { }
 
     search(term, filters=[]): Promise<any> {
-        return this.http.get('/api/search/' + term)
+        let url = new UrlSegment('/api/search', { term: term });
+        return this.http.get(url.toString())
             .toPromise()
             .then(this.extractData)
             .catch(this.handleError);

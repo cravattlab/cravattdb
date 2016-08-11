@@ -195,6 +195,7 @@ class Dataset(db.Model):
     rsquared = Column(db.Numeric)
     entry = Column(db.Integer)
     experiment_id = Column(db.Integer, db.ForeignKey('experiment.id'), index=True)
+    experiment = relationship('Experiment', lazy='joined')
 
 
 class DatasetSchema(Schema):
@@ -223,6 +224,8 @@ class DatasetSchema(Schema):
     entry = fields.Integer()
     link = fields.String()
     experiment_id = fields.Integer()
+    experiment = fields.Nested('ExperimentSchema')
+
 
     class Meta:
         """Additional settings."""
