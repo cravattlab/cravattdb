@@ -8,15 +8,14 @@ import statistics
 
 experiment_schema = m.ExperimentSchema()
 treatment_schema = m.TreatmentSchema()
-dataset_schema = m.DatasetSchema(many=True)
-dataset_schema_summary = m.DatasetSchema(many=True, only=(
+dataset_schema = m.DatasetSchema(many=True, exclude='experiment')
+dataset_schema_summary = m.DatasetSchema(only=(
     'uniprot', 'symbol', 'description', 'sequence',
     'mass', 'charge', 'segment', 'ratio', 'entry'
-))
-dataset_schema_search = m.DatasetSchema(many=True, only=(
-    'id', 'uniprot', 'symbol', 'description', 'sequence', 'ratio',
-    'experiment_id'
-))
+), exclude='experiment', many=True)
+dataset_schema_search = m.DatasetSchema(only=(
+    'experiment_id', 'experiment', 'uniprot', 'symbol', 'description', 'ratio'
+), many=True)
 organism_schema = m.OrganismSchema()
 experiment_type_schema = m.ExperimentTypeSchema()
 instrument_schema = m.InstrumentSchema()
@@ -85,23 +84,21 @@ def get_available_filters():
     return {'data': result}
 
 
-def search(term):
-    data = m.Dataset.query.filter(
-        (m.Dataset.uniprot.ilike(term)) |
+def search(params):
+    term = params.pop('term')
+
+    query = db.session.query(
+        m.Dataset
+    ).join(m.Experiment).filter(
         (m.Dataset.symbol.ilike('{}%'.format(term))) |
+        (m.Dataset.uniprot.ilike(term)) |
         (m.Dataset.description.ilike('%{}%'.format(term)))
     )
 
-    result = dataset_schema_search.dump(data).data['dataset']
+    query = filter_query(query, params).order_by(m.Dataset.uniprot)
+    result = dataset_schema_search.dump(query).data['dataset']
 
-    sorted_result = sorted(result, key=lambda x: x.get('uniprot'))
-    grouped_result = itertools.groupby(sorted_result, key=lambda x: x.get('uniprot'))
-
-    # grab ids so we can look up experiment info by batch
-    experiment_ids = [item.get('experiment_id') for item in result]
-    experiments_data = get_experiments(set(experiment_ids))['experiments']
-    experiments = {ex['id']: ex for ex in experiments_data}
-
+    grouped_result = itertools.groupby(result, key=lambda x: x.get('uniprot'))
     groups = []
 
     for uniprot, group in grouped_result:
@@ -119,11 +116,13 @@ def search(term):
 
         for experiment_id, g in by_experiment:
             items = list(g)
+            experiment = items[0]['experiment']
+            experiment.update(_aggregate_treatment_data(experiment.pop('treatments')))
 
             ratios = [x['ratio'] for x in items]
 
             temp['data'].append({
-                'experiment': experiments[experiment_id],
+                'experiment': experiment,
                 'mean_ratio': '{:.2f}'.format(statistics.mean(ratios)),
                 'qp': len(ratios)
             })
@@ -131,6 +130,17 @@ def search(term):
         groups.append(temp)
 
     return groups
+
+
+def filter_query(query, filters):
+    """Apply filters to a query."""
+    for key, value in filters.items():
+        column = getattr(m.Experiment, key, None)
+
+        if column:
+            query = query.filter(column == value)
+
+    return query
 
 
 def _aggregate_treatment_data(data):
@@ -212,19 +222,6 @@ def get_experiment(experiment_id=None, flat=False):
         experiments = [data]
 
     for ex in experiments:
-        ex.update(_aggregate_treatment_data(ex['treatments']))
-
-    return data
-
-
-def get_experiments(experiment_ids):
-    if not experiment_ids:
-        return {'experiments': []}
-
-    experiments = m.Experiment.query.filter(m.Experiment.id.in_(experiment_ids))
-    data = experiment_schema.dump(experiments, many=True).data
-
-    for ex in data['experiments']:
         ex.update(_aggregate_treatment_data(ex['treatments']))
 
     return data

@@ -4,6 +4,7 @@ from flask.ext.security import Security, SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
 # from cravattdb.utils.mail import Mail
 from cravattdb.utils.admin import AuthAdminIndexView
+from cravattdb.utils.converters import MatrixConverter
 from flask_mail import Mail
 from flask_admin import Admin
 from flask_migrate import Migrate
@@ -43,6 +44,7 @@ from .users.models import User, Role
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
+app.url_map.converters['matrix'] = MatrixConverter
 
 # get da blueprints
 from .home.views import home

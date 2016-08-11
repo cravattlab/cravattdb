@@ -12,9 +12,9 @@ api = Blueprint('api', __name__,
                 static_folder='static')
 
 
-@api.route('/search/<string:term>')
-def search(term):
-    return jsonify({'data': model.search(term)})
+@api.route('/search<matrix():matrix_params>')
+def search(matrix_params):
+    return jsonify({'data': model.search(matrix_params)})
 
 
 @api.route('/user_defined')

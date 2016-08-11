@@ -14,8 +14,8 @@ class MatrixConverter(BaseConverter):
         super(MatrixConverter, self).__init__(url_map)
         self.defaults = {k: str(v) for k, v in defaults.items()}
 
-    def to_dict(self, value):
-        """Convert parametrs to dict."""
+    def to_python(self, value):
+        """Convert parameters to dict."""
         if not value.startswith(';'):
             raise ValidationError()
         value = value[1:]
