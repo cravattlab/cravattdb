@@ -65,6 +65,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     _search(term = this.term) {
         if (!term) return;
+        this.searching = true;
         this.service.search(term, this._flattenActiveFilters())
             .then(d => this.data = d)
             .catch(e => this.searching = false);
