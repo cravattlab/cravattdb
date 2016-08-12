@@ -20,8 +20,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private _data: any[];
     private sub: any;
     term: string = '';
-    filters: any[];
-    activeFilters: any[];
+    filters: any[] = [];
+    activeFilters: any[] = [];
     details: {} = {};
     scale: any = chroma.scale('YlOrRd');
     searching: boolean = false;
@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         this.sub = this.route.params.subscribe(({term}) =>  {
             this.term = term || '';
-            this._search(this.term);
+            this._search();
         });
     }
 
@@ -58,20 +58,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     search(term) {
-        let routeOptions: any[] = ['/search'];
-
-        if (term) {
-            routeOptions.push({ term: term });
-        }
-
         this.searching = !!term;
         this.term = term;
-        this.router.navigate(routeOptions);
+        this.updateUrl();
     }
 
-    _search(term) {
+    _search(term = this.term) {
         if (!term) return;
-        this.service.search(term)
+        this.service.search(term, this._flattenActiveFilters())
             .then(d => this.data = d)
             .catch(e => this.searching = false);
     }
@@ -115,6 +109,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     onFiltersChange(filters) {
         this.activeFilters = filters;
     }
+
+    onFiltersSelect(filters) {
+        this.updateUrl(filters);
+    }
     
     onFilterRemove({filter, item}) {
         let index = filter.index;
@@ -132,5 +130,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     onFilterEdit(filter) {
         this.filter.show();
         this.filter.showFilterDetails(this.filters[filter.index]);
+    }
+
+    updateUrl(filters = []) {
+        let params = Object.assign({ term: this.term }, this._flattenActiveFilters(filters));
+        this.router.navigate(['/search', params]);
+    }
+
+    _flattenActiveFilters(filters = this.activeFilters) {
+        // map active filter structure into url param structure
+        return Object.assign({}, ...filters.map(filter => {
+            return { [filter.name + '_id']: filter.options.map(o => o.id).join(',') }
+        }));
     }
 }

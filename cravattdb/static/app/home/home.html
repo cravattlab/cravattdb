@@ -14,7 +14,11 @@
     </div>
 </div>
 
-<filter [filters]="filters" (filtersChange)="onFiltersChange($event.value)"></filter>
+<filter
+    [filters]="filters"
+    (filtersChange)="onFiltersChange($event.value)"
+    (filtersSelect)="onFiltersSelect($event.value)"
+></filter>
 
 <div *ngIf="data" class="ui wide fluid container">
     <table *ngIf="data.length" class="ui celled table">
