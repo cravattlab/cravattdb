@@ -1,4 +1,5 @@
 """Contains definitions of SQLAlchemy tables."""
+from sqlalchemy import func, text
 from sqlalchemy.dialects.postgresql import JSON, JSONB
 from marshmallow import Schema, fields, pre_load, post_load, post_dump, validate
 from cravattdb.users.models import UserSchema
@@ -52,16 +53,16 @@ class Experiment(db.Model):
     public = Column(db.Boolean)
 
     # bidirectional many-to-one relationships corresponding to foreign keys above
-    user = relationship('User', backref='experiments')
-    organism = relationship('Organism', backref='experiments')
-    experiment_type = relationship('ExperimentType', backref='experiments')
-    sample_type = relationship('SampleType', backref='experiments')
-    cell_type = relationship('CellType', backref='experiments')
-    instrument = relationship('Instrument', backref='experiments')
-    proteomic_fraction = relationship('ProteomicFraction', backref='experiments')
+    user = relationship('User', backref='experiments', lazy='joined')
+    organism = relationship('Organism', backref='experiments', lazy='joined')
+    experiment_type = relationship('ExperimentType', backref='experiments', lazy='joined')
+    sample_type = relationship('SampleType', backref='experiments', lazy='joined')
+    cell_type = relationship('CellType', backref='experiments', lazy='joined')
+    instrument = relationship('Instrument', backref='experiments', lazy='joined')
+    proteomic_fraction = relationship('ProteomicFraction', backref='experiments', lazy='joined')
     replicates = relationship('Experiment', foreign_keys=[replicate_of])
     inverted_dataset = relationship('Experiment', foreign_keys=[inverse_ratio_id])
-    treatments = relationship('Treatment', backref='experiment')
+    treatments = relationship('Treatment', backref='experiment', lazy='joined')
 
 
 class JSONField(fields.Field):
@@ -141,8 +142,8 @@ class Treatment(db.Model):
     # for storing other type of treatments
     other = Column(db.Text)
 
-    inhibitor = relationship('Inhibitor', backref='treatments')
-    probe = relationship('Probe', backref='treatments')
+    inhibitor = relationship('Inhibitor', backref='treatments', lazy='joined')
+    probe = relationship('Probe', backref='treatments', lazy='joined')
 
 
 class TreatmentSchema(Schema):
@@ -197,6 +198,13 @@ class Dataset(db.Model):
     experiment_id = Column(db.Integer, db.ForeignKey('experiment.id'), index=True)
     experiment = relationship('Experiment', lazy='joined')
 
+    __table_args__ = (
+        db.Index('dataset_symbol_lower_text_idx', 'symbol', text('lower(symbol)'),
+                 postgresql_ops={'symbol': 'text_pattern_ops'}),
+        db.Index('dataset_description_gin_idx', 'description',
+                 postgresql_using='gin', postgresql_ops={'description': 'gin_trgm_ops'}),
+    )
+
 
 class DatasetSchema(Schema):
     """Marshmallow schema for Dataset."""
@@ -225,7 +233,6 @@ class DatasetSchema(Schema):
     link = fields.String()
     experiment_id = fields.Integer()
     experiment = fields.Nested('ExperimentSchema')
-
 
     class Meta:
         """Additional settings."""
