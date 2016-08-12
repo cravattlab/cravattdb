@@ -1,4 +1,5 @@
 """Contains definitions of SQLAlchemy tables."""
+from sqlalchemy import func, text
 from sqlalchemy.dialects.postgresql import JSON, JSONB
 from marshmallow import Schema, fields, pre_load, post_load, post_dump, validate
 from cravattdb.users.models import UserSchema
@@ -197,6 +198,13 @@ class Dataset(db.Model):
     experiment_id = Column(db.Integer, db.ForeignKey('experiment.id'), index=True)
     experiment = relationship('Experiment', lazy='joined')
 
+    __table_args__ = (
+        db.Index('dataset_symbol_lower_text_idx', 'symbol', text('lower(symbol)'),
+                 postgresql_ops={'symbol': 'text_pattern_ops'}),
+        db.Index('dataset_description_gin_idx', 'description',
+                 postgresql_using='gin', postgresql_ops={'description': 'gin_trgm_ops'}),
+    )
+
 
 class DatasetSchema(Schema):
     """Marshmallow schema for Dataset."""
@@ -225,7 +233,6 @@ class DatasetSchema(Schema):
     link = fields.String()
     experiment_id = fields.Integer()
     experiment = fields.Nested('ExperimentSchema')
-
 
     class Meta:
         """Additional settings."""

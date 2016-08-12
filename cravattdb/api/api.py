@@ -1,5 +1,6 @@
 """Defines methods for interacting with database."""
 from cravattdb import db
+from sqlalchemy import func
 import cravattdb.contrib.residue_number_annotation as residue_number_annotation
 import cravattdb.home.models as m
 import csv
@@ -90,8 +91,8 @@ def search(params):
     query = db.session.query(
         m.Dataset
     ).join(m.Experiment).filter(
-        (m.Dataset.symbol.ilike('{}%'.format(term))) |
-        (m.Dataset.uniprot.ilike(term)) |
+        (func.lower(m.Dataset.symbol).like('{}%'.format(term.lower()))) |
+        (m.Dataset.uniprot == term.upper()) |
         (m.Dataset.description.ilike('%{}%'.format(term)))
     )
 
