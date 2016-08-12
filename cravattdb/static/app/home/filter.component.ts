@@ -14,7 +14,8 @@ export class FilterComponent {
     @ViewChild(FilterDetailComponent) filterDetail: FilterDetailComponent;
     @Input() filters: any[];
     @Output() filtersChange: EventEmitter<any> = new EventEmitter();
-    @Output() filterSelect: EventEmitter<any> = new EventEmitter();
+    @Output() filtersSelect: EventEmitter<any> = new EventEmitter();
+    activeFilters: any[];
 
     constructor() {}
     
@@ -28,6 +29,9 @@ export class FilterComponent {
     
     done() {
         this.sidebar.hide();
+        this.filtersSelect.emit({
+            value: this.activeFilters
+        });
     }
 
     update() {
@@ -53,6 +57,8 @@ export class FilterComponent {
         this.filtersChange.emit({
             value: activeFilters
         });
+
+        this.activeFilters = activeFilters;
     }
 
     showFilterDetails(filter) {
