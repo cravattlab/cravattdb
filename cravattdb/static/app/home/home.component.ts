@@ -125,6 +125,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         });
         
         this.filter.update();
+        this.updateUrl();
     }
     
     onFilterEdit(filter) {
