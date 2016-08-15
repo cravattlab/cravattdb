@@ -1,11 +1,12 @@
 """Defines methods for interacting with database."""
 from cravattdb import db
 from sqlalchemy import func
+from cravattdb.utils.fun import special_median
+import cravattdb.shared.constants as constants
 import cravattdb.contrib.residue_number_annotation as residue_number_annotation
 import cravattdb.home.models as m
 import csv
 import itertools
-import statistics
 
 experiment_schema = m.ExperimentSchema()
 treatment_schema = m.TreatmentSchema()
@@ -15,7 +16,7 @@ dataset_schema_summary = m.DatasetSchema(only=(
     'mass', 'charge', 'segment', 'ratio', 'entry'
 ), exclude='experiment', many=True)
 dataset_schema_search = m.DatasetSchema(only=(
-    'experiment_id', 'experiment', 'uniprot', 'symbol', 'description', 'ratio'
+    'experiment_id', 'experiment', 'uniprot', 'symbol', 'description', 'ratio', 'rsquared'
 ), many=True)
 organism_schema = m.OrganismSchema()
 experiment_type_schema = m.ExperimentTypeSchema()
@@ -119,12 +120,12 @@ def search(params):
             items = list(g)
             experiment = items[0]['experiment']
             experiment.update(_aggregate_treatment_data(experiment.pop('treatments')))
-
-            ratios = [x['ratio'] for x in items]
+            # filter ratios through rsquared cutoff
+            ratios = [x['ratio'] for x in items if x['rsquared'] > constants.RSQUARED_CUTOFF]
 
             temp['data'].append({
                 'experiment': experiment,
-                'mean_ratio': '{:.2f}'.format(statistics.mean(ratios)),
+                'median_ratio': '{:.2f}'.format(special_median(ratios)),
                 'qp': len(ratios)
             })
 

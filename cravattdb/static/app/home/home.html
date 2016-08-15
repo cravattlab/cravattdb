@@ -36,7 +36,7 @@
                 <th>Probe(s)</th>
                 <th>Inhibitor(s)</th>
                 <th class="center aligned one wide">QP</th>
-                <th class="center aligned one wide">Mean Ratio</th>
+                <th class="center aligned one wide">Median Ratio</th>
             </tr>
         </thead>
         <tbody *ngFor="let row of data">
@@ -55,7 +55,7 @@
                 <td>{{ column.experiment.probe }}</td>
                 <td>{{ column.experiment.inhibitor }}</td>
                 <td class="center aligned" [style.background-color]="scale(column.qp/100)">{{ column.qp }}</td>
-                <td class="center aligned" [style.background-color]="scale(column.mean_ratio/20)">{{ column.mean_ratio }}</td>
+                <td class="center aligned" [style.background-color]="scale(column.median_ratio/20)">{{ column.median_ratio }}</td>
             </tr>
             <tr *ngIf="isDetailVisible(column.experiment.id, row.uniprot)">
                 <td colspan="8">
