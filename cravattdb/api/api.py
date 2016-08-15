@@ -2,6 +2,7 @@
 from cravattdb import db
 from sqlalchemy import func
 from cravattdb.utils.fun import special_median
+from cravattdb.users.models import User, UserSchema
 import cravattdb.shared.constants as constants
 import cravattdb.contrib.residue_number_annotation as residue_number_annotation
 import cravattdb.home.models as m
@@ -27,6 +28,7 @@ cell_type_schema = m.CellTypeSchema()
 proteomic_fraction_schema = m.ProteomicFractionSchema()
 probe_schema = m.ProbeSchema()
 inhibitor_schema = m.InhibitorSchema()
+user_schema = UserSchema()
 
 
 def _get_all(model, schema):
@@ -64,7 +66,8 @@ def get_user_defined():
         **_get_all(m.SampleType, sample_type_schema),
         **_get_all(m.Instrument, instrument_schema),
         **_get_all(m.CellType, cell_type_schema),
-        **_get_all(m.ProteomicFraction, proteomic_fraction_schema)
+        **_get_all(m.ProteomicFraction, proteomic_fraction_schema),
+        **_get_all(User, user_schema)
     }
 
 

@@ -1,7 +1,7 @@
 """User models."""
 from flask.ext.security import UserMixin, RoleMixin
 from cravattdb.utils.admin import AuthModelView
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, post_dump
 from sqlalchemy.dialects.postgresql import JSON
 from cravattdb import db, admin
 
@@ -45,6 +45,11 @@ class UserSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     email = fields.String(dump_only=True)
+    name = fields.Function(lambda obj: obj.email.split('@')[0])
+
+    @post_dump(pass_many=True)
+    def _wrap(self, data, many):
+        return {'users': data} if many else data
 
 
 # Flask-Admin views defined here for convenience
