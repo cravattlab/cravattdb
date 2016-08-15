@@ -13,7 +13,8 @@ treatment_schema = m.TreatmentSchema()
 dataset_schema = m.DatasetSchema(many=True, exclude='experiment')
 dataset_schema_summary = m.DatasetSchema(only=(
     'uniprot', 'symbol', 'description', 'sequence',
-    'mass', 'charge', 'segment', 'ratio', 'entry'
+    'mass', 'charge', 'segment', 'ratio', 'entry',
+    'rsquared'
 ), exclude='experiment', many=True)
 dataset_schema_search = m.DatasetSchema(only=(
     'experiment_id', 'experiment', 'uniprot', 'symbol', 'description', 'ratio', 'rsquared'
