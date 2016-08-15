@@ -19,12 +19,12 @@
                 <th
                     class="two wide center aligned sorted"
                     [ngClass]="{ 
-                        'descending': sortDirection['mean'] == Sort.Descending,
-                        'ascending': sortDirection['mean'] == Sort.Ascending
+                        'descending': sortDirection['median'] == Sort.Descending,
+                        'ascending': sortDirection['median'] == Sort.Ascending
                     }"
-                    (click)="sortDirection['mean'] = sortDirection['mean'] * -1; sort('mean', sortDirection['mean'])">Mean Ratio
+                    (click)="sortDirection['median'] = sortDirection['median'] * -1; sort('median', sortDirection['median'])">Median Ratio
                 </th>
-                <th class="one wide center aligned" rowspan="2" (click)="sort('mean')"><i class="area chart big icon"></i></th>
+                <th class="one wide center aligned" rowspan="2" (click)="sort('median')"><i class="area chart big icon"></i></th>
             </tr>
             <tr *ngIf="!collapsed">
                 <th>Sequence</th>
@@ -39,7 +39,7 @@
                 <td>{{ row[0][0] }}</td>
                 <td>{{ row[0][1] }}</td>
                 <td colspan="2">{{ row[0][2] }}</td>
-                <td class="center aligned mean-ratio" [style.background-color]="scale(row[0][9]/20)">{{ row[0][9] }}</td>
+                <td class="center aligned median-ratio" [style.background-color]="scale(row[0][10]/20)">{{ row[0][10] }}</td>
                 <td></td>
             </tr>
             <template [ngIf]="!collapsed">
@@ -59,7 +59,7 @@
         <thead>
             <tr>
                 <th colspan="6">Sequence</th>
-                <th class="two wide center aligned">Mean Ratio</th>
+                <th class="two wide center aligned">Median Ratio</th>
                 <th class="center aligned" rowspan="2"><i class="area chart big icon"></i></th>
             </tr>
             <tr *ngIf="!collapsed">
@@ -75,7 +75,7 @@
         <tbody *ngFor="let row of data">
             <tr class="active">
                 <td colspan="6">{{ row[0][3] }}</td>
-                <td class="two wide center aligned mean-ratio" [style.background-color]="scale(row[0][9]/20)">{{ row[0][9] }}</td>
+                <td class="two wide center aligned median-ratio" [style.background-color]="scale(row[0][10]/20)">{{ row[0][10] }}</td>
                 <td></td>
             </tr>
             <template [ngIf]="!collapsed">

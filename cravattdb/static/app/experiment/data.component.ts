@@ -8,6 +8,8 @@ import {
     SimpleChange
 } from '@angular/core';
 import * as _ from 'lodash';
+import Utils from '../shared/utils';
+import Constants from '../shared/constants';
 import { DataService } from './data.service';
 
 declare var chroma: Chroma.ChromaStatic;
@@ -44,7 +46,7 @@ export class DataComponent implements OnInit, OnChanges {
     Sort = Sort;
 
     sortDirection: { [ propName: string]: Sort } = {
-        'mean': Sort.Descending
+        'median': Sort.Descending
     };
 
     constructor(
@@ -54,11 +56,11 @@ export class DataComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.service.getData(this.id).then(d => {
-            d.headers.push('mean');
+            d.headers.push('median');
             // save reference to pristine copy of data
             this._data = d;
             this.data = this.groupBy(this.byPeptide);
-            this.sort('mean', Sort.Descending);
+            this.sort('median', Sort.Descending);
         });
     }
 
@@ -88,19 +90,21 @@ export class DataComponent implements OnInit, OnChanges {
     group(header: string): any[] {
         const groupByIndex = this.getHeaderIndex(header);
         const ratioIndex = this.getHeaderIndex('ratio');
+        const rsquaredIndex = this.getHeaderIndex('rsquared');
         let grouped: any = _.values(_.groupBy(this._data.data, groupByIndex));
 
         grouped = grouped.map(group => {
-            // mean by the ratio column
-            let mean = _['meanBy'](group, ratioIndex);
-            // add mean ratio as final element of first group member
+            // median by the ratio column
+            let ratios = group.filter(x => x[rsquaredIndex] >= Constants.RSQUARED_CUTOFF).map(x => x[ratioIndex]);
+            let median = Utils.specialMedian(ratios);
+            // add median ratio as final element of first group member
             // I know this would be nicer on an object, but... we have to
             // juggle around tens of thousands of these sometimes
             //
             // also this is not formatted using toFixed since we want it
             // to stay a number, for details see:
             // http://stackoverflow.com/a/29494612/383744 
-            group[0].push(Math.round(mean*1e2)/1e2);
+            group[0].push(Math.round(median * 1e2) / 1e2);
             return group;
         });
 
