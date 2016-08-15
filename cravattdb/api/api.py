@@ -143,7 +143,12 @@ def filter_query(query, filters):
     for key, value in filters.items():
         column = getattr(m.Experiment, key, None)
 
-        if column:
+        if not column:
+            continue
+
+        if ',' in value:
+            query = query.filter(column.in_(value.split(',')))
+        else:
             query = query.filter(column == value)
 
     return query
