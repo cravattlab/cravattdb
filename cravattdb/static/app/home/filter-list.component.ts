@@ -16,8 +16,6 @@ export class FilterListComponent {
     removeFilter(e, filter, item) {
         e.stopPropagation();
 
-        console.log(filter, item);
-
         this.remove.emit({
             value: { filter: filter, item: item }
         });

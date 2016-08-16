@@ -67,7 +67,7 @@ export class DataComponent implements OnInit, OnChanges {
     ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
         let change = changes['byPeptide'];
 
-        if (change && !change.isFirstChange) {
+        if (change && !change.isFirstChange()) {
             this.groupBy(change.currentValue)
         }
     }

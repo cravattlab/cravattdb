@@ -7,8 +7,8 @@ import { Observable } from 'rxjs/Observable';
 export class HomeService {
     constructor(private http: Http) { }
 
-    search(term, filterParams={}): Promise<any> {
-        let url = new UrlSegment('/api/search', Object.assign({ term: term }, filterParams));
+    search(params): Promise<any> {
+        let url = new UrlSegment('/api/search', params);
         return this.http.get(url.toString())
             .toPromise()
             .then(this.extractData)
