@@ -95,7 +95,7 @@ def search(params):
 
     query = db.session.query(
         m.Dataset
-    ).join(m.Experiment).filter(
+    ).join(m.Experiment).join(m.Treatment).filter(
         (func.lower(m.Dataset.symbol).like('{}%'.format(term.lower()))) |
         (m.Dataset.uniprot == term.upper()) |
         (m.Dataset.description.ilike('%{}%'.format(term)))
@@ -141,7 +141,9 @@ def search(params):
 def filter_query(query, filters):
     """Apply filters to a query."""
     for key, value in filters.items():
-        column = getattr(m.Experiment, key, None)
+        column = getattr(m.Experiment, key, None) or getattr(m.Treatment, key, None)
+
+        print(query, column, value)
 
         if not column:
             continue
