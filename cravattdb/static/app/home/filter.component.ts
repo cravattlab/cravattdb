@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, OnChanges, SimpleChange } from '@angular/core';
 import { FilterDetailComponent } from './filter-detail.component';
 import { SidebarComponent } from './sidebar.component';
 
@@ -9,7 +9,7 @@ import { SidebarComponent } from './sidebar.component';
     directives: [ FilterDetailComponent, SidebarComponent ]
 })
 
-export class FilterComponent {
+export class FilterComponent implements OnChanges {
     @ViewChild(SidebarComponent) sidebar: SidebarComponent;
     @ViewChild(FilterDetailComponent) filterDetail: FilterDetailComponent;
     @Input() filters: any[];
@@ -18,6 +18,14 @@ export class FilterComponent {
     activeFilters: any[];
 
     constructor() {}
+
+    ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+        let change = changes['filters'];
+
+        if (change && !change.isFirstChange()) {
+            this.update();
+        }
+    }
     
     show() {
         this.sidebar.show();

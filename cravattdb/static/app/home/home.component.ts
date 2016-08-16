@@ -34,13 +34,17 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.service.getFilters().then(d => {
-            d.forEach(f => f.options.forEach(o => o.active = false));
+            let params = this.route.snapshot.params;
+            d.forEach(f => f.options.forEach(o =>
+                o.active = params.hasOwnProperty(f.name + '_id') && 
+                           (params[f.name + '_id'].split(',').map(parseInt).indexOf(o.id)) !== -1
+            ));
             this.filters = d;
         });
 
-        this.sub = this.route.params.subscribe(({term}) =>  {
-            this.term = term || '';
-            this._search();
+        this.sub = this.route.params.subscribe(params =>  {
+            this.term = params['term'] || '';
+            this._search(params);
         });
     }
 
@@ -63,10 +67,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.updateUrl();
     }
 
-    _search(term = this.term) {
-        if (!term) return;
+    _search(params) {
+        if (!this.term) return;
         this.searching = true;
-        this.service.search(term, this._flattenActiveFilters())
+        this.service.search(params)
             .then(d => this.data = d)
             .catch(e => this.searching = false);
     }
@@ -134,7 +138,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.filter.showFilterDetails(this.filters[filter.index]);
     }
 
-    updateUrl(filters = []) {
+    updateUrl(filters = this.activeFilters) {
         let params = Object.assign({ term: this.term }, this._flattenActiveFilters(filters));
         this.router.navigate(['/search', params]);
     }
