@@ -14,8 +14,11 @@
             <input type="checkbox" [checked]="collapsed" (change)="collapsed = !collapsed">
             <label>Collapse peptide entries</label>
         </div>
+        <div class="ui toggle checkbox" [class.disabled]="metadata?.inverse_ratio_id == null">
+            <input type="checkbox" [checked]="lh_quant" (change)="flipQuantification()">
+            <label>{{ lh_quant ? 'Light/Heavy' : 'Heavy/Light' }} ratios</label>
+        </div>
     </div>
-
     <experiment-data
         [id]="id"
         [userId]="metadata?.user?.id"
