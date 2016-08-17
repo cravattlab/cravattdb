@@ -1,20 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MetaService } from './meta.service'
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'experiment-meta',
     templateUrl: 'static/app/experiment/meta.html',
     styleUrls: [ 'static/app/experiment/meta.css' ],
-    providers: [ MetaService ]
 })
 
-export class MetaComponent implements OnInit {
-    @Input() id: Number
-    data: any[];
-
-    constructor(private service: MetaService) { }
-
-    ngOnInit(): void {
-        this.service.getData(this.id).then(d => this.data = d);
-    }
+export class MetaComponent {
+    @Input() data: any[];
 }

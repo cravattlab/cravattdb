@@ -69,7 +69,7 @@
                         </thead>
                         <tr *ngFor="let item of details[column.experiment.id][row.uniprot].data">
                             <td>{{ item.sequence }}</td>
-                            <td class="chromatogram center aligned"><a [href]="'legacy/1/' + column.experiment.id + '/chromatogram/' + item.entry"><i class="area chart link icon"></i></a></td>
+                            <td class="chromatogram center aligned"><a [href]="'legacy/' + column.experiment.user.id + '/' + column.experiment.id + '/chromatogram/' + item.entry"><i class="area chart link icon"></i></a></td>
                             <td class="center aligned" [style.background-color]="scale(item.ratio/20)">{{ item.ratio }}</td>
                         </tr>
                         <tfoot>
