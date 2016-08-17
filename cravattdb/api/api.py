@@ -1,8 +1,8 @@
 """Defines methods for interacting with database."""
 from cravattdb import db
-from sqlalchemy import func
 from cravattdb.utils.fun import special_median
 from cravattdb.users.models import User, UserSchema
+import sqlalchemy as sa
 import cravattdb.shared.constants as constants
 import cravattdb.contrib.residue_number_annotation as residue_number_annotation
 import cravattdb.home.models as m
@@ -96,7 +96,7 @@ def search(params):
     query = db.session.query(
         m.Dataset
     ).join(m.Experiment).join(m.Treatment).filter(
-        (func.lower(m.Dataset.symbol).like('{}%'.format(term.lower()))) |
+        (sa.func.lower(m.Dataset.symbol).like('{}%'.format(term.lower()))) |
         (m.Dataset.uniprot == term.upper()) |
         (m.Dataset.description.ilike('%{}%'.format(term)))
     )
@@ -140,18 +140,62 @@ def search(params):
 
 def filter_query(query, filters):
     """Apply filters to a query."""
+    experiment_filters = []
+    treatment_filters = []
+
+    # group queries by model
     for key, value in filters.items():
-        column = getattr(m.Experiment, key, None) or getattr(m.Treatment, key, None)
+        column = getattr(m.Experiment, key, None)
 
-        print(query, column, value)
-
-        if not column:
-            continue
-
-        if ',' in value:
-            query = query.filter(column.in_(value.split(',')))
+        if column:
+            experiment_filters.append((column, value))
         else:
-            query = query.filter(column == value)
+            column = getattr(m.Treatment, key, None)
+
+            if not column:
+                continue
+
+            treatment_filters.append((column, value))
+
+    # filtering against experiment is just a chained and_ op
+    for f in experiment_filters:
+        query = _build_chained_query(query, f[0], f[1])
+
+    if treatment_filters:
+        return query.filter(
+            m.Experiment.id.in_(_get_treatment_subquery(treatment_filters))
+        )
+    else:
+        return query
+
+
+def _get_treatment_subquery(filters):
+    """Not pretty. Sigh."""
+    query = db.session.query(sa.distinct(m.Treatment.experiment_id))
+
+    treatment_clauses = sa.or_()
+
+    for f in filters:
+        if ',' in f[1]:
+            treatment_clauses = sa.or_(treatment_clauses, f[0].in_(f[1].split(',')))
+        else:
+            treatment_clauses = sa.or_(treatment_clauses, f[0] == f[1])
+
+    query = query.filter(treatment_clauses).group_by(m.Treatment.experiment_id)
+
+    for f in filters:
+        query = query.having(sa.func.count(sa.distinct(f[0])) == 1)
+
+    print(query)
+
+    return query
+
+
+def _build_chained_query(query, column, value, join=None):
+    if ',' in value:
+        query = query.filter(column.in_(value.split(',')))
+    else:
+        query = query.filter(column == value)
 
     return query
 
@@ -254,7 +298,6 @@ def get_treatment(experiment_id):
 
 def add_treatment(data):
     treatment = treatment_schema.load(data)
-    print(treatment)
     db.session.add(treatment.data)
     db.session.commit()
     return treatment_schema.dump(treatment.data).data
