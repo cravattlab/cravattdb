@@ -1,7 +1,9 @@
 <div class="ui wide fluid container">
     <h2>Experiment Info:</h2>
 
-    <experiment-meta [id]="id"></experiment-meta>
+    <experiment-meta
+        [data]="metadata"
+    ></experiment-meta>
 
     <div id="controls">
         <div class="ui toggle checkbox">
@@ -16,6 +18,7 @@
 
     <experiment-data
         [id]="id"
+        [userId]="metadata?.user?.id"
         [byPeptide]="byPeptide"
         [collapsed]="collapsed"
     ></experiment-data>

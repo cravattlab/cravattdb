@@ -49,7 +49,7 @@
                     <td class="two wide center aligned">{{ column[5] }}</td>
                     <td class="two wide center aligned">{{ column[6] }}</td>
                     <td class="two wide center aligned" [style.background-color]="scale(column[7]/20)">{{ column[7] }}</td>
-                    <td class="chromatogram center aligned"><a [href]="'legacy/1/' + id + '/chromatogram/' + column[8]"><i class="area chart link icon"></i></a></td>
+                    <td class="chromatogram center aligned"><a [href]="'legacy/' + userId + '/' + id + '/chromatogram/' + column[8]"><i class="area chart link icon"></i></a></td>
                 </tr>
             </template>
         </tbody>

@@ -31,9 +31,10 @@ enum Sort {
 })
 
 export class DataComponent implements OnInit, OnChanges {
-    @Input() id: number
-    @Input() byPeptide: boolean
+    @Input() id: number;
+    @Input() byPeptide: boolean;
     @Input() collapsed: boolean;
+    @Input() userId: number;
 
     loading: boolean = true;
 
