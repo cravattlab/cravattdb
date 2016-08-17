@@ -20,9 +20,13 @@ def render_chromatogram(user_id, experiment_id, chromatogram_index):
     group = math.floor((chromatogram_index - 1) / 500)
     corrected_index = (chromatogram_index - 1) % 500
 
-    chromatogram_path = Path(
-        dataset_path,
-        'dta',
+    if dataset_path.joinpath('dta').exists():
+        dta_folder = 'dta'
+    else:
+        dta_folder = 'dta_HL'
+
+    chromatogram_path = dataset_path.joinpath(
+        dta_folder,
         'output',
         'PNG',
         str(group)
@@ -40,4 +44,4 @@ def _get_dataset_path(user_id, experiment_id):
         str(experiment_id)
     )
 
-    return str(path_to_legacy)
+    return path_to_legacy

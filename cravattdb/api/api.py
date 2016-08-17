@@ -186,8 +186,6 @@ def _get_treatment_subquery(filters):
     for f in filters:
         query = query.having(sa.func.count(sa.distinct(f[0])) == 1)
 
-    print(query)
-
     return query
 
 
