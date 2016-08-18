@@ -12,7 +12,9 @@
     {% else %}
 
     {{ menu_item('login', 'Login', true) }}
+    {% if security.recoverable %}
     {{ menu_item('register', 'Register', true) }}
+    {% endif %}
 
     {% if security.recoverable %}
     {{ menu_item('forgot_password', 'Forgot password', false) }}
