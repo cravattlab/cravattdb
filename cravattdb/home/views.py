@@ -1,8 +1,7 @@
 """Blueprint for front-end."""
 
 from flask import Blueprint, render_template, make_response, jsonify
-from flask_security import login_required, LoginForm
-from flask_security.core import current_user
+from flask_security import current_user, login_required, LoginForm
 from http import HTTPStatus
 import cravattdb.api.api as api
 

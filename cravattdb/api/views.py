@@ -1,8 +1,7 @@
 """Blueprint for API methods."""
 
 from flask import Blueprint, jsonify, request
-from flask.ext.security import login_required
-from flask_security.core import current_user
+from flask_security import login_required, current_user
 from cravattdb.home.sideload import sideload_experiment
 import cravattdb.api.api as model
 import json
