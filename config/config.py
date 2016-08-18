@@ -1,4 +1,5 @@
 """ONLY (kind of :/) configuration file for project."""
+
 import yaml
 import os
 import pathlib
@@ -50,6 +51,15 @@ class _Config(object):
     MAIL_DEFAULT_SENDER = ''
     EMAIL = _SECRETS['mail']['EMAIL']
     EMAIL_PASSWORD = _SECRETS['mail']['EMAIL_PASSWORD']
+
+    # LDAP configuration
+    SECURITY_LDAP_URI = 'ldap://lj.ad.scripps.edu'
+    SECURITY_LDAP_BASE_DN = 'OU=Research Divisions,DC=lj,DC=ad,DC=scripps,DC=edu'
+    SECURITY_LDAP_SEARCH_FILTER = 'sAMAccountName={}'
+    SECURITY_LDAP_BIND_DN = _SECRETS['flask-security']['SECURITY_LDAP_BIND_DN']
+    SECURITY_LDAP_BIND_PASSWORD = _SECRETS['flask-security']['SECURITY_LDAP_BIND_PASSWORD']
+    SECURITY_LDAP_EMAIL_FIELDNAME = 'mail'
+    SECURITY_MESSAGE_USERID_NOT_PROVIDED = ('User ID not provided', 'error')
 
     # Flask-SqlAlchemy
     SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@postgres/{}'.format(
