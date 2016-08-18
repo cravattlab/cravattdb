@@ -1,7 +1,7 @@
 """Patch Flask-Admin to require Flask-Security authentication."""
 from flask_admin import AdminIndexView
+from flask_security import current_user
 from flask.ext.admin.contrib.sqla import ModelView
-from flask.ext.security import current_user
 
 
 class _AuthBase:

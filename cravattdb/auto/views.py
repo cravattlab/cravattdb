@@ -1,8 +1,7 @@
 """Blueprint for API methods."""
 
 from flask import Blueprint, request, abort, render_template
-from flask.ext.security import login_required
-from flask_security.core import current_user
+from flask_security import login_required, current_user
 from .search import Search
 from .tasks import process
 from cravattdb.home.models import ExperimentType, Organism

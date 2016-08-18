@@ -1,5 +1,5 @@
 """User models."""
-from flask.ext.security import UserMixin, RoleMixin
+from flask_security import UserMixin, RoleMixin
 from cravattdb.utils.admin import AuthModelView
 from marshmallow import Schema, fields, post_dump
 from sqlalchemy.dialects.postgresql import JSON

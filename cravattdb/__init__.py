@@ -1,15 +1,16 @@
 """Backend for a proteomics database."""
 from flask import Flask, jsonify, make_response
-from flask.ext.security import Security, SQLAlchemyUserDatastore
+from http import HTTPStatus
 from flask_sqlalchemy import SQLAlchemy
-# from cravattdb.utils.mail import Mail
-from cravattdb.utils.admin import AuthAdminIndexView
-from cravattdb.utils.converters import MatrixConverter
+from flask_security import Security
 from flask_mail import Mail
 from flask_admin import Admin
 from flask_migrate import Migrate
-from http import HTTPStatus
+from cravattdb.contrib.ldap import LDAPUserDatastore, LDAPLoginForm
+from cravattdb.utils.converters import MatrixConverter
+from cravattdb.utils.admin import AuthAdminIndexView
 import config.config as config
+
 
 # setup da app
 app = Flask(__name__, instance_path=str(config.INSTANCE_PATH))
@@ -39,11 +40,13 @@ __init__.py). Be advised that this is a bad idea in general but here it is actua
   and just ensuring the module is imported and we are doing that at the bottom of the file.
 """
 
-# Setup Flask-Security
+# Setup Flask-Security with LDAP goodness
 from .users.models import User, Role
-user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore)
+user_datastore = LDAPUserDatastore(db, User, Role)
+security = Security(app, user_datastore, login_form=LDAPLoginForm)
 
+# url converter for matrix parameters. Used by Angular2 and convenient to have
+# server-side as well
 app.url_map.converters['matrix'] = MatrixConverter
 
 # get da blueprints
