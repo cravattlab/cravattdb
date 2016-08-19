@@ -42,7 +42,7 @@ class _Config(object):
     # Flask-Security
     SECURITY_PASSWORD_SALT = _SECRETS['flask-security']['SECURITY_PASSWORD_SALT']
     SECURITY_PASSWORD_HASH = 'pbkdf2_sha512'
-    SECURITY_REGISTERABLE = True
+    SECURITY_REGISTERABLE = False
     SECURITY_SEND_REGISTER_EMAIL = False
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
