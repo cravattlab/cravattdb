@@ -22,7 +22,7 @@ set private_key_file=C:\Users\blergh\.ssh\id_rsa
 
 Vagrant will pick the key up and make a copy inside the VM. Finally, run `vagrant up` and once the machine is done being setup, `vagrant ssh` to get access to the VM. If this fails, you can just use any ssh program and `ssh vagrant@127.0.0.1 -p 2222` with the default password `vagrant`.
 
-Note that there will be two repositories shared into a folder called vagrant-sync. These are synced to the VM! Once the application has finished setting up, it will be accessible at (http://localhost:8080)[http://localhost:8080].
+Note that there will be two repositories shared into a folder called vagrant-sync. These are synced to the VM! Once the application has finished setting up, it will be accessible at [http://localhost:8080](http://localhost:8080).
 
 ## Application Setup
 
