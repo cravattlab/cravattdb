@@ -9,6 +9,9 @@ semantic
 vagrant-sync
 typings
 cravattdb/static/app/**/*.js
+cravattdb/static/config/vendor.js
+cravattdb/static/config/polyfills.js
+cravattdb/static/dist
 secrets.prod.yml
 secrets.override.yml
 

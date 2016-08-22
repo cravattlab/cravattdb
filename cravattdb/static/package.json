@@ -1,15 +1,16 @@
 {
   "name": "cravattdb",
   "version": "1.0.0",
-  "description": "A user-facing database for chemoproteomics data",
+  "description": "A user-facing database for chemoproteomics data.",
   "repository": "cravattlab/cravattdb",
   "private": true,
   "scripts": {
-    "start": "tsc && concurrently \"npm run tsc:w\"",
-    "postinstall": "typings install && tsc",
+    "start": "tsc",
+    "postinstall": "tsc",
+    "dev": "webpack-dev-server --inline --progress --host 0.0.0.0 --port 3000",
+    "build": "rimraf dist && webpack --config webpack.config.js --progress --profile --bail",
     "tsc": "tsc",
-    "tsc:w": "tsc -w",
-    "typings": "typings"
+    "tsc:w": "tsc -w"
   },
   "license": "ISC",
   "dependencies": {
@@ -28,13 +29,27 @@
     "reflect-metadata": "^0.1.3",
     "rxjs": "5.0.0-beta.6",
     "semantic-ui-css": "^2.2.2",
-    "systemjs": "^0.19.36",
     "zone.js": "0.6.12"
   },
   "devDependencies": {
-    "concurrently": "^2.2.0",
-    "gulp": "^3.9.1",
+    "@types/chroma-js": "^1.1.30",
+    "@types/core-js": "^0.9.31",
+    "@types/lodash": "^4.14.32",
+    "@types/node": "^6.0.36",
+    "angular2-template-loader": "^0.4.0",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^2.0.0-beta",
+    "file-loader": "^0.8.5",
+    "html-loader": "^0.4.3",
+    "html-webpack-plugin": "^2.19.0",
+    "null-loader": "^0.1.1",
+    "raw-loader": "^0.5.1",
+    "rimraf": "^2.5.2",
+    "style-loader": "^0.13.1",
+    "ts-loader": "^0.8.2",
     "typescript": "^2.0.0",
-    "typings": "^1.3.1"
+    "webpack": "^2.1.0-beta.21",
+    "webpack-dev-server": "^2.1.0-beta.0",
+    "webpack-merge": "^0.14.1"
   }
 }
