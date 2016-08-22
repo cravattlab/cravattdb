@@ -1,15 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DataComponent } from './data.component'
-import { MetaComponent } from './meta.component'
 import { ExperimentService } from './experiment.service'
 
 @Component({
     selector: 'experiment',
     templateUrl: 'static/app/experiment/experiment.html',
-    styleUrls: [ 'static/app/experiment/experiment.css' ],
-    directives: [ DataComponent, MetaComponent ],
-    providers: [ ExperimentService ]
+    styleUrls: [ 'static/app/experiment/experiment.css' ]
 })
 
 export class ExperimentComponent implements OnInit, OnDestroy {

@@ -1,17 +1,13 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { FORM_DIRECTIVES } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { AutoService } from './auto.service'
-import { InitializeDropdown, InitializeCheckbox } from '../directives/semantic-ui-init';
 
 import * as _ from 'lodash';
 
 @Component({
     selector: 'auto',
     templateUrl: 'static/app/auto/auto.html',
-    styleUrls: [ 'static/app/auto/auto.css' ],
-    directives: [FORM_DIRECTIVES, InitializeDropdown, InitializeCheckbox],
-    providers: [ AutoService ]
+    styleUrls: [ 'static/app/auto/auto.css' ]
 })
 
 export class AutoComponent implements OnInit {

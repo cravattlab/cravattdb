@@ -2,10 +2,8 @@ import { Component, OnInit } from '@angular/core'
 import { ProbesService } from './probes.service'
 
 @Component({
-    templateUrl: 'static/app/probes/probes.html',
-    providers: [ProbesService]
+    templateUrl: 'static/app/probes/probes.html'
 })
-
 export class ProbesComponent implements OnInit {
     data: any[];
 

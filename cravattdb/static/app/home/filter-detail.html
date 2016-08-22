@@ -1,5 +1,5 @@
 <sidebar>
-    <header>{{ filter?.display }}</header>
+    <header>{{ activeFilter?.display }}</header>
     <content>
         <div class="ui vertical fluid menu">
             <div class="item">
@@ -8,7 +8,7 @@
                     <i class="search icon"></i>
                 </div>
             </div>
-            <template ngFor let-item [ngForOf]="filter?.options">
+            <template ngFor let-item [ngForOf]="activeFilter?.options">
                 <a *ngIf="item.name.startsWith(term)" class="item" [class.active]="item.active" (click)="toggleFilter(item)">
                     {{ item.name }}
                     <i class="ui checkmark icon" [class.grey]="!item.active" [class.inverted]="!item.active"></i>

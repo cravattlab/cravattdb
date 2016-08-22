@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import { ExperimentsService } from './experiments.service'
+import { Router } from '@angular/router';
+import { ExperimentsService } from './experiments.service';
 
 @Component({
-    templateUrl: 'static/app/experiments/experiments.html',
-    providers: [ExperimentsService],
-    directives: [ROUTER_DIRECTIVES]
+    templateUrl: 'static/app/experiments/experiments.html'
 })
 
 export class ExperimentsComponent implements OnInit {

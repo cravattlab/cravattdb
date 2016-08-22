@@ -9,6 +9,11 @@ semantic
 vagrant-sync
 typings
 cravattdb/static/app/**/*.js
+cravattdb/static/config/vendor.js
+cravattdb/static/config/polyfills.js
+cravattdb/static/dist
+# index template is built by webpack
+cravattdb/templates/index.html
 secrets.prod.yml
 secrets.override.yml
 

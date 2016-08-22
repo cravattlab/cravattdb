@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cravatt Lab Proteomics Pipeline</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="/">
+    <link rel="stylesheet" type="text/css" href="/static/node_modules/semantic-ui-css/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+    {% if bootstrap %}
+    <!-- bootstrapping code for application -->
+    <script type="text/javascript">
+        window.bootstrap = {{ bootstrap | tojson | safe }};
+    </script>
+    {% endif %}
+</head>
+<body>
+    <app class="ui fluid container">
+        <div class="ui active dimmer">
+            <div class="ui text large loader">Loading</div>
+        </div>
+    </app>
+</body>
+</html>

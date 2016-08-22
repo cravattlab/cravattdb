@@ -26,8 +26,7 @@ enum Sort {
     selector: 'experiment-data',
     templateUrl: 'static/app/experiment/data.html',
     styleUrls: ['static/app/experiment/data.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [DataService]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class DataComponent implements OnInit, OnChanges {
