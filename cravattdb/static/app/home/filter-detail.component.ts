@@ -1,20 +1,19 @@
-import { Component, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, ViewChild, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { SidebarComponent } from './sidebar.component';
 
 @Component({
     selector: 'filter-detail',
-    templateUrl: 'static/app/home/filter-detail.html',
-    directives: [ SidebarComponent ]
+    templateUrl: 'static/app/home/filter-detail.html'
 })
 
 export class FilterDetailComponent {
     @ViewChild(SidebarComponent) sidebar: SidebarComponent;
     @Output() filterChange: EventEmitter<any> = new EventEmitter();
-    filter: {};
+    activeFilter: {};
     term: string = '';
-    
+
     show(filter) {
-        this.filter = filter;
+        this.activeFilter = filter;
         // clear the search term whenever we show the details panel
         this.term = '';
 

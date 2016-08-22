@@ -5,8 +5,7 @@ import { SidebarComponent } from './sidebar.component';
 @Component({
     selector: 'filter',
     templateUrl: 'static/app/home/filter.html',
-    styleUrls: ['static/app/home/filter.css'],
-    directives: [ FilterDetailComponent, SidebarComponent ]
+    styleUrls: ['static/app/home/filter.css']
 })
 
 export class FilterComponent implements OnChanges {

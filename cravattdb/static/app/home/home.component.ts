@@ -1,18 +1,14 @@
 import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HomeService } from './home.service';
 import { FilterComponent } from './filter.component';
-import { FilterListComponent } from './filter-list.component';
-import * as _ from 'lodash';
 
 declare var chroma: any;
 
 @Component({
     selector: 'home',
     templateUrl: 'static/app/home/home.html',
-    styleUrls: [ 'static/app/home/home.css' ],
-    directives: [ FilterComponent, FilterListComponent ],
-    providers: [ HomeService ]
+    styleUrls: [ 'static/app/home/home.css' ]
 })
 
 export class HomeComponent implements OnInit, OnDestroy {
