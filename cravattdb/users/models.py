@@ -2,7 +2,9 @@
 from flask_security import UserMixin, RoleMixin
 from cravattdb.utils.admin import AuthModelView
 from marshmallow import Schema, fields, post_dump
+from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.ext.hybrid import hybrid_property
 from cravattdb import db, admin
 
 Column = db.Column
@@ -38,6 +40,16 @@ class User(db.Model, UserMixin):
         secondary=roles_users,
         backref=db.backref('users', lazy='dynamic')
     )
+
+    @hybrid_property
+    def username(self):
+        print('hello', self.email)
+        return self.email.split('@')[0]
+
+    @username.expression
+    def username(cls):
+        return func.split_part(cls.email, '@', 1)
+
 
 
 class UserSchema(Schema):
