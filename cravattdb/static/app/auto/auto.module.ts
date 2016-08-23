@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AutoComponent } from './auto.component';
 
@@ -14,6 +14,7 @@ import { routing } from './auto.routing';
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         routing
     ],
     declarations: [
