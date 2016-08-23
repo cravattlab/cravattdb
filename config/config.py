@@ -59,7 +59,10 @@ class _Config(object):
     SECURITY_LDAP_BIND_DN = _SECRETS['flask-security']['SECURITY_LDAP_BIND_DN']
     SECURITY_LDAP_BIND_PASSWORD = _SECRETS['flask-security']['SECURITY_LDAP_BIND_PASSWORD']
     SECURITY_LDAP_EMAIL_FIELDNAME = 'mail'
-    SECURITY_MESSAGE_USERID_NOT_PROVIDED = ('User ID not provided', 'error')
+    SECURITY_MSG_USERID_NOT_PROVIDED = ('User ID not provided', 'error')
+    SECURITY_MSG_LDAP_SERVER_DOWN = ("""The Scripps authentication server is down or not accessible, please try the
+                                            last password you successfully used to login to this server.""", 'error')
+    SECURITY_USER_IDENTITY_ATTRIBUTES = ['email', 'username']
 
     # Flask-SqlAlchemy
     SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@postgres/{}'.format(

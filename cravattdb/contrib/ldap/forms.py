@@ -1,11 +1,12 @@
 """Provides Flask-Security login forms for usage with LDAP auth backend."""
 
+import ldap
 from werkzeug.local import LocalProxy
 from flask import request, current_app
-from flask_security.utils import encrypt_password
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from flask_security.forms import Form, NextFormMixin, get_form_field_label
-from flask_security.utils import config_value, get_message
+from flask_security.utils import config_value, get_message, verify_and_update_password, encrypt_password
+from flask_security.confirmable import requires_confirmation
 
 _datastore = LocalProxy(lambda: current_app.extensions['security'].datastore)
 
@@ -21,6 +22,8 @@ class LDAPLoginForm(Form, NextFormMixin):
     def __init__(self, *args, **kwargs):
         """Init new LDAP login form."""
         super(LDAPLoginForm, self).__init__(*args, **kwargs)
+        self._args = args
+        self._kwargs = kwargs
         if not self.next.data:
             self.next.data = request.args.get('next', '')
         self.remember.default = config_value('DEFAULT_REMEMBER_ME')
@@ -40,24 +43,41 @@ class LDAPLoginForm(Form, NextFormMixin):
             )
             return False
 
-        user_dn, ldap_data = _datastore.query_ldap_user(self.email.data)
+        try:
+            user_dn, ldap_data = _datastore.query_ldap_user(self.email.data)
 
-        if user_dn is None:
-            self.email.errors.append(get_message('USER_DOES_NOT_EXIST')[0])
-            return False
+            if user_dn is None:
+                self.email.errors.append(get_message('USER_DOES_NOT_EXIST')[0])
+                return False
 
-        if not _datastore.verify_password(user_dn, self.password.data):
-            self.password.errors.append(get_message('INVALID_PASSWORD')[0])
-            return False
+            if not _datastore.verify_password(user_dn, self.password.data):
+                self.password.errors.append(get_message('INVALID_PASSWORD')[0])
+                return False
 
-        ldap_email = ldap_data.get(config_value('LDAP_EMAIL_FIELDNAME'), '')
-        ldap_email = ldap_email[0].decode('utf-8')
-        password = encrypt_password(self.password.data)
+            ldap_email = ldap_data.get(config_value('LDAP_EMAIL_FIELDNAME'), '')
+            ldap_email = ldap_email[0].decode('utf-8')
+            password = encrypt_password(self.password.data)
 
-        if _datastore.find_user(email=ldap_email):
-            self.user = _datastore.get_user(ldap_email)
-            self.user.password = password
-        else:
-            self.user = _datastore.create_user(email=ldap_email, password=password)
-            _datastore.commit()
+            if _datastore.find_user(email=ldap_email):
+                self.user = _datastore.get_user(ldap_email)
+                # note that this is being stored per user login
+                self.user.password = password
+            else:
+                self.user = _datastore.create_user(email=ldap_email, password=password)
+                _datastore.commit()
+        except ldap.SERVER_DOWN:
+            self.password.errors.append(get_message('LDAP_SERVER_DOWN')[0])
+            self.user = _datastore.get_user(self.email.data)
+            if not self.user.password:
+                self.password.errors.append(get_message('PASSWORD_NOT_SET')[0])
+                return False
+            if not verify_and_update_password(self.password.data, self.user):
+                self.password.errors.append(get_message('INVALID_PASSWORD')[0])
+                return False
+            if requires_confirmation(self.user):
+                self.email.errors.append(get_message('CONFIRMATION_REQUIRED')[0])
+                return False
+            if not self.user.is_active:
+                self.email.errors.append(get_message('DISABLED_ACCOUNT')[0])
+                return False
         return True
