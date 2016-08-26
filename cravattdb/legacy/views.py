@@ -1,7 +1,7 @@
 """Blueprint for legacy thangs."""
 
 from flask import Blueprint, send_from_directory
-from flask.ext.autoindex import AutoIndexBlueprint
+from flask_autoindex import AutoIndexBlueprint
 from pathlib import Path
 import config.config as config
 import math
