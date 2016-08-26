@@ -8,6 +8,7 @@ Flask-Migrate
 Flask-Script
 Flask-Security
 Flask-SQLAlchemy
+ldap3
 marshmallow
 psycopg2
 PyYAML
