@@ -1,6 +1,6 @@
 """Provides Flask-Security login forms for usage with LDAP auth backend."""
 
-import ldap
+import ldap3
 from werkzeug.local import LocalProxy
 from flask import request, current_app
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
@@ -54,8 +54,7 @@ class LDAPLoginForm(Form, NextFormMixin):
                 self.password.errors.append(get_message('INVALID_PASSWORD')[0])
                 return False
 
-            ldap_email = ldap_data.get(config_value('LDAP_EMAIL_FIELDNAME'), '')
-            ldap_email = ldap_email[0].decode('utf-8')
+            ldap_email = ldap_data[config_value('LDAP_EMAIL_FIELDNAME')].value
             password = encrypt_password(self.password.data)
 
             if _datastore.find_user(email=ldap_email):
@@ -65,7 +64,7 @@ class LDAPLoginForm(Form, NextFormMixin):
             else:
                 self.user = _datastore.create_user(email=ldap_email, password=password)
                 _datastore.commit()
-        except ldap.SERVER_DOWN:
+        except ldap3.LDAPExceptionError:
             self.password.errors.append(get_message('LDAP_SERVER_DOWN')[0])
             self.user = _datastore.get_user(self.email.data)
             if not self.user.password:
@@ -80,4 +79,5 @@ class LDAPLoginForm(Form, NextFormMixin):
             if not self.user.is_active:
                 self.email.errors.append(get_message('DISABLED_ACCOUNT')[0])
                 return False
+
         return True

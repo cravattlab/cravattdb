@@ -1,6 +1,6 @@
 """Connects Flask-Security datastore to LDAP."""
 
-import ldap
+import ldap3
 from flask_security.datastore import SQLAlchemyUserDatastore
 from flask_security.utils import config_value
 
@@ -13,23 +13,29 @@ class LDAPUserDatastore(SQLAlchemyUserDatastore):
         SQLAlchemyUserDatastore.__init__(self, db, user_model, role_model)
 
     def _get_ldap_con(self):
-        con = ldap.initialize(config_value('LDAP_URI'), bytes_mode=False)
-        con.simple_bind_s(config_value('LDAP_BIND_DN'), config_value('LDAP_BIND_PASSWORD'))
+        s = ldap3.Server(config_value('LDAP_URI'))
+        con = ldap3.Connection(s, user=config_value('LDAP_BIND_DN'), password=config_value('LDAP_BIND_PASSWORD'))
+        con.bind()
         return con
 
     def _close_ldap_con(self, con):
-        con.unbind_s()
+        con.unbind()
 
     def query_ldap_user(self, identifier):
         """Get information about a user throught AD."""
         con = self._get_ldap_con()
-        results = con.search_s(
-            config_value('LDAP_BASE_DN'), ldap.SCOPE_SUBTREE,
-            config_value('LDAP_SEARCH_FILTER').format(identifier)
+        result = con.search(
+            search_base=config_value('LDAP_BASE_DN'),
+            search_filter=config_value('LDAP_SEARCH_FILTER').format(identifier),
+            search_scope=ldap3.SUBTREE,
+            attributes=ldap3.ALL_ATTRIBUTES
         )
+
+        data = con.entries
         self._close_ldap_con(con)
-        if len(results) > 0:
-            return results[0]
+
+        if result and data:
+            return (data[0]['DistinguishedName'].value, data[0])
         else:
             return (None, None)
 
@@ -38,8 +44,8 @@ class LDAPUserDatastore(SQLAlchemyUserDatastore):
         con = self._get_ldap_con()
         valid = True
         try:
-            con.simple_bind_s(user_dn, password)
-        except ldap.INVALID_CREDENTIALS:
+            valid = con.rebind(user=user_dn, password=password)
+        except ldap3.LDAPBindError:
             valid = False
         self._close_ldap_con(con)
         return valid
