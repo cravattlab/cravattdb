@@ -1,7 +1,17 @@
-cravattdb:
-    environment:
-        DEBUG: false
-postgres:
-    extends:
-        file: config/secrets.prod.yml
-        service: database
+version: '2'
+
+services:
+    cravattdb:
+        environment:
+            PRODUCTION: 'true'
+            DEBUG: 'false'
+            LC_ALL: 'C.UTF-8'
+            LANG: 'C.UTF-8'
+            FLASK_APP: 'cravattdb/__init__.py'
+    postgres:
+        extends:
+            file: config/secrets.prod.yml
+            service: database
+    nginx:
+        environment:
+            NGINX_HOST: 'titanic.scripps.edu'
