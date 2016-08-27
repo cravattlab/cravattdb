@@ -16,5 +16,5 @@ npm install
 
 # run the server
 cd "${PROJECT_HOME}" || exit
-python run.py db upgrade
-python run.py runserver
+flask db upgrade
+flask run -h 0.0.0.0 --with-threads
