@@ -1,4 +1,4 @@
-"""ONLY (kind of :/) configuration file for project."""
+"""Main configuration file for project."""
 
 import yaml
 import os
@@ -7,21 +7,22 @@ import pathlib
 
 # debug is true by default
 DEBUG = bool(os.getenv('DEBUG', True))
-_secrets_path = 'config/secrets{}.yml'.format('' if DEBUG else '.prod')
-_override_path = 'config/secrets.override.yml'
+_secrets_path = pathlib.Path('config/secrets{}.yml'.format('' if DEBUG else '.prod'))
+_override_path = pathlib.Path('config/secrets.override.yml')
 
 # get our secrets
-with open(_secrets_path, 'r') as f:
+with _secrets_path.open() as f:
     _SECRETS = yaml.load(f)
 
 # provide a mechanism for overriding some secrets
-if os.path.isfile(_override_path):
-    with open(_override_path, 'r') as f:
-        _SECRETS.update(yaml.load(f))
+
+if _override_path.is_file():
+    with _override_path.open() as f:
+        _SECRETS['services'].update(yaml.load(f)['services'])
 
 # remove extraneous 'environment' wrapper without which docker-compose will bitch
 # this is only necessary to avoid duplication of secrets
-_SECRETS = {k: v['environment'] for k, v in _SECRETS.items()}
+_SECRETS = {k: v['environment'] for k, v in _SECRETS['services'].items()}
 
 PROJECT_NAME = 'cravattdb'
 PROJECT_HOME_PATH = pathlib.PurePath(os.path.realpath(__file__)).parents[1]

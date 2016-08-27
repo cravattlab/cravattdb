@@ -19,6 +19,7 @@ Flask-Silk==0.2
 Flask-SQLAlchemy==2.1
 Flask-WTF==0.12
 future==0.15.2
+gunicorn==19.6.0
 itsdangerous==0.24
 Jinja2==2.8
 kombu==3.0.35

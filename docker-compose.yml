@@ -1,32 +1,41 @@
-cravattdb:
-    build: .
-    ports:
-        - '8080:5000'
-    environment:
-        DEBUG: 'true'
-        LC_ALL: 'C.UTF-8'
-        LANG: 'C.UTF-8'
-        FLASK_APP: 'cravattdb/__init__.py'
-    volumes:
-        - .:/home/cravattdb/cravattdb
-        - /mnt/cravattdb:/home/cravattdb/cravattdb/cravattdb/uploads/processing
-        - ../cimage-minimal:/home/cravattdb/cimage-minimal
-    links:
-        - postgres
-        - rabbitmq
-        - redis
-    tty: true
-    stdin_open: true
-postgres:
-    image: cravattlab/cravattdb_postgres
-    extends:
-        file: config/secrets.yml
-        service: database
-rabbitmq:
-    image: rabbitmq
-    hostname: rabbitmq
-    tty: true
-    stdin_open: true
-redis:
-    image: redis
-    hostname: redis
+version: '2'
+
+services:
+    cravattdb:
+        build: .
+        environment:
+            DEBUG: 'true'
+            LC_ALL: 'C.UTF-8'
+            LANG: 'C.UTF-8'
+            FLASK_APP: 'cravattdb/__init__.py'
+            FLASK_DEBUG: 1
+        volumes:
+            - .:/home/cravattdb/cravattdb
+            - ../cimage-minimal:/home/cravattdb/cimage-minimal
+            - /mnt/cravattdb:/home/cravattdb/cravattdb/cravattdb/uploads/processing
+        tty: true
+        stdin_open: true
+    postgres:
+        image: cravattlab/cravattdb_postgres
+        extends:
+            file: config/secrets.yml
+            service: database
+    rabbitmq:
+        image: rabbitmq
+        hostname: rabbitmq
+        tty: true
+        stdin_open: true
+    redis:
+        image: redis
+        hostname: redis
+    nginx:
+        image: nginx
+        volumes:
+            - ./config/nginx.conf:/etc/nginx/cravattdb.conf
+            - ./cravattdb/static:/usr/share/nginx/html/static
+        ports:
+            - '80:80'
+        environment:
+            NGINX_HOST: 'localhost'
+        command: /bin/bash -c "envsubst '$$NGINX_HOST' < /etc/nginx/cravattdb.conf > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+

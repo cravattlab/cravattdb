@@ -6,6 +6,7 @@ Flask-AutoIndex
 Flask-Migrate
 Flask-Security
 Flask-SQLAlchemy
+gunicorn
 ldap3
 marshmallow
 psycopg2
