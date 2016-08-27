@@ -21,5 +21,5 @@ flask db upgrade
 if [[ -n $DEBUG && $DEBUG == true ]]; then
     flask run -h 0.0.0.0 --with-threads
 else
-    gunicorn -b 0.0.0.0:5000 cravattdb:app --threads 16
+    gunicorn --config=config/gunicorn.py cravattdb:app
 fi
