@@ -17,4 +17,9 @@ npm install
 # run the server
 cd "${PROJECT_HOME}" || exit
 flask db upgrade
-flask run -h 0.0.0.0 --with-threads
+
+if [[ -n $DEBUG && $DEBUG == true ]]; then
+    flask run -h 0.0.0.0 --with-threads
+else
+    gunicorn -b 0.0.0.0:5000 cravattdb:app --threads 16
+fi
