@@ -24,8 +24,8 @@ enum Sort {
 // except when we know it is strictly necessary
 @Component({
     selector: 'experiment-data',
-    templateUrl: 'static/app/experiment/data.html',
-    styleUrls: ['static/app/experiment/data.css'],
+    templateUrl: 'data.html',
+    styleUrls: ['data.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

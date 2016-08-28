@@ -2,8 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'filter-list',
-    templateUrl: 'static/app/home/filter-list.html',
-    styleUrls: [ 'static/app/home/filter-list.css' ]
+    templateUrl: 'filter-list.html',
+    styleUrls: [ 'filter-list.css' ]
 })
 
 export class FilterListComponent {

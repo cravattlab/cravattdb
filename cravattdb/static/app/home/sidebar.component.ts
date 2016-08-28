@@ -4,7 +4,7 @@ declare var $: any;
 
 @Component({
     selector: 'sidebar',
-    templateUrl: 'static/app/home/sidebar.html',
+    templateUrl: 'sidebar.html',
     styles: [`
         .sidebar {
             overflow-x: hidden;
