@@ -5,12 +5,14 @@
   "repository": "cravattlab/cravattdb",
   "private": true,
   "scripts": {
-    "tsc": "tsc",
-    "tsc:w": "tsc -w",
-    "dev": "webpack-dev-server --inline --progress --host 0.0.0.0 --port 3000",
-    "build": "rimraf dist && webpack --config webpack.config.js --progress --profile --bail",
-    "start": "npm run tsc && npm run dev",
-    "postinstall": "npm run tsc && npm run build"
+    "build": "npm run clean && npm run build:dll && npm run build:dev",
+    "build:dll": "webpack --config config/webpack.dll.js --progress --profile --bail",
+    "build:dev": "webpack --config config/webpack.dev.js --progress --profile --bail",
+    "dev": "npm run clean && npm run build:dll && webpack-dev-server --config config/webpack.dev.js --inline",
+    "clean": "npm run clean:dist && npm run clean:tsc",
+    "clean:dist": "rimraf dist",
+    "clean:tsc": "rimraf app/**/*.js && rimraf app/**/*.map",
+    "postinstall": "npm run build"
   },
   "license": "ISC",
   "dependencies": {
@@ -36,7 +38,9 @@
     "@types/core-js": "^0.9.31",
     "@types/lodash": "^4.14.32",
     "@types/node": "^6.0.36",
+    "add-asset-html-webpack-plugin": "^1.0.2",
     "angular2-template-loader": "^0.4.0",
+    "awesome-typescript-loader": "^2.2.1",
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^2.0.0-beta",
     "file-loader": "^0.8.5",
