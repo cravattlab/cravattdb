@@ -13,7 +13,7 @@ module.exports = {
 
   output: {
     path: helpers.root('dist'),
-    publicPath: '/static/dist/',
+    publicPath: 'http://localhost:3000/',
     filename: 'bundle.js'
   },
 
@@ -27,7 +27,7 @@ module.exports = {
     loaders: [
       {
         test: /\.ts$/,
-        loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
+        loaders: ['awesome-typescript-loader', '@angularclass/hmr-loader','angular2-template-loader'],
       },
       {
         test: /\.html$/,
