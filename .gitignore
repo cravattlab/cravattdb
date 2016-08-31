@@ -16,6 +16,7 @@ cravattdb/static/dist
 cravattdb/templates/index.html
 secrets.prod.yml
 secrets.override.yml
+.awcache
 
 # Windows image file caches
 Thumbs.db

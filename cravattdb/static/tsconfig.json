@@ -13,7 +13,9 @@
     ]
   },
   "awesomeTypescriptLoaderOptions": {
-    "useWebpackText": true // Allows other loaders to be chained to awesome-typescript-loader.
+    "useWebpackText": true, // Allows other loaders to be chained to awesome-typescript-loader.
+    "forkChecker": true,
+    "useCache": true
   },
   "exclude": [
     "node_modules"

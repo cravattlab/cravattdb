@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 var helpers = require('./helpers');
 
 module.exports = {
@@ -61,6 +62,7 @@ module.exports = {
       { filepath: 'dist/polyfills.dll.js', includeSourcemap: false },
       { filepath: 'dist/vendor.dll.js', includeSourcemap: false }
     ]),
+    new ForkCheckerPlugin(),
     new webpack.ProvidePlugin({
       chroma: 'chroma-js',
       jQuery: 'jquery',
