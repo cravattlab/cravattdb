@@ -3,6 +3,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
+var HappyPack = require('happypack');
 var helpers = require('./helpers');
 
 module.exports = {
@@ -32,13 +33,15 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        loader: 'raw'
+        loader: 'raw',
+        happy: { id: 'raw' }
       },
       // handle component-scoped styles specified with styleUrls
       {
         test: /\.css$/,
         include: helpers.root('app'),
-        loader: 'raw'
+        loader: 'raw',
+        happy: { id: 'raw' }
       }
     ]
   },
@@ -68,7 +71,8 @@ module.exports = {
       jQuery: 'jquery',
       jquery: 'jquery',
       $: 'jquery'
-    })
+    }),
+    new HappyPack({ id: 'raw' })
   ],
 
   devServer: {
