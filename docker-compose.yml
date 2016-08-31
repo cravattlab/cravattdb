@@ -9,6 +9,8 @@ services:
             LANG: 'C.UTF-8'
             FLASK_APP: 'cravattdb/__init__.py'
             FLASK_DEBUG: 1
+        ports:
+            - '3000:3000'
         volumes:
             - .:/home/cravattdb/cravattdb
             - ../cimage-minimal:/home/cravattdb/cimage-minimal
