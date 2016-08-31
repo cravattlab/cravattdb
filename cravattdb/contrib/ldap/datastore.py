@@ -13,8 +13,13 @@ class LDAPUserDatastore(SQLAlchemyUserDatastore):
         SQLAlchemyUserDatastore.__init__(self, db, user_model, role_model)
 
     def _get_ldap_con(self):
-        s = ldap3.Server(config_value('LDAP_URI'))
-        con = ldap3.Connection(s, user=config_value('LDAP_BIND_DN'), password=config_value('LDAP_BIND_PASSWORD'))
+        server = ldap3.Server(config_value('LDAP_URI'), connect_timeout=1)
+        con = ldap3.Connection(
+            server,
+            user=config_value('LDAP_BIND_DN'),
+            password=config_value('LDAP_BIND_PASSWORD'),
+            receive_timeout=True
+        )
         con.bind()
         return con
 
