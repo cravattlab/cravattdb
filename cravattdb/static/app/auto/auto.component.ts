@@ -7,8 +7,8 @@ import * as _ from 'lodash';
 
 @Component({
     selector: 'auto',
-    templateUrl: 'static/app/auto/auto.html',
-    styleUrls: [ 'static/app/auto/auto.css' ]
+    templateUrl: 'auto.html',
+    styleUrls: [ 'auto.css' ]
 })
 
 export class AutoComponent implements OnInit {

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ExperimentsService } from './experiments.service';
 
 @Component({
-    templateUrl: 'static/app/experiments/experiments.html'
+    templateUrl: 'experiments.html'
 })
 
 export class ExperimentsComponent implements OnInit {

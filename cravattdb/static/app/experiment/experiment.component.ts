@@ -4,8 +4,8 @@ import { ExperimentService } from './experiment.service'
 
 @Component({
     selector: 'experiment',
-    templateUrl: 'static/app/experiment/experiment.html',
-    styleUrls: [ 'static/app/experiment/experiment.css' ]
+    templateUrl: 'experiment.html',
+    styleUrls: [ 'experiment.css' ]
 })
 
 export class ExperimentComponent implements OnInit, OnDestroy {

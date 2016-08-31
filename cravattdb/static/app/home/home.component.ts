@@ -7,8 +7,8 @@ declare var chroma: any;
 
 @Component({
     selector: 'home',
-    templateUrl: 'static/app/home/home.html',
-    styleUrls: [ 'static/app/home/home.css' ]
+    templateUrl: 'home.html',
+    styleUrls: [ 'home.css' ]
 })
 
 export class HomeComponent implements OnInit, OnDestroy {

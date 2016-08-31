@@ -3,7 +3,7 @@ import { SidebarComponent } from './sidebar.component';
 
 @Component({
     selector: 'filter-detail',
-    templateUrl: 'static/app/home/filter-detail.html'
+    templateUrl: 'filter-detail.html'
 })
 
 export class FilterDetailComponent {
