@@ -18,6 +18,8 @@ export class AutoComponent implements OnInit {
     errors: any[] = [];
     files: any[] = [];
     progress: number = 0;
+    treatments = [];
+    diffMods = [];
 
     constructor(
         private service: AutoService,
@@ -36,28 +38,42 @@ export class AutoComponent implements OnInit {
     ngOnInit(): void {
         this.service.getData().subscribe(d => this.data = d);
 
+        let treatments = this.formBuilder.group({
+
+        });
+
         this.autoForm = this.formBuilder.group({
             name: '',
+            description: '',
             organism: '',
             type: '',
             instrument: '',
-            treatment_type: '',
             proteomic_fraction: '',
-            probe: this.formBuilder.group({
-                id: 0,
-                concentration: '',
-                time: 0,
-            }),
-            inhibitor: this.formBuilder.group({
-                id: 0,
-                concentration: '',
-                time: 0,
-            }),
             sample_type: '',
             cell_type: '',
             ip2_username: '',
-            ip2_password: ''
+            ip2_password: '',
+            treatments: this.formBuilder.array([])
         });
+    }
+
+    addTreatment(treatmentType): void {
+        this.treatments.push({
+            type: treatmentType
+        });
+    }
+
+    removeTreatment(index): void {
+        this.treatments.splice(index, 1);
+    }
+
+
+    addDiffMod(mass, residue): void {
+        this.diffMods.push({mass: null, residue:null});
+    }
+
+    removeDiffMod(index): void {
+        this.diffMods.splice(index, 1);
     }
 
     onFileChange(e): void {
