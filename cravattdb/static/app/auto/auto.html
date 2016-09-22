@@ -11,7 +11,7 @@
         </ul>
     </div>
 
-    <form [formGroup]="autoForm" class="ui form" name="upload" (ngSubmit)="onSubmit(f.value)">
+    <form [formGroup]="form" class="ui form" name="upload" (ngSubmit)="onSubmit(f.value)">
         <div class="six wide required field">
             <label>Dataset Name</label>
             <input type="text" placeholder="Dataset name" formControlName="name" required>
@@ -86,7 +86,7 @@
             <i class="plus icon"></i>Add probe
         </div>
 
-        <table *ngIf="treatments.length" class="ui single line celled table">
+        <table *ngIf="treatments.controls.length" class="ui single line celled table">
             <thead>
                 <th class="four wide">Name</th>
                 <th class="two wide">Fraction</th>
@@ -96,15 +96,73 @@
                 <th class="three wide">Details</th>
                 <th class="one wide">Remove</th>
             </thead>
-            <tbody>
-                <tr
-                    treatment
-                    *ngFor="let treatment of treatments; let i=index;"
-                    [data]="data"
-                    [type]="treatment.type"
-                    [removeTreatment]="removeTreatment.bind(this, i)"
-                    formGroupName="treatments"
-                ></tr>
+            <tbody formArrayName="treatments">
+                <tr *ngFor="let treatment of treatments.controls; let i=index;" class="treatment" [formGroupName]="i">
+                    <td>
+                        <div *ngIf="treatment.get('type').value == 'probe'" class="ui field">
+                            <div class="ui red ribbon label">Probe</div>
+                            <select class="ui search selection dropdown" formControlName="id">
+                                <option value="">Select probe</option>
+                                <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="treatment.get('type').value == 'inhibitor'" class="ui field">
+                            <div class="ui blue ribbon label">Inhibitor</div>
+                            <select class="ui search selection dropdown" formControlName="id">
+                                <option value="">Select inhibitor</option>
+                                <option *ngFor="let inhibitor of data?.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name }}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td class="collapsing">
+                        <div class="inline fields fraction" formGroupName="fraction">
+                            <div class="ui field">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" class="hidden" formControlName="light">
+                                    <label>Light</label>
+                                </div>
+                            </div>                         
+                            <div class="ui field">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" class="hidden" formControlName="heavy">
+                                    <label>Heavy</label>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui field">
+                            <select class="ui search selection dropdown" formControlName="treatmentType">
+                                <option value="">Select treatment type</option>
+                                <option *ngFor="let treatmentType of data?.treatment_types" value="{{ treatmentType.id }}">{{ treatmentType.name }}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui required field">
+                            <div class="ui right labeled input">
+                                <input type="number" min="0" placeholder="Probe concentration" formControlName="concentration">
+                                <div class="ui basic label">&micro;M</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui required field">
+                            <div class="ui right labeled input">
+                                <input type="number" min="0" placeholder="Treatment time" formControlName="time">
+                                <div class="ui basic label">hours</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui field">
+                            <div class="ui input">
+                                <input type="text" placeholder="i.p. 5x" formControlName="details">
+                            </div>
+                        </div>
+                    </td>
+                    <td (click)="removeTreatment(i)" class="center aligned"><i class="large red remove icon"></i></td>
+                </tr>
             </tbody>
         </table>
 
@@ -114,30 +172,30 @@
         </h2>
 
         <div class="field">
-            <div (click)="addDiffMod('inhibitor')" class="ui small blue labeled icon button">
+            <div (click)="addDiffMod()" class="ui small blue labeled icon button">
                 <i class="plus icon"></i>Add differential modification
             </div>
         </div>
 
-        <table *ngIf="diffMods.length" class="ui very basic collapsing table">
+        <table *ngIf="diffMods.controls.length" class="ui very basic collapsing table">
             <thead>
                 <th>Mass</th>
                 <th>Residue</th>
                 <th>Remove</th>
             </thead>
-            <tbody>
-                <tr *ngFor="let mod of diffMods; let i=index;">
+            <tbody formArrayName="diffMods">
+                <tr *ngFor="let mod of diffMods.controls; let i=index;" [formGroupName]="i">
                     <td>
                         <div class="ui field">
                             <div class="ui input">
-                                <input type="number" min="0" placeholder="54.0078">
+                                <input type="number" min="0" placeholder="54.0078" formControlName="mass">
                             </div>
                         </div>
                     </td>
                     <td>
                         <div class="ui field">
                             <div class="ui input">
-                                <input type="text" placeholder="C">
+                                <input type="text" placeholder="C" formControlName="residue">
                             </div>
                         </div>
                     </td>

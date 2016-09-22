@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AutoComponent } from './auto.component';
-import { TreatmentComponent } from './treatment.component';
 
 import { InitializeDropdown, InitializeCheckbox } from '../directives/semantic-ui-init';
 
@@ -20,7 +19,6 @@ import { routing } from './auto.routing';
     ],
     declarations: [
         AutoComponent,
-        TreatmentComponent,
         InitializeDropdown,
         InitializeCheckbox
     ],
