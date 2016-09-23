@@ -6,9 +6,9 @@ from flask_security import Security
 from flask_mail import Mail
 from flask_admin import Admin
 from flask_migrate import Migrate
-from cravattdb.contrib.ldap import LDAPUserDatastore, LDAPLoginForm
-from cravattdb.utils.converters import MatrixConverter
-from cravattdb.utils.admin import AuthAdminIndexView
+from .contrib.ldap import LDAPUserDatastore, LDAPLoginForm
+from .utils.converters import MatrixConverter
+from .utils.admin import AuthAdminIndexView
 import config.config as config
 
 
@@ -24,10 +24,12 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db, directory='cravattdb/migrations')
 
 # Setup Flask-Admin
+from .admin.views import bootstrap_admin
 admin = Admin(app,
               name=config.PROJECT_NAME,
               template_mode='bootstrap3',
               index_view=AuthAdminIndexView())
+bootstrap_admin(admin, db)
 
 """
 We register blue prints after setting up app and db so that we can import these
