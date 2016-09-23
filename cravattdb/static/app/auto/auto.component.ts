@@ -63,7 +63,7 @@ export class AutoComponent implements OnInit {
                 light: false,
                 heavy: false
             }),
-            treatment_type: '',
+            method: '',
             concentration: null,
             time: null,
             description: ''

@@ -304,6 +304,24 @@ def add_treatment(data):
     return treatment_schema.dump(treatment.data).data
 
 
+def add_treatments(experiment_id, treatments):
+    for data in treatments:
+        fractions = data.pop('fraction')
+        for fraction, value in fractions:
+            if value:
+                # fraction is passed as 'heavy' or 'light',
+                # database currently represents this as an Enum(L, H)
+                # so we take the uppercase first character...
+                # I got tired of joining tables for things that are
+                # more appropriately expressed as enums and now I'm
+                # slighly annoyed with myself for having allowed things
+                # to be less than standard
+                # /rant
+                data['fraction'] = fraction[:1].upper()
+                data['experiment_id'] = experiment_id
+                add_treatment(data)
+
+
 def get_experiment_type(experiment_id=None):
     return _get_all_or_one(m.ExperimentType, experiment_type_schema, experiment_id)
 
