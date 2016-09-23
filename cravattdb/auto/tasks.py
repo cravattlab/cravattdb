@@ -1,6 +1,7 @@
 """Define processing actions for celery task queue."""
 from celery import Celery
 from redis import StrictRedis
+import cravattdb.shared.models as m
 import cravattdb.auto.convert as convert
 import cravattdb.auto.quantify as quantify
 import cravattdb.api.api as api

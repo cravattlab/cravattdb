@@ -5,7 +5,7 @@ from cravattdb.users.models import User, UserSchema
 import sqlalchemy as sa
 import cravattdb.shared.constants as constants
 import cravattdb.contrib.residue_number_annotation as residue_number_annotation
-import cravattdb.home.models as m
+import cravattdb.shared.models as m
 import csv
 import itertools
 

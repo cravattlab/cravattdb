@@ -12,7 +12,7 @@ down_revision = '321971a9085b'
 
 from alembic import op
 import sqlalchemy as sa
-from cravattdb.home.models import Experiment
+from cravattdb.shared.models import Experiment
 
 
 bind = op.get_bind()
