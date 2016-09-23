@@ -132,9 +132,9 @@
                     </td>
                     <td>
                         <div class="ui field">
-                            <select class="ui search selection dropdown" formControlName="treatmentType">
+                            <select class="ui search selection dropdown" formControlName="treatment_type">
                                 <option value="">Select treatment type</option>
-                                <option *ngFor="let treatmentType of data?.treatment_types" value="{{ treatmentType.id }}">{{ treatmentType.name }}</option>
+                                <option *ngFor="let treatmentType of data?.treatment_method_types" value="{{ treatmentType.name }}">{{ treatmentType.name }}</option>
                             </select>
                         </div>
                     </td>

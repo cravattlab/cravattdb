@@ -2,10 +2,10 @@
 from cravattdb import db
 from cravattdb.utils.fun import special_median
 from cravattdb.users.models import User, UserSchema
-import sqlalchemy as sa
-import cravattdb.shared.constants as constants
+from cravattdb.shared import constants as constants
 import cravattdb.contrib.residue_number_annotation as residue_number_annotation
 import cravattdb.shared.models as m
+import sqlalchemy as sa
 import csv
 import itertools
 
@@ -58,6 +58,8 @@ def get_user_defined():
     Utility method for use with forms and filters. Collects all user defined
     *things* and returns them in one object. Saves on requests.
     """
+    method_types = [{'id': i, 'name': val} for i, val in enumerate(['in vitro', 'in situ', 'in vivo'])]
+
     return {
         **_get_all(m.ExperimentType, experiment_type_schema),
         **_get_all(m.Organism, organism_schema),
@@ -67,7 +69,8 @@ def get_user_defined():
         **_get_all(m.Instrument, instrument_schema),
         **_get_all(m.CellType, cell_type_schema),
         **_get_all(m.ProteomicFraction, proteomic_fraction_schema),
-        **_get_all(User, user_schema)
+        **_get_all(User, user_schema),
+        **{'treatment_method_types': method_types}
     }
 
 
