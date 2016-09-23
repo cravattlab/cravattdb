@@ -38,7 +38,7 @@ class Search:
             params_map = json.loads(f.read())
 
         if experiment_type not in params_map:
-            raise KeyError('Search params are not available for this experiment_type')
+            raise KeyError('Search params are not available for this experiment type')
 
         with SEARCH_PARAMS_PATH.joinpath(params_map[experiment_type]).open() as f:
             params = json.loads(f.read())

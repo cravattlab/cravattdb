@@ -8,6 +8,7 @@ from cravattdb.home.models import ExperimentType, Organism
 from http import HTTPStatus
 from redis import StrictRedis
 import cravattdb.auto.upload as upload
+import json
 
 
 auto = Blueprint('auto', __name__,
@@ -26,13 +27,10 @@ def render_auto_home():
 @auto.route('/search', methods=['POST'])
 @login_required
 def search():
-    name = request.form.get('name')
-    search = Search(name)
+    data = json.loads(request.form.get('data'))
+    search = Search(data['name'])
 
-    login = search.login(
-        request.form.get('ip2_username'),
-        request.form.get('ip2_password')
-    )
+    login = search.login(data['ip2_username'], data['ip2_password'])
 
     if not login:
         abort(HTTPStatus.UNAUTHORIZED)
@@ -43,29 +41,16 @@ def search():
         name, path = upload.upload(
             request.files.getlist('files'),
             current_user.get_id(),
-            name
+            data['name']
         )
     except FileExistsError:
         abort(HTTPStatus.CONFLICT)
 
-    organism_id = request.form.get('organism')
-    experiment_type_id = request.form.get('type')
+    data.update({'name': name})
 
     # continue processing in background with celery
-    process.delay(
-        search=search,
-        user_id=current_user.get_id(),
-        name=name,
-        path=path,
-        organism_id=organism_id,
-        organism_name=Organism.query.get(organism_id).name,
-        experiment_type_id=experiment_type_id,
-        experiment_type_name=ExperimentType.query.get(experiment_type_id).name,
-        probe_id=int(request.form.get('probe')),
-        inhibitor_id=int(request.form.get('inhibitor'))
-    )
-
-    return 'hello'
+    process.delay(data, search, current_user.get_id(), path)
+    return 'processing'
 
 
 @auto.route('/status')

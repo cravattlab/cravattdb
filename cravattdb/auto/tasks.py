@@ -13,28 +13,30 @@ redis = StrictRedis(host='redis')
 
 
 @celery.task
-def process(search, user_id, name, path, organism_id, organism_name, experiment_type_id, experiment_type_name, probe_id, inhibitor_id):
+def process(data, search, user_id, path):
+    name = data['name']
     set_status = update_status(user_id, name)
-    set_status('converting')
 
     # convert .raw to .ms2
     # removing first bit of file path since that is the upload folder
+    set_status('converting')
     corrected_path = pathlib.PurePath(*path.parts[path.parts.index('processing') + 1:])
     convert_status = convert.convert(corrected_path.as_posix())
-
     converted_paths = [path.joinpath(f) for f in convert_status['files_converted']]
-    set_status('searching ip2')
 
     # initiate IP2 search
+    set_status('searching ip2')
+    organism_name = m.Organism.query.get(data['organism']).name
+    experiment_type_name = m.ExperimentType.query.get(data['type']).name
+
     dta_select_link = search.search(
         organism_name,
         experiment_type_name,
         [f for f in converted_paths if f.suffix == '.ms2']
     )
 
-    set_status('quantification')
-
     # quantify all of the things
+    set_status('quantification')
     quantify.quantify(
         name,
         dta_select_link,
@@ -43,17 +45,11 @@ def process(search, user_id, name, path, organism_id, organism_name, experiment_
     )
 
     set_status('loading into database')
-
-    experiment = api.add_experiment(
-        name=name,
-        user_id=user_id,
-        organism_id=organism_id,
-        experiment_type_id=experiment_type_id,
-        probe_id=probe_id,
-        inhibitor_id=inhibitor_id
-    )
-
+    data['user_id'] = user_id
+    treatment_data = data.pop('treatments')
+    experiment = api.add_experiment(data)
     experiment_id = experiment['id']
+    api.add_treatments(experiment_id, treatment_data)
 
     # move cimage results to legacy folder, grab file and load into database
     new_path = path.parents[0].joinpath('legacy', user_id, experiment_id)
