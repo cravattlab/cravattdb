@@ -93,7 +93,7 @@
                 <th class="two wide">Treatment Type</th>
                 <th class="one wide">Concentration</th>
                 <th class="one wide">Time</th>
-                <th class="three wide">Details</th>
+                <th class="three wide">Description</th>
                 <th class="one wide">Remove</th>
             </thead>
             <tbody formArrayName="treatments">
@@ -141,7 +141,7 @@
                     <td>
                         <div class="ui required field">
                             <div class="ui right labeled input">
-                                <input type="number" min="0" placeholder="Probe concentration" formControlName="concentration">
+                                <input type="number" min="0" step="any" placeholder="4" formControlName="concentration">
                                 <div class="ui basic label">&micro;M</div>
                             </div>
                         </div>
@@ -149,7 +149,7 @@
                     <td>
                         <div class="ui required field">
                             <div class="ui right labeled input">
-                                <input type="number" min="0" placeholder="Treatment time" formControlName="time">
+                                <input type="number" min="0" step="any" placeholder="1" formControlName="time">
                                 <div class="ui basic label">hours</div>
                             </div>
                         </div>
@@ -157,7 +157,7 @@
                     <td>
                         <div class="ui field">
                             <div class="ui input">
-                                <input type="text" placeholder="i.p. 5x" formControlName="details">
+                                <input type="text" placeholder="i.p. 5x" formControlName="description">
                             </div>
                         </div>
                     </td>
@@ -188,7 +188,7 @@
                     <td>
                         <div class="ui field">
                             <div class="ui input">
-                                <input type="number" min="0" placeholder="54.0078" formControlName="mass">
+                                <input type="number" min="0" step="any" placeholder="54.0078" formControlName="mass">
                             </div>
                         </div>
                     </td>

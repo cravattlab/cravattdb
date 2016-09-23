@@ -4,7 +4,6 @@ from flask import Blueprint, request, abort, render_template
 from flask_security import login_required, current_user
 from .search import Search
 from .tasks import process
-from cravattdb.home.models import ExperimentType, Organism
 from http import HTTPStatus
 from redis import StrictRedis
 import cravattdb.auto.upload as upload

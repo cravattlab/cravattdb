@@ -63,10 +63,10 @@ export class AutoComponent implements OnInit {
                 light: false,
                 heavy: false
             }),
-            treatmentType: '',
+            treatment_type: '',
             concentration: null,
             time: null,
-            details: ''
+            description: ''
         });
 
         this.treatments.push(treatment);
