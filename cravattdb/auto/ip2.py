@@ -110,6 +110,18 @@ class IP2:
             cookies=self.cookies
         )
 
+    def remove_experiment(self):
+        """Remove experiment from project."""
+        requests.post(
+            urljoin(config.IP2_URL, 'ip2/deleteExperiment.html'),
+            {
+                'pid': self.project_id,
+                'projectName': self.project_name,
+                'expId': self.experiment_id,
+                'delete': 'true'
+            }
+        )
+
     def upload_spectra(self, file_paths):
         """Upload .ms2 files."""
         for path in file_paths:
