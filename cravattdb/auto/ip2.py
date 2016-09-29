@@ -1,7 +1,8 @@
 """Rough interface to IP2."""
 from bs4 import BeautifulSoup
 from distutils.util import strtobool
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlparse, urljoin
+import config.config as config
 import requests
 import re
 
@@ -28,19 +29,21 @@ class IP2:
 
     def login(self, username, password):
         """Login to IP2."""
-        login_req = requests.post('http://goldfish.scripps.edu/ip2/j_security_check', {
-            'j_username': username,
-            'j_password': password,
-            'rememberMe': 'on',
-            'login': 'Login'
-        })
+        login_req = requests.post(
+            urljoin(config.IP2_URL, 'ip2/j_security_check'), 
+            {
+                'j_username': username,
+                'j_password': password,
+                'rememberMe': 'remember-me'
+            }
+        )
 
         self.cookies = login_req.history[0].cookies
         return 'error' not in login_req.url
 
     def logout(self):
         """Log out of IP2."""
-        requests.get('http://goldfish.scripps.edu/ip2/logout.jsp', cookies=self.cookies)
+        requests.get(urljoin(config.IP2_URL, 'logout.jsp'), cookies=self.cookies)
 
     def get_project_id(self):
         """Get project id for cravattdb project or else create new project."""
@@ -55,7 +58,7 @@ class IP2:
     def get_experiment_id(self):
         """After uploading experiment, fetch the id."""
         exp_req = requests.get(
-            'http://goldfish.scripps.edu/ip2/viewExperiment.html',
+            urljoin(config.IP2_URL, 'ip2/viewExperiment.html'),
             {
                 'projectName': self.project_name,
                 'pid': self.project_id
@@ -74,7 +77,7 @@ class IP2:
     def get_experiment_path(self):
         """Get path to experiment and save as property."""
         path_req = requests.get(
-            'http://goldfish.scripps.edu/ip2/eachExperiment.html',
+            urljoin(config.IP2_URL, 'ip2/eachExperiment.html'),
             {
                 'experimentId': self.experiment_id,
                 'projectName': self.project_name,
@@ -92,7 +95,7 @@ class IP2:
     def create_experiment(self):
         """Create experiment under project."""
         requests.post(
-            'http://goldfish.scripps.edu/ip2/addExperiment.html',
+            urljoin(config.IP2_URL, 'ip2/addExperiment.html'),
             {
                 'pid': self.project_id,
                 'projectName': self.project_name,
@@ -112,7 +115,7 @@ class IP2:
         for path in file_paths:
             with open(str(path), 'rb') as f:
                 requests.post(
-                    'http://goldfish.scripps.edu/ip2/fileUploadAction.html',
+                    urljoin(config.IP2_URL, 'ip2/fileUploadAction.html'),
                     params={
                         'filePath': self.experiment_path
                     },
@@ -126,7 +129,7 @@ class IP2:
                 )
 
                 requests.post(
-                    'http://goldfish.scripps.edu/ip2/fileUploadAction.html',
+                    urljoin(config.IP2_URL, 'ip2/fileUploadAction.html'),
                     params={
                         'fileFileName': path.name,
                         'filePath': self.experiment_path,
@@ -137,7 +140,7 @@ class IP2:
                 )
 
                 requests.post(
-                    'http://goldfish.scripps.edu/ip2/fileUploadAction.html',
+                    urljoin(config.IP2_URL, 'ip2/fileUploadAction.html'),
                     params={
                         'fileFileName': path.name,
                         'filePath': self.experiment_path,
@@ -161,18 +164,18 @@ class IP2:
         })
 
         requests.post(
-            'http://goldfish.scripps.edu/ip2/prolucidProteinId.html',
+            urljoin(config.IP2_URL, 'ip2/prolucidProteinId.html'),
             params,
             cookies=self.cookies
         )
 
     def check_job_status(self):
         """Check if job is finished."""
-        session_text = requests.get('http://goldfish.scripps.edu/ip2/dwr/engine.js').text
+        session_text = requests.get(urljoin(config.IP2_URL, 'ip2/dwr/engine.js')).text
         session_id = re.search('_origScriptSessionId\s=\s"(\w+)"', session_text).group(1)
 
         status_req = requests.post(
-            'http://goldfish.scripps.edu/ip2/dwr/call/plaincall/JobMonitor.getSearchJobStatus.dwr',
+            urljoin(config.IP2_URL, 'ip2/dwr/call/plaincall/JobMonitor.getSearchJobStatus.dwr'),
             {
                 'callCount': 1,
                 'page': '/ip2/jobstatus.html',
@@ -213,7 +216,7 @@ class IP2:
     def get_dtaselect(self):
         """Finally grab what we came for."""
         path_req = requests.get(
-            'http://goldfish.scripps.edu/ip2/eachExperiment.html',
+            urljoin(config.IP2_URL, 'ip2/eachExperiment.html'),
             {
                 'experimentId': self.experiment_id,
                 'projectName': self.project_name,
@@ -231,15 +234,15 @@ class IP2:
                 link = el.find('a', text='View').attrs['href']
                 break
 
-        dta_req = requests.get('http://goldfish.scripps.edu' + link, cookies=self.cookies)
+        dta_req = requests.get(urljoin(config.IP2_URL, link), cookies=self.cookies)
         soup = BeautifulSoup(dta_req.text)
-        dta_link = 'http://goldfish.scripps.edu' + soup.find('a', text=re.compile('DTASelect-filter')).attrs['href']
+        dta_link = urljoin(config.IP2_URL, soup.find('a', text=re.compile('DTASelect-filter')).attrs['href'])
 
         return dta_link
 
     def _find_project_id(self):
         project_req = requests.get(
-            'http://goldfish.scripps.edu/ip2/viewProject.html',
+            urljoin(config.IP2_URL, 'ip2/viewProject.html'),
             cookies=self.cookies
         )
 
@@ -255,7 +258,7 @@ class IP2:
     def _create_new_project(self):
         """Create new ip2 project for cravattdb experiments."""
         requests.post(
-            'http://goldfish.scripps.edu/ip2/addProject.html',
+            urljoin(config.IP2_URL, 'ip2/addProject.html'),
             {
                 'projectName': self.project_name,
                 'desc': ''
