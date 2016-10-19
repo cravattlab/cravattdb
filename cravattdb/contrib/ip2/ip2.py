@@ -165,13 +165,29 @@ class IP2:
                 })
             )
 
-    def search(self, name, instrument_id, sample_description, experiment_description, date, params, database_user_id, database_id, file_paths):
+    def search(self, name, file_paths, experiment_options={}, search_options={}):
         """Convenience method."""
-        project = IP2Project(self, name)
-        experiment = project.add_experiment(name, instrument_id, sample_description, experiment_description, date)
+        project = self.get_default_project()
+
+        experiment_defaults = {
+            'name': name,
+            'instrument_id': None,
+            'sample_description': None,
+            'experiment_description': None,
+            'date': None
+        }
+
+        search_defaults = {
+            'params': None,
+            'database': None
+        }
+
+        experiment_defaults.update(experiment_options)
+        search_defaults.update(search_options)
+        experiment = project.add_experiment(**experiment_defaults)
         experiment.upload_files(file_paths)
-        job = experiment.prolucid_search(params, database_user_id, database_id)
-        return job
+        job = experiment.prolucid_search(**search_defaults)
+        return (experiment, job)
 
     def login(self, password, force=False):
         """Login to IP2."""
@@ -428,7 +444,7 @@ class IP2Experiment:
 
         return dta_link
 
-    def prolucid_search(self, params, database_user_id, database_id):
+    def prolucid_search(self, params, database):
         """Perform prolucid search."""
         params.update({
             'expId': self.id,
@@ -436,8 +452,8 @@ class IP2Experiment:
             'sampleName': self.name,
             'pid': self.project.id,
             'projectName': self.project.name,
-            'sp.proteinUserId': database_user_id,
-            'sp.proteinDbId': database_id
+            'sp.proteinUserId': database.user_id,
+            'sp.proteinDbId': database.id
         })
 
         self.ip2.post(IP2_ENDPOINTS['prolucid_search'], params)
