@@ -275,6 +275,7 @@ class IP2:
                 description=m.group('description'),
                 organism=m.group('organism'),
                 filepath=m.group('file'),
+                user_id=int(user_id),
                 username=username
             ))
 
@@ -686,7 +687,7 @@ class IP2Job:
 class IP2Database():
     """Representation of a proteomics database on IP2."""
 
-    def __init__(self, ip2, database_id=None, source=None, description=None, organism=None, username=None, filepath=None):
+    def __init__(self, ip2, database_id=None, source=None, description=None, organism=None, username=None, user_id=None, filepath=None):
         """Initialize a new IP2 database given an IP2 instance."""
         self.ip2 = ip2
         self._id = database_id
@@ -695,6 +696,8 @@ class IP2Database():
         self.description = description
         self.organism = organism
         self.username = username
+        # gets populated only after upload or on init with an already existing db
+        self.user_id = user_id
 
         if self.username is None:
             self.username = self.ip2.username
@@ -777,9 +780,10 @@ class IP2Database():
         return utils.equal_dicts(self.__dict__, other.__dict__, 'ip2')
 
     def __repr__(self):
-        return 'IP2Database(id={}, username={}, organism={}, source={}, description={}, filepath={})'.format(
+        return 'IP2Database(id={}, username={}, user_id={}, organism={}, source={}, description={}, filepath={})'.format(
             self.id,
             self.username,
+            self.user_id,
             self.organism,
             self.source,
             self.description,
