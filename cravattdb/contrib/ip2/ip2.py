@@ -216,7 +216,7 @@ class IP2:
 
     def get_database(self, name):
         """Get a database by file name."""
-        return IP2
+        return next(d for d in self.databases if d.filepath == name)
 
     def get_default_project(self):
         """Get project with default name."""
