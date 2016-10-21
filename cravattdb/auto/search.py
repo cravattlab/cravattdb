@@ -19,7 +19,7 @@ class Search:
         """Login to IP2 and keep reference to session."""
         self._ip2 = IP2(
             ip2_url=config.IP2_URL,
-            username=self.username,
+            username=username,
             default_project_name=config.PROJECT_NAME
         )
         return self._ip2.login(password)
@@ -28,7 +28,7 @@ class Search:
         """Initiate search on IP2."""
         params = self._get_params(experiment_type)
         # get database by file name
-        database = self._ip2.get_database(self._get_database_path(organism).name)
+        database = self._ip2.get_database(self._get_database_path(organism)['name'])
 
         (experiment, job) = self._ip2.search(
             name=self.name,

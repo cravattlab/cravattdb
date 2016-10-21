@@ -7,7 +7,7 @@ import datetime
 import requests
 import pathlib
 import re
-import utils
+from cravattdb.contrib.ip2 import utils
 
 IP2_ENDPOINTS = {
     'login': 'ip2/j_security_check',
@@ -117,7 +117,7 @@ class IP2:
     def dwr(self, endpoint, page, script_name, method_name, params=None):
         """Make a request to IP2 via the dwr interface."""
         if self._dwr_session_id is None:
-            self._dwr_session_id = self._get_dwr_session_id
+            self._dwr_session_id = self._get_dwr_session_id()
 
         payload = {
             'callCount': 1,
@@ -143,8 +143,7 @@ class IP2:
         """Helper method for uploading files to IP2."""
         with open(str(file_path), 'rb') as f:
             return(
-                requests.post(
-                    IP2_ENDPOINTS['file_upload'],
+                requests.post(urljoin(self.ip2_url, IP2_ENDPOINTS['file_upload']),
                     params={'filePath': upload_path},
                     data={'name': file_path.name, 'chunk': 0, 'chunks': 1},
                     cookies=self._cookies,
@@ -165,28 +164,18 @@ class IP2:
                 })
             )
 
-    def search(self, name, file_paths, experiment_options={}, search_options={}):
+    def search(self, name, file_paths, search_options, experiment_options={}):
         """Convenience method."""
-        project = self.get_default_project()
-
         experiment_defaults = {
-            'name': name,
-            'instrument_id': None,
-            'sample_description': None,
-            'experiment_description': None,
-            'date': None
-        }
-
-        search_defaults = {
-            'params': None,
-            'database': None
+            'name': name
         }
 
         experiment_defaults.update(experiment_options)
-        search_defaults.update(search_options)
+
+        project = self.get_default_project()
         experiment = project.add_experiment(**experiment_defaults)
         experiment.upload_files(file_paths)
-        job = experiment.prolucid_search(**search_defaults)
+        job = experiment.prolucid_search(**search_options)
         return (experiment, job)
 
     def login(self, password, force=False):
@@ -225,7 +214,7 @@ class IP2:
             warnings.warn('Multiple projects found with the provided name.')
 
         if projects:
-            # default to returning firt project
+            # default to returning first project
             return projects[-1]
         else:
             return []
@@ -725,7 +714,7 @@ class IP2Database():
             self._id = self._get_id
         return self._id
 
-    def upload(self, path, source, organism, date, version, description, reverse=True, contaminant=True):
+    def upload(self, path, source, organism, version, description, date=datetime.date.today(), reverse=True, contaminant=True):
         """Upload a .fasta database to IP2."""
         self.upload_file(path)
         self.source = source
