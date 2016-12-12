@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { AutoService } from './auto.service';
 
@@ -12,12 +12,15 @@ import * as _ from 'lodash';
 })
 
 export class AutoComponent implements OnInit {
-    autoForm: FormGroup;
+    form: FormGroup;
     data: {} = {};
     showErrors: boolean = false;
     errors: any[] = [];
     files: any[] = [];
     progress: number = 0;
+
+    get treatments(): FormArray { return this.form.get('treatments') as FormArray; }
+    get diffMods(): FormArray { return this.form.get('diffMods') as FormArray; }
 
     constructor(
         private service: AutoService,
@@ -36,28 +39,54 @@ export class AutoComponent implements OnInit {
     ngOnInit(): void {
         this.service.getData().subscribe(d => this.data = d);
 
-        this.autoForm = this.formBuilder.group({
+        this.form = this.formBuilder.group({
             name: '',
+            description: '',
             organism: '',
             type: '',
             instrument: '',
-            treatment_type: '',
             proteomic_fraction: '',
-            probe: this.formBuilder.group({
-                id: 0,
-                concentration: '',
-                time: 0,
-            }),
-            inhibitor: this.formBuilder.group({
-                id: 0,
-                concentration: '',
-                time: 0,
-            }),
             sample_type: '',
             cell_type: '',
             ip2_username: '',
-            ip2_password: ''
+            ip2_password: '',
+            treatments: new FormArray([]),
+            diffMods: new FormArray([])
         });
+    }
+
+    addTreatment(treatmentType): void {
+        let treatment = this.formBuilder.group({
+            type: treatmentType,
+            id: null,
+            fraction: this.formBuilder.group({
+                light: false,
+                heavy: false
+            }),
+            method: '',
+            concentration: null,
+            time: null,
+            description: ''
+        });
+
+        this.treatments.push(treatment);
+    }
+
+    removeTreatment(i: number): void {
+        this.treatments.removeAt(i);
+    }
+
+    addDiffMod(mass, residue): void {
+        let diffMod = this.formBuilder.group({
+            mass: null,
+            residue: ''
+        });
+
+        this.diffMods.push(diffMod);
+    }
+
+    removeDiffMod(i: number): void {
+        this.diffMods.removeAt(i);
     }
 
     onFileChange(e): void {

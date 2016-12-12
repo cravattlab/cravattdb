@@ -1,4 +1,4 @@
-<div class="ui padded container">
+<div class="ui wide fluid container">
     <h1 class="ui dividing header">Upload a new dataset</h1>
 
     <div class="ui error message" *ngIf="errors.length && showErrors">
@@ -11,7 +11,7 @@
         </ul>
     </div>
 
-    <form [formGroup]="autoForm" class="ui form" name="upload" (ngSubmit)="onSubmit(f.value)">
+    <form [formGroup]="form" class="ui form" name="upload" (ngSubmit)="onSubmit(form.value)">
         <div class="six wide required field">
             <label>Dataset Name</label>
             <input type="text" placeholder="Dataset name" formControlName="name" required>
@@ -19,12 +19,12 @@
 
         <div class="six wide field">
             <label>Description</label>
-            <textarea rows="2"></textarea>
+            <textarea rows="2" formControlName="description"></textarea>
         </div>
 
         <div class="six wide required field">
             <label>Organism</label>
-            <select class="ui search selection dropdown" formControlName="organism" required>
+            <select class="ui search selection dropdown" required formControlName="organism">
                 <option value="">Select species</option>
                 <option *ngFor="let organism of data?.organisms" value="{{ organism.id }}">{{ organism.name }}</option>
             </select>
@@ -32,7 +32,7 @@
 
         <div class="six wide required field">
             <label>Experiment Type</label>
-            <select class="ui search selection dropdown" formControlName="type" required>
+            <select class="ui search selection dropdown" required formControlName="type">
                 <option value="">Select experiment type</option>
                 <option *ngFor="let experimentType of data?.experiment_types" value="{{ experimentType.id }}">{{ experimentType.name }}</option>
             </select>
@@ -46,107 +46,14 @@
             </select>
         </div>
 
-        <h4 class="ui dividing header">Treatment Information</h4>
-
-        <div class="six wide field">
-            <label>Treatment Type</label>
-            <select class="ui search selection dropdown" formControlName="treatment_type">
-                <option value="">Select treatment type</option>
-                <option *ngFor="let treatment_type of data?.treatment_types" value="{{ treatment_type.id }}">{{ treatment_type.name }}</option>
-            </select>
-        </div>
+        <h2 class="ui header">Sample Information</h2>
 
         <div class="six wide field">
             <label>Proteomic Fraction</label>
             <select class="ui search selection dropdown" formControlName="proteomic_fraction">
                 <option value="">Select proteomic fraction</option>
-                <option *ngFor="let proteomic_fraction of data?.proteomic_fractions" value="{{ proteomic_fraction.id }}">{{ proteomic_fraction.name }}</option>
+                <option *ngFor="let proteomicFraction of data?.proteomic_fractions" value="{{ proteomicFraction.id }}">{{ proteomicFraction.name }}</option>
             </select>
-        </div>
-
-        <div class="three fields" formGroupName="probe">
-            <div class="six wide field">
-                <label>Probe</label>
-                <select class="ui search selection dropdown" formControlName="id">
-                    <option value="">Select probe</option>
-                    <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
-                </select>
-            </div>
-
-            <div class="three wide required field">
-                <label>Probe Concentration</label>
-                <div class="ui right labeled input">
-                    <input type="text" placeholder="Probe concentration" formControlName="concentration">
-                    <div class="ui dropdown label">
-                        <div class="text">&micro;M</div>
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                            <div class="item">nM</div>
-                            <div class="item">&micro;M</div>
-                            <div class="item">mM</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="three wide required field">
-                <label>Treatment Time</label>
-                <div class="ui right labeled input">
-                    <input type="text" placeholder="Treatment time" formControlName="time">
-                    <div class="ui basic label">hours</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="three fields" formGroupName="inhibitor">
-            <div class="six wide field">
-                <label>Inhibitor</label>
-                <select class="ui search selection dropdown" formControlName="id">
-                    <option value="">Select inhibitor</option>
-                    <option *ngFor="let inhibitor of data?.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name }}</option>
-                </select>
-            </div>
-
-            <div class="three wide required field">
-                <label>Inhibitor Concentration</label>
-                <div class="ui right labeled input">
-                    <input type="text" placeholder="Inhibitor concentration" formControlName="concentration">
-                    <div class="ui dropdown label">
-                        <div class="text">&micro;M</div>
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                            <div class="item">nM</div>
-                            <div class="item">&micro;M</div>
-                            <div class="item">mM</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="three wide required field">
-                <label>Treatment Time</label>
-                <div class="ui right labeled input">
-                    <input type="text" placeholder="Treatment time" formControlName="time">
-                    <div class="ui basic label">hours</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grouped fields">
-            <label>Inhibitor treated sample is:</label>
-            <div class="field">
-                <div class="ui checkbox">
-                    <input type="checkbox" tabindex="0" class="hidden">
-                    <label>Light</label>
-                </div>
-            </div>
-            <div class="field">
-                <div class="ui checkbox">
-                    <input type="checkbox" tabindex="0" class="hidden">
-                    <label>Heavy</label>
-                </div>
-            </div>
         </div>
 
         <div class="two fields">
@@ -154,7 +61,7 @@
                 <label>Sample Type</label>
                 <select class="ui search selection dropdown" formControlName="sample_type">
                     <option value="">Select sample type</option>
-                    <option *ngFor="let sample_type of data?.sample_types" value="{{ sample_type.id }}">{{ sample_type.name }}</option>
+                    <option *ngFor="let sampleType of data?.sample_types" value="{{ sampleType.id }}">{{ sampleType.name }}</option>
                 </select>
             </div>
 
@@ -162,21 +69,151 @@
                 <label>Cell Type</label>
                 <select class="ui search selection dropdown" formControlName="cell_type">
                     <option value="">Select cell type</option>
-                    <option *ngFor="let cell_type of data?.cell_types" value="{{ cell_type.id }}">{{ cell_type.name }}</option>
+                    <option *ngFor="let cellType of data?.cell_types" value="{{ cellType.id }}">{{ cellType.name }}</option>
                 </select>
             </div>
         </div>
 
-        <h4 class="ui dividing header">Search and Quantification</h4>
+        <h2 class="ui header">
+            Treatment Information
+            <div class="sub header">Add information about compound treatments.</div>
+        </h2>
 
-        <div class="six wide required field">
-            <label>IP2 Username</label>
-            <input type="text" placeholder="IP2 username" formControlName="ip2_username" required>
+        <div (click)="addTreatment('inhibitor')" class="ui small blue labeled icon button">
+            <i class="plus icon"></i>Add inhibitor
+        </div>
+        <div (click)="addTreatment('probe')" class="ui small red labeled icon button">
+            <i class="plus icon"></i>Add probe
         </div>
 
-        <div class="six wide required field">
-            <label>IP2 Password</label>
-            <input type="password" placeholder="IP2 password" formControlName="ip2_password" required>
+        <table *ngIf="treatments.controls.length" class="ui single line celled table">
+            <thead>
+                <th class="four wide">Name</th>
+                <th class="two wide">Fraction</th>
+                <th class="two wide">Treatment Type</th>
+                <th class="one wide">Concentration</th>
+                <th class="one wide">Time</th>
+                <th class="three wide">Description</th>
+                <th class="one wide">Remove</th>
+            </thead>
+            <tbody formArrayName="treatments">
+                <tr *ngFor="let treatment of treatments.controls; let i=index;" class="treatment" [formGroupName]="i">
+                    <td>
+                        <div *ngIf="treatment.get('type').value == 'probe'" class="ui field">
+                            <div class="ui red ribbon label">Probe</div>
+                            <select class="ui search selection dropdown" formControlName="id">
+                                <option value="">Select probe</option>
+                                <option *ngFor="let probe of data?.probes" value="{{ probe.id }}">{{ probe.name }}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="treatment.get('type').value == 'inhibitor'" class="ui field">
+                            <div class="ui blue ribbon label">Inhibitor</div>
+                            <select class="ui search selection dropdown" formControlName="id">
+                                <option value="">Select inhibitor</option>
+                                <option *ngFor="let inhibitor of data?.inhibitors" value="{{ inhibitor.id }}">{{ inhibitor.name }}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td class="collapsing">
+                        <div class="inline fields fraction" formGroupName="fraction">
+                            <div class="ui field">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" class="hidden" formControlName="light">
+                                    <label>Light</label>
+                                </div>
+                            </div>                         
+                            <div class="ui field">
+                                <div class="ui checkbox">
+                                    <input type="checkbox" class="hidden" formControlName="heavy">
+                                    <label>Heavy</label>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui field">
+                            <select class="ui search selection dropdown" formControlName="method">
+                                <option value="">Select treatment type</option>
+                                <option *ngFor="let treatmentType of data?.treatment_method_types" value="{{ treatmentType.name }}">{{ treatmentType.name }}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui required field">
+                            <div class="ui right labeled input">
+                                <input type="number" min="0" step="any" placeholder="4" formControlName="concentration">
+                                <div class="ui basic label">&micro;M</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui required field">
+                            <div class="ui right labeled input">
+                                <input type="number" min="0" step="any" placeholder="1" formControlName="time">
+                                <div class="ui basic label">hours</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui field">
+                            <div class="ui input">
+                                <input type="text" placeholder="i.p. 5x" formControlName="description">
+                            </div>
+                        </div>
+                    </td>
+                    <td (click)="removeTreatment(i)" class="center aligned"><i class="large red remove icon"></i></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="ui header">
+            Search and Quantification
+            <div class="sub header">Customize search and quantification parameters.</div>
+        </h2>
+
+        <div class="field">
+            <div (click)="addDiffMod()" class="ui small blue labeled icon button">
+                <i class="plus icon"></i>Add differential modification
+            </div>
+        </div>
+
+        <table *ngIf="diffMods.controls.length" class="ui very basic collapsing table">
+            <thead>
+                <th>Mass</th>
+                <th>Residue</th>
+                <th>Remove</th>
+            </thead>
+            <tbody formArrayName="diffMods">
+                <tr *ngFor="let mod of diffMods.controls; let i=index;" [formGroupName]="i">
+                    <td>
+                        <div class="ui field">
+                            <div class="ui input">
+                                <input type="number" min="0" step="any" placeholder="54.0078" formControlName="mass">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui field">
+                            <div class="ui input">
+                                <input type="text" placeholder="C" formControlName="residue">
+                            </div>
+                        </div>
+                    </td>
+                    <td (click)="removeDiffMod(i)" class="center aligned"><i class="large red remove icon"></i></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="two fields">
+            <div class="six wide required field">
+                <label>IP2 Username</label>
+                <input type="text" placeholder="IP2 username" required formControlName="ip2_username">
+            </div>
+
+            <div class="six wide required field">
+                <label>IP2 Password</label>
+                <input type="password" placeholder="IP2 password" required formControlName="ip2_password">
+            </div>
         </div>
 
         <div *ngIf="files.length" class="field">
@@ -190,7 +227,7 @@
                 <tbody>
                     <tr *ngFor="let item of files">
                         <td><strong>{{ item.name }}</strong></td>
-                        <td nowrap>{{ item.size/1024/1024 | number:1.2.2 }} MB</td>    
+                        <td nowrap>{{ item.size/1024/1024 | number:'1.2-2' }} MB</td>    
                     </tr>
                 </tbody>
             </table>
@@ -201,12 +238,13 @@
                 <div class="label">Uploading Files</div>
             </div>
         </div>
+        <div class="field">
+            <button class="ui primary button" type="submit">Submit</button>
 
-        <button class="ui primary button" type="submit">Submit</button>
-
-        <button type="button" class="ui button" onclick="document.getElementById('file-select').click()">
-            <i class="file outline icon"></i> Select Raw Files
-            <input type="file" id="file-select" multiple (change)="onFileChange($event)" required />
-        </button>
+            <button type="button" class="ui button" onclick="document.getElementById('file-select').click()">
+                <i class="file outline icon"></i> Select Raw Files
+                <input type="file" id="file-select" multiple (change)="onFileChange($event)" required />
+            </button>
+        </div>
     </form>
 </div>

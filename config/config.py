@@ -30,6 +30,7 @@ SEARCH_PARAMS_PATH = PROJECT_HOME_PATH.joinpath(PROJECT_NAME, 'auto', 'search_pa
 INSTANCE_PATH = PROJECT_HOME_PATH.joinpath(PROJECT_NAME, 'uploads')
 
 CONVERT_URL = 'http://cravattwork.scripps.edu:5001'
+IP2_URL = 'http://goldfish.scripps.edu'
 
 
 class _Config(object):

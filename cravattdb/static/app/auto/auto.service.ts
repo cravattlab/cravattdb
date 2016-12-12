@@ -27,11 +27,7 @@ export class AutoService {
             let formData: FormData = new FormData();
             let xhr: XMLHttpRequest = new XMLHttpRequest();
 
-            for (let key in form) {
-                if (form[key]) {
-                    formData.append(key, form[key]);
-                }
-            }
+            formData.append('data', JSON.stringify(form));
 
             for (let file of files) {
                 formData.append('files', file, file.name);

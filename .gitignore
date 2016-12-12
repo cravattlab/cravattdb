@@ -16,6 +16,8 @@ cravattdb/static/dist
 cravattdb/templates/index.html
 secrets.prod.yml
 secrets.override.yml
+.awcache
+.happypack
 
 # Windows image file caches
 Thumbs.db

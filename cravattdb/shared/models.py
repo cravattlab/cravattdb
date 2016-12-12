@@ -3,8 +3,7 @@ from sqlalchemy import func, text
 from sqlalchemy.dialects.postgresql import JSON, JSONB
 from marshmallow import Schema, fields, pre_load, post_load, post_dump, validate
 from cravattdb.users.models import UserSchema
-from cravattdb.utils.admin import AuthModelView
-from cravattdb import db, admin
+from cravattdb import db
 
 Column = db.Column
 relationship = db.relationship
@@ -438,16 +437,3 @@ class ProteomicFractionSchema(Schema):
     @post_dump(pass_many=True)
     def _wrap(self, data, many):
         return {'proteomic_fractions': data} if many else data
-
-
-# Flask-Admin views defined here for convenience
-admin.add_view(AuthModelView(Probe, db.session))
-admin.add_view(AuthModelView(Dataset, db.session))
-admin.add_view(AuthModelView(Inhibitor, db.session))
-admin.add_view(AuthModelView(Experiment, db.session))
-admin.add_view(AuthModelView(ExperimentType, db.session))
-admin.add_view(AuthModelView(Organism, db.session))
-admin.add_view(AuthModelView(SampleType, db.session))
-admin.add_view(AuthModelView(CellType, db.session))
-admin.add_view(AuthModelView(Instrument, db.session))
-admin.add_view(AuthModelView(ProteomicFraction, db.session))

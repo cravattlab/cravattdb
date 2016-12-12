@@ -1,3 +1,22 @@
+:host > .container {
+    padding: 3em 10em!important;
+}
+
+:host .remove.icon {
+    cursor: pointer;
+}
+
+.treatment .ui.ribbon.label {
+    width: 8em;
+    margin-right: 0!important;
+}
+.treatment .fraction {
+    margin-bottom: 0;
+}
+.treatment >>> .selection.dropdown {
+    max-width: calc(100% - 7em)!important;
+}
+
 #file-select {
     min-height: 100%;
     min-width: 100%;

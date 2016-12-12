@@ -3,7 +3,6 @@
 from flask import Blueprint, render_template, make_response, jsonify
 from flask_security import current_user, login_required, LoginForm
 from http import HTTPStatus
-import cravattdb.api.api as api
 
 home = Blueprint('home', __name__,
                  template_folder='templates',
@@ -40,14 +39,7 @@ def render_probes():
 @home.route('/experiment/<int:experiment_id>')
 @login_required
 def render_experiment(experiment_id):
-    raw = api.get_dataset(experiment_id)
-
-    return render_template('index.html', bootstrap={
-        'experiment': {
-            'data': [list(item.values()) for item in raw['dataset']],
-            'id': experiment_id
-        }
-    })
+    return render_template('index.html')
 
 
 @home.route('/login_csrf')

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +10,8 @@ import { ExperimentsModule } from './experiments/experiments.module';
 import { ExperimentModule } from './experiment/experiment.module';
 import { AutoModule } from './auto/auto.module';
 import { ProbesModule } from './probes/probes.module';
+
+import HMR from './shared/hmr';
 
 import { routing } from './app.routing';
 
@@ -32,4 +34,8 @@ import { routing } from './app.routing';
     ],
     bootstrap: [ AppComponent ]
 })
-export class AppModule {}
+export class AppModule extends HMR {
+    constructor(public appRef: ApplicationRef) {
+        super(appRef);
+    }
+}

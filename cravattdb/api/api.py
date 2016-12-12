@@ -2,10 +2,10 @@
 from cravattdb import db
 from cravattdb.utils.fun import special_median
 from cravattdb.users.models import User, UserSchema
-import sqlalchemy as sa
-import cravattdb.shared.constants as constants
+from cravattdb.shared import constants as constants
 import cravattdb.contrib.residue_number_annotation as residue_number_annotation
-import cravattdb.home.models as m
+import cravattdb.shared.models as m
+import sqlalchemy as sa
 import csv
 import itertools
 
@@ -58,6 +58,8 @@ def get_user_defined():
     Utility method for use with forms and filters. Collects all user defined
     *things* and returns them in one object. Saves on requests.
     """
+    method_types = [{'id': i, 'name': val} for i, val in enumerate(['in vitro', 'in situ', 'in vivo'])]
+
     return {
         **_get_all(m.ExperimentType, experiment_type_schema),
         **_get_all(m.Organism, organism_schema),
@@ -67,7 +69,8 @@ def get_user_defined():
         **_get_all(m.Instrument, instrument_schema),
         **_get_all(m.CellType, cell_type_schema),
         **_get_all(m.ProteomicFraction, proteomic_fraction_schema),
-        **_get_all(User, user_schema)
+        **_get_all(User, user_schema),
+        **{'treatment_method_types': method_types}
     }
 
 
@@ -299,6 +302,24 @@ def add_treatment(data):
     db.session.add(treatment.data)
     db.session.commit()
     return treatment_schema.dump(treatment.data).data
+
+
+def add_treatments(experiment_id, treatments):
+    for data in treatments:
+        fractions = data.pop('fraction')
+        for fraction, value in fractions:
+            if value:
+                # fraction is passed as 'heavy' or 'light',
+                # database currently represents this as an Enum(L, H)
+                # so we take the uppercase first character...
+                # I got tired of joining tables for things that are
+                # more appropriately expressed as enums and now I'm
+                # slighly annoyed with myself for having allowed things
+                # to be less than standard
+                # /rant
+                data['fraction'] = fraction[:1].upper()
+                data['experiment_id'] = experiment_id
+                add_treatment(data)
 
 
 def get_experiment_type(experiment_id=None):

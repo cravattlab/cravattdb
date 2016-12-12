@@ -1,5 +1,5 @@
 """Perform search of dataset on IP2."""
-from .ip2 import IP2
+from cravattdb.contrib.ip2 import IP2
 import config.config as config
 import pathlib
 import json
@@ -17,19 +17,29 @@ class Search:
 
     def login(self, username, password):
         """Login to IP2 and keep reference to session."""
-        self._ip2 = IP2(self.name)
-        return self._ip2.login(username, password)
+        self._ip2 = IP2(
+            ip2_url=config.IP2_URL,
+            username=username,
+            default_project_name=config.PROJECT_NAME
+        )
+        return self._ip2.login(password)
 
     def search(self, organism, experiment_type, file_paths):
         """Initiate search on IP2."""
         params = self._get_params(experiment_type)
-        database = self._get_database_path(organism)
+        # get database by file name
+        database = self._ip2.get_database(self._get_database_path(organism)['name'])
 
-        self._ip2.protein_database_user_id = database['user_id']
-        self._ip2.protein_database_id = database['database_id']
+        (experiment, job) = self._ip2.search(
+            name=self.name,
+            file_paths=file_paths,
+            search_options={
+                'params': params,
+                'database': database
+            }
+        )
 
-        self._ip2.search(params, file_paths)
-        link = self._check_search_status()
+        link = self._check_search_status(job, experiment)
 
         return link
 
@@ -38,7 +48,7 @@ class Search:
             params_map = json.loads(f.read())
 
         if experiment_type not in params_map:
-            raise KeyError('Search params are not available for this experiment_type')
+            raise KeyError('Search params are not available for this experiment type')
 
         with SEARCH_PARAMS_PATH.joinpath(params_map[experiment_type]).open() as f:
             params = json.loads(f.read())
@@ -54,7 +64,7 @@ class Search:
 
         return database_map[organism]
 
-    def _check_search_status(self):
+    def _check_search_status(self, job, experiment):
         polling_interval = 180
 
         # wait a bit before we poll for status
@@ -64,11 +74,11 @@ class Search:
             start = time.clock()
 
             try:
-                self._ip2.check_job_status()
+                job.status()
             except LookupError:
                 # job was not found, the job is finished or something went
                 # horribly wrong
-                return self._ip2.get_dtaselect()
+                return experiment.get_dtaselect()
 
             work_duration = time.clock() - start
             time.sleep(polling_interval - work_duration)
